@@ -1,0 +1,22 @@
+[
+  {
+    "id": "gmail",
+    "active": true,
+    "link": "mailto:ryusuf05@gmail.com"
+  },
+  {
+    "id": "github",
+    "active": true,
+    "link": "github.com/harbanery"
+  },
+  {
+    "id": "whatsapp",
+    "active": true,
+    "link": "wa.com/085156463606"
+  },
+  {
+    "id": "linkedin",
+    "active": true,
+    "link": "linkedin.com/in/raihan-yusuf"
+  }
+]
