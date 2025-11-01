@@ -5,10 +5,34 @@ import {
   CardTitle,
 } from "@/components/shadcn/ui/card";
 import Link from "next/link";
-import { FaGithub, FaLinkedin, FaWhatsapp } from "react-icons/fa6";
-import { SiGmail } from "react-icons/si";
+import contacts from "@/data/socmed.json";
+import { logoMap } from "@/utils/helpers/icon";
 
 const ContactSection = () => {
+  const contactList = contacts
+    .filter((contact) => logoMap[contact.key] && contact.active)
+    .map((contact) => ({
+      ...contact,
+      icon: logoMap[contact.key],
+    }));
+
+  const renderList = (list: any[]) => {
+    return list.map((item) => (
+      <Link
+        key={item.key}
+        href={item.link}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={item.key === "mail" ? "mx-2" : ""}
+      >
+        <item.icon
+          size={60}
+          className="text-white hover:text-white/50 transition-all duration-300 ease-in-out"
+        />
+      </Link>
+    ));
+  };
+
   return (
     <section
       id="contact"
@@ -27,35 +51,7 @@ const ContactSection = () => {
           </CardHeader>
         </Card>
         <div className="flex flex-wrap max-w-lg items-end justify-end gap-4">
-          <Link
-            href="/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mx-2"
-          >
-            <SiGmail
-              size={60}
-              className="text-white hover:text-white/50 transition-all duration-300 ease-in-out"
-            />
-          </Link>
-          <Link href="/" target="_blank" rel="noopener noreferrer">
-            <FaGithub
-              size={60}
-              className="text-white hover:text-white/50 transition-all duration-300 ease-in-out"
-            />
-          </Link>
-          <Link href="/" target="_blank" rel="noopener noreferrer">
-            <FaWhatsapp
-              size={60}
-              className="text-white hover:text-white/50 transition-all duration-300 ease-in-out"
-            />
-          </Link>
-          <Link href="/" target="_blank" rel="noopener noreferrer">
-            <FaLinkedin
-              size={60}
-              className="text-white hover:text-white/50 transition-all duration-300 ease-in-out"
-            />
-          </Link>
+          {renderList(contactList)}
         </div>
       </Card>
     </section>

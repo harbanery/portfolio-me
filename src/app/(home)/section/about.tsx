@@ -4,6 +4,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/shadcn/ui/card";
+import abouts from "@/data/about.json";
 
 const AboutSection = () => {
   return (
@@ -16,21 +17,14 @@ const AboutSection = () => {
           <CardTitle className="text-white text-center font-bebas tracking-wide font-bold text-7xl">
             About
           </CardTitle>
-          <CardDescription className="text-white text-justify font-inter font-light text-2xl indent-14">
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quod magni
-            alias eum accusamus libero sunt illo ad nesciunt reiciendis
-            blanditiis quae, laudantium natus nam, vero molestias veritatis
-            beatae officia nihil a! Recusandae inventore corporis, voluptatum id
-            natus consequuntur ipsum. Sed omnis magnam quidem tempore, iste ab
-            beatae mollitia voluptas voluptatibus, accusamus eos dicta
-            cupiditate dolores voluptates deleniti, alias eveniet necessitatibus
-            dignissimos saepe eum provident vero repellat dolore. Provident
-            earum repellat dolore accusantium? Accusamus veritatis corrupti enim
-            necessitatibus doloribus blanditiis quibusdam sit voluptas?
-            Doloribus modi reprehenderit maxime placeat, dolore tempora dolorem
-            eaque. Expedita asperiores dolore harum, est voluptas iure
-            laboriosam temporibus!
-          </CardDescription>
+          {abouts?.map((about, index) => (
+            <CardDescription
+              key={index}
+              className="text-white text-justify font-inter font-light text-2xl indent-14"
+            >
+              {about}
+            </CardDescription>
+          ))}
         </CardHeader>
       </Card>
     </section>

@@ -1,35 +1,55 @@
 [
   {
-    "id": "1",
-    "title": "Project 1",
-    "description": "Description for Project 1",
+    "title": "Peworld",
+    "description": "Peworld is a dynamic web application designed to revolutionize the job search experience. It not only helps job seekers find suitable employment opportunities but also provides comprehensive and detailed information about potential employers. With Peworld, users can explore a wide range of job listings tailored to their skills and preferences, gain insights into company cultures and benefits, and stay updated on the latest industry trends.",
     "role": "Front End Developer",
-    "image": "https://venngage-wordpress.s3.amazonaws.com/uploads/2018/04/Landing-Page-Examples.png",
-    "link": "github.com",
-    "tools": ["react", "nextjs", "tailwind"],
+    "image": "https://github.com/harbanery/peworld-hirejob-app/blob/main/public/screenshots/Landing-Page-After-Login.png?raw=true",
+    "link": "https://peworld-hirejob.vercel.app",
+    "tools": ["react", "tailwind", "redux"],
     "source": [
       {
-        "name": "rehany/project-1",
-        "link": "github.com"
+        "name": "WEB",
+        "link": "https://github.com/harbanery/peworld-hirejob-app"
+      },
+      {
+        "name": "API",
+        "link": "https://github.com/harbanery/be-peworld-hirejob-app"
       }
     ]
   },
   {
-    "id": "2",
-    "title": "Project 2",
-    "description": "Description for Project 2",
+    "title": "Blanja",
+    "description": "Blanja is a comprehensive e-commerce platform designed to connect customers with a diverse array of products from multiple sellers. Our website offers a seamless shopping experience for customers and robust tools for sellers to manage their storefronts.",
     "role": "Back End Developer",
-    "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSbXzsPYZYUHY04fAwV6FeiLOohJHHgDxb1tJGDg7hlxg&s&ec=72940544",
-    "link": "github.com",
-    "tools": ["react", "tailwind"],
+    "image": "https://github.com/echestratus/BlanjaWebsiteProject/blob/feature/front-end/public/HomePage.png?raw=true",
+    "link": "https://blanja-website-project.netlify.app",
+    "tools": ["go", "postgre", "cloudinary"],
     "source": [
       {
-        "name": "rehany/project-2",
-        "link": "github.com"
+        "name": "WEB",
+        "link": "https://github.com/harbanery/blanja-marketplace-app"
       },
       {
-        "name": "rehany/project-2-backend",
-        "link": "github.com"
+        "name": "API",
+        "link": "https://github.com/harbanery/be-blanja-marketplace-app"
+      }
+    ]
+  },
+  {
+    "title": "Mama Recipe",
+    "description": "My web-based application, Mama Recipe, is specifically designed for food enthusiasts who are always seeking new inspirations in the kitchen. With a constantly updated collection of recipes from around the world, you can discover a wide range of dishes, from traditional cuisine to modern creations. Interactive features such as video tutorials, automatic shopping lists, and an online chef community make your cooking experience more enjoyable and easy. So, what are you waiting for? Explore Mama Recipe now and find your new favorite recipes!",
+    "role": "Fullstack Developer",
+    "image": "https://github.com/harbanery/mama-food-recipe-app/blob/main/public/screenshots/Home.png?raw=true",
+    "link": "https://mama-recipe-food.vercel.app/",
+    "tools": ["next", "tailwind", "redux"],
+    "source": [
+      {
+        "name": "WEB",
+        "link": "https://github.com/harbanery/mama-food-recipe-app"
+      },
+      {
+        "name": "API",
+        "link": "https://github.com/harbanery/be-mama-food-recipe-app"
       }
     ]
   }
