@@ -1,3 +1,5 @@
+"use client";
+
 import { BiSolidFilePdf } from "react-icons/bi";
 
 const Navbar = () => {

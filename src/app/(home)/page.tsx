@@ -9,11 +9,13 @@ import SkillSection from "./section/skill";
 const HomePage = () => {
   return (
     <BaseLayout>
-      <HeroSection image={hero} />
-      <AboutSection />
-      <SkillSection />
-      <ProjectSection />
-      <ContactSection />
+      <div className="bg-slate-950">
+        <HeroSection image={hero} />
+        <AboutSection />
+        <SkillSection />
+        <ProjectSection />
+        <ContactSection />
+      </div>
     </BaseLayout>
   );
 };
