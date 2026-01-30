@@ -5,7 +5,7 @@ import { FormLayout } from "@/app/admin/interfaces/form";
 import { loadAntdIcon } from "@/components/custom/icon";
 import { masterDataMap } from "@/utils/helpers/category";
 import { logoMap } from "@/utils/helpers/icon";
-import { App, Button, Form, Modal } from "antd";
+import { App, Button, Form } from "antd";
 import { useEffect, useState } from "react";
 
 const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
@@ -130,26 +130,6 @@ const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
         layout={formLayout}
         optionList={options}
       />
-
-      <Modal
-        open={isConfirm}
-        onOk={handleSave}
-        confirmLoading={loading}
-        onCancel={() => setIsConfirm(false)}
-        cancelButtonProps={{
-          variant: "filled",
-          color: "default",
-        }}
-        okButtonProps={{
-          style: { fontWeight: 600 },
-          variant: "solid",
-          color: "primary",
-        }}
-        okText="Yes"
-        cancelText="No"
-      >
-        <p>Are you sure you want to save?</p>
-      </Modal>
     </section>
   );
 };
