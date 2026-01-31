@@ -3,6 +3,7 @@
 import FormAdmin from "@/app/admin/components/form";
 import { FormLayout } from "@/app/admin/interfaces/form";
 import { loadAntdIcon } from "@/components/custom/icon";
+import { isEmpty } from "@/utils/helpers";
 import { masterDataMap } from "@/utils/helpers/category";
 import { logoMap } from "@/utils/helpers/icon";
 import { App, Button, Form } from "antd";
@@ -13,11 +14,12 @@ const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
   const SaveIcon = loadAntdIcon("SaveOutlined");
 
   const [form] = Form.useForm();
+  const data = Form.useWatch([], form);
+
   const { notification, modal } = App.useApp();
 
   const [loading, setLoading] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [isConfirm, setIsConfirm] = useState(false);
 
   const handleEdit = () => {
     setIsEdit(!isEdit);
@@ -109,6 +111,7 @@ const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
             color={isEdit ? "volcano" : "geekblue"}
             iconPosition="end"
             size="large"
+            disabled={isEdit && isEmpty(data)}
             onClick={
               isEdit
                 ? async () =>
