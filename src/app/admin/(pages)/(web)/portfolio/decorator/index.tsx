@@ -11,6 +11,9 @@ import {
   GithubOutlined,
   LinkOutlined,
   DeleteOutlined,
+  EditOutlined,
+  SaveOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import { useEffect, useState } from "react";
 
@@ -28,11 +31,15 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
   const PlusIcon = <PlusOutlined />;
 
   const [form] = Form.useForm();
+  const [detailForm] = Form.useForm();
   const { notification, modal } = App.useApp();
 
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const handleAddPortfolio = () => {
     form.resetFields();
@@ -119,6 +126,64 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
     return options.role.find((r) => r.value === role)?.label || role;
   };
 
+  const handleOpenDetail = (item: PortfolioItem) => {
+    setSelectedItem(item);
+    detailForm.setFieldsValue(item);
+    setIsDetailModalOpen(true);
+    setIsEditMode(false);
+  };
+
+  const handleCloseDetail = () => {
+    setIsDetailModalOpen(false);
+    setSelectedItem(null);
+    setIsEditMode(false);
+    detailForm.resetFields();
+  };
+
+  const handleEditToggle = () => {
+    if (isEditMode) {
+      detailForm.setFieldsValue(selectedItem);
+    }
+    setIsEditMode(!isEditMode);
+  };
+
+  const handleSaveEdit = async () => {
+    setLoading(true);
+    try {
+      const values = await detailForm.validateFields();
+
+      const updatedItems = portfolioItems.map((item) =>
+        item.id === selectedItem?.id ? { ...item, ...values } : item
+      );
+
+      setPortfolioItems(updatedItems);
+      setSelectedItem({ ...selectedItem!, ...values });
+
+      notification.success({
+        key: "edit-success",
+        message: "Success",
+        description: "Portfolio item updated successfully",
+        placement: "bottomRight",
+      });
+
+      setIsEditMode(false);
+      return Promise.resolve();
+    } catch (error: any) {
+      notification.error({
+        key: "edit-error",
+        message: error?.errorFields ? "Validation Error" : "Error",
+        ...(error?.errorFields
+          ? {}
+          : { description: "Failed to update portfolio item" }),
+        placement: "bottomRight",
+      });
+
+      return Promise.reject();
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <section className="flex flex-col gap-8">
       <div className="flex gap-8 justify-between items-center">
@@ -151,21 +216,23 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
               <Card
                 key={item.id}
                 hoverable
+                onClick={() => handleOpenDetail(item)}
                 actions={[
                   <Button
                     key="delete"
                     danger
                     type="text"
                     icon={<DeleteOutlined />}
-                    onClick={() =>
+                    onClick={(e) => {
+                      e.stopPropagation();
                       modal.confirm({
                         title:
                           "Are you sure you want to delete this portfolio item?",
                         okText: "Yes",
                         cancelText: "No",
                         onOk: () => handleDelete(item.id),
-                      })
-                    }
+                      });
+                    }}
                   >
                     Delete
                   </Button>,
@@ -243,6 +310,72 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       >
         <FormAdmin
           formProps={{ form }}
+          layout={formLayout}
+          optionList={options}
+        />
+      </Modal>
+
+      <Modal
+        title={
+          <div className="flex justify-between items-center pr-8">
+            <span>Portfolio Detail</span>
+            <div className="flex gap-2">
+              {isEditMode && (
+                <Button
+                  variant="filled"
+                  color="default"
+                  size="small"
+                  icon={<CloseOutlined />}
+                  onClick={handleEditToggle}
+                >
+                  Cancel
+                </Button>
+              )}
+              <Button
+                style={{ fontWeight: 600 }}
+                icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
+                variant="solid"
+                color={isEditMode ? "volcano" : "geekblue"}
+                iconPosition="end"
+                size="small"
+                onClick={
+                  isEditMode
+                    ? async () =>
+                        await modal.confirm({
+                          title: "Are you sure you want to save?",
+                          okText: "Yes",
+                          cancelText: "No",
+                          okButtonProps: {
+                            style: { fontWeight: 600 },
+                            variant: "solid",
+                            color: "primary",
+                          },
+                          cancelButtonProps: {
+                            variant: "filled",
+                            color: "default",
+                          },
+                          onOk: handleSaveEdit,
+                        })
+                    : handleEditToggle
+                }
+              >
+                {isEditMode ? "Save" : "Edit"}
+              </Button>
+            </div>
+          </div>
+        }
+        open={isDetailModalOpen}
+        onCancel={handleCloseDetail}
+        footer={null}
+        width={700}
+        styles={{
+          body: {
+            paddingBlock: "10px",
+          },
+        }}
+      >
+        <FormAdmin
+          formProps={{ form: detailForm, disabled: !isEditMode }}
           layout={formLayout}
           optionList={options}
         />
