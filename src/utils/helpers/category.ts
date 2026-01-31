@@ -73,4 +73,19 @@ export const masterDataMap: Record<string, any> = {
     category: ["contact", "messaging"],
     color: "#EA4335",
   },
+  twitter: {
+    name: "Twitter / X",
+    category: ["contact", "social"],
+    color: "#000000",
+  },
+  instagram: {
+    name: "Instagram",
+    category: ["contact", "social"],
+    color: "#E4405F",
+  },
+  facebook: {
+    name: "Facebook",
+    category: ["contact", "social"],
+    color: "#1877F2",
+  },
 };

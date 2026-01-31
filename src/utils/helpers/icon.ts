@@ -8,10 +8,13 @@ import {
   FaCss3Alt,
   FaGithub,
   FaGolang,
+  FaInstagram,
   FaLaravel,
   FaLinkedin,
   FaReact,
+  FaSquareFacebook,
   FaWhatsapp,
+  FaXTwitter,
 } from "react-icons/fa6";
 import { RiNextjsFill, RiTailwindCssFill } from "react-icons/ri";
 import { SiCloudinary, SiGmail, SiRedux } from "react-icons/si";
@@ -32,4 +35,7 @@ export const logoMap: Record<string, IconType> = {
   linkedin: FaLinkedin,
   whatsapp: FaWhatsapp,
   mail: SiGmail,
+  twitter: FaXTwitter,
+  instagram: FaInstagram,
+  facebook: FaSquareFacebook,
 };
