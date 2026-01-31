@@ -13,7 +13,7 @@ export const formLayout: FormLayout[] = [
       {
         name: "about",
         label: "About",
-        type: "textarea",
+        type: "editor",
       },
     ],
   },

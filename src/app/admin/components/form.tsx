@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react";
 import { loadAntdIcon } from "@/components/custom/icon";
+import Editor from "@/components/custom/editor";
 import {
   Form,
   Input,
@@ -35,6 +36,7 @@ const GetComponent = (
   switch (type) {
     case "input":
     case "textarea":
+    case "editor":
       templatePlaceholder = placeholder ?? (name && "Enter " + name);
       break;
     case "select":
@@ -164,6 +166,8 @@ const GetComponent = (
       );
     case "switch":
       return <Switch disabled={disabled} />;
+    case "editor":
+      return <Editor placeholder={templatePlaceholder} disabled={disabled} />;
     default:
       return null;
   }
@@ -400,7 +404,7 @@ const FormAdmin = ({
                 type: item.type,
                 placeholder: item.placeholder,
                 icon: item.icon,
-                disabled: item.disabled,
+                disabled: formProps?.disabled || item.disabled,
                 rules: item.required
                   ? [
                       ...(item.rules ?? []),
