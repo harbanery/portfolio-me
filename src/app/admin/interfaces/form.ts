@@ -5,6 +5,7 @@ export interface FormAdminProps {
   layout: FormLayout[];
   formProps?: FormProps;
   optionList?: Record<string, any[]>;
+  formValue?: any;
 }
 
 export type FormLayout = {
@@ -28,6 +29,7 @@ export type FormLayoutItem = {
 export interface FieldProps {
   key?: string;
   name: any;
+  value?: any;
   label?: string;
   type?: string;
   placeholder?: string;

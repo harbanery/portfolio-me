@@ -5,60 +5,124 @@ import { FormLayout } from "@/app/admin/interfaces/form";
 import { loadAntdIcon } from "@/components/custom/icon";
 import { masterDataMap } from "@/utils/helpers/category";
 import { logoMap } from "@/utils/helpers/icon";
-import { App, Button, Form, Modal, Card, Tag, Empty } from "antd";
-import {
-  PlusOutlined,
-  GithubOutlined,
-  LinkOutlined,
-  DeleteOutlined,
-  EditOutlined,
-  SaveOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
+import { App, Button, Form, Modal, Card, Tag, Empty, Spin, Badge } from "antd";
 import { useEffect, useState } from "react";
+import {
+  getPortfolios,
+  createPortfolio,
+  updatePortfolio,
+  deletePortfolio,
+  togglePortfolioStatus,
+  PortfolioStatus,
+} from "../actions";
+import { getGithubRepoName } from "@/utils/helpers";
 
 interface PortfolioItem {
-  id: string;
+  id: number;
   title: string;
   role: string;
   skills: string[];
-  image: any;
-  repo_links: string[];
-  web_link: string;
+  image: string;
+  repoLinks: string[];
+  webLink: string | null;
+  description?: string | null;
+  status: PortfolioStatus;
 }
 
 const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
-  const PlusIcon = <PlusOutlined />;
+  const PlusIcon = loadAntdIcon("PlusOutlined");
+  const EditIcon = loadAntdIcon("EditOutlined");
+  const SaveIcon = loadAntdIcon("SaveOutlined");
+  const GithubIcon = loadAntdIcon("GithubOutlined");
+  const LinkIcon = loadAntdIcon("LinkOutlined");
+  const DeleteIcon = loadAntdIcon("DeleteOutlined");
+  const CheckIcon = loadAntdIcon("CheckOutlined");
+  const StopIcon = loadAntdIcon("StopOutlined");
 
   const [form] = Form.useForm();
   const [detailForm] = Form.useForm();
+  const dataDetail = Form.useWatch([], detailForm);
   const { notification, modal } = App.useApp();
 
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
 
+  const fetchPortfolios = async () => {
+    setFetching(true);
+    try {
+      const result = await getPortfolios();
+      if (result.success && result.data) {
+        setPortfolioItems(result.data as unknown as PortfolioItem[]);
+      }
+    } catch (error) {
+      console.error("Error fetching portfolios:", error);
+    } finally {
+      setFetching(false);
+    }
+  };
+
   const handleAddPortfolio = () => {
     form.resetFields();
     setIsModalOpen(true);
+  };
+
+  const getImageString = async (imageValue: any): Promise<string> => {
+    if (!imageValue) return "";
+    if (typeof imageValue === "string") return imageValue;
+
+    // Handle Ant Design Upload file list
+    if (Array.isArray(imageValue) && imageValue.length > 0) {
+      const file = imageValue[0];
+      // If it's already uploaded and has a URL
+      if (file.url) return file.url;
+      // If it has originFileObj, convert to base64
+      if (file.originFileObj) {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.readAsDataURL(file.originFileObj);
+        });
+      }
+      // If it has thumbUrl
+      if (file.thumbUrl) return file.thumbUrl;
+    }
+
+    // Handle single file object
+    if (imageValue.originFileObj) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsDataURL(imageValue.originFileObj);
+      });
+    }
+
+    return "";
   };
 
   const handleSave = async () => {
     setLoading(true);
     try {
       const values = await form.validateFields();
+      const imageString = await getImageString(values.image?.fileList);
 
-      const newItem: PortfolioItem = {
-        id: Date.now().toString(),
-        ...values,
-      };
+      const result = await createPortfolio({
+        title: values.title,
+        role: values.role,
+        image: imageString,
+        description: values.description,
+        skills: values.skills,
+        repoLinks: values.repo_links || [],
+        webLink: values.web_link,
+      });
 
-      console.log("values portfolio", newItem);
-
-      setPortfolioItems([...portfolioItems, newItem]);
+      if (!result.success) {
+        throw new Error(result.error);
+      }
 
       notification.success({
         key: "save-success",
@@ -69,6 +133,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
 
       setIsModalOpen(false);
       form.resetFields();
+      fetchPortfolios();
       return Promise.resolve();
     } catch (error: any) {
       notification.error({
@@ -76,7 +141,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
         message: error?.errorFields ? "Validation Error" : "Error",
         ...(error?.errorFields
           ? {}
-          : { description: "Failed to add portfolio item" }),
+          : { description: error?.message || "Failed to add portfolio item" }),
         placement: "bottomRight",
       });
 
@@ -91,14 +156,55 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
     setIsModalOpen(false);
   };
 
-  const handleDelete = (id: string) => {
-    setPortfolioItems(portfolioItems.filter((item) => item.id !== id));
-    notification.success({
-      key: "delete-success",
-      message: "Success",
-      description: "Portfolio item deleted successfully",
-      placement: "bottomRight",
-    });
+  const handleDelete = async (id: number) => {
+    try {
+      const result = await deletePortfolio(id);
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      fetchPortfolios();
+      notification.success({
+        key: "delete-success",
+        message: "Success",
+        description: "Portfolio item deleted successfully",
+        placement: "bottomRight",
+      });
+    } catch (error: any) {
+      notification.error({
+        key: "delete-error",
+        message: "Error",
+        description: error?.message || "Failed to delete portfolio item",
+        placement: "bottomRight",
+      });
+    }
+  };
+
+  const handleToggleStatus = async (
+    id: number,
+    currentStatus: PortfolioStatus,
+  ) => {
+    const newStatus: PortfolioStatus =
+      currentStatus === "ACTIVE" ? "NONACTIVE" : "ACTIVE";
+    try {
+      const result = await togglePortfolioStatus(id, newStatus);
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+      fetchPortfolios();
+      notification.success({
+        key: "toggle-status-success",
+        message: "Success",
+        description: `Portfolio status changed to ${newStatus === "ACTIVE" ? "Active" : "Inactive"}`,
+        placement: "bottomRight",
+      });
+    } catch (error: any) {
+      notification.error({
+        key: "toggle-status-error",
+        message: "Error",
+        description: error?.message || "Failed to toggle portfolio status",
+        placement: "bottomRight",
+      });
+    }
   };
 
   const options = {
@@ -128,7 +234,11 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
 
   const handleOpenDetail = (item: PortfolioItem) => {
     setSelectedItem(item);
-    detailForm.setFieldsValue(item);
+    detailForm.setFieldsValue({
+      ...item,
+      repo_links: item.repoLinks,
+      web_link: item.webLink,
+    });
     setIsDetailModalOpen(true);
     setIsEditMode(false);
   };
@@ -141,8 +251,12 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
   };
 
   const handleEditToggle = () => {
-    if (isEditMode) {
-      detailForm.setFieldsValue(selectedItem);
+    if (isEditMode && selectedItem) {
+      detailForm.setFieldsValue({
+        ...selectedItem,
+        repo_links: selectedItem.repoLinks,
+        web_link: selectedItem.webLink,
+      });
     }
     setIsEditMode(!isEditMode);
   };
@@ -151,13 +265,29 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
     setLoading(true);
     try {
       const values = await detailForm.validateFields();
+      const imageString = await getImageString(values.image?.fileList);
 
-      const updatedItems = portfolioItems.map((item) =>
-        item.id === selectedItem?.id ? { ...item, ...values } : item
-      );
+      const result = await updatePortfolio(selectedItem!.id, {
+        title: values.title,
+        role: values.role,
+        image: imageString,
+        description: values.description,
+        skills: values.skills,
+        repoLinks: values.repo_links || [],
+        webLink: values.web_link,
+      });
 
-      setPortfolioItems(updatedItems);
-      setSelectedItem({ ...selectedItem!, ...values });
+      if (!result.success) {
+        throw new Error(result.error);
+      }
+
+      const updatedItem = {
+        ...selectedItem!,
+        ...values,
+        repoLinks: values.repo_links || [],
+        webLink: values.web_link,
+      };
+      setSelectedItem(updatedItem);
 
       notification.success({
         key: "edit-success",
@@ -167,6 +297,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       });
 
       setIsEditMode(false);
+      fetchPortfolios();
       return Promise.resolve();
     } catch (error: any) {
       notification.error({
@@ -174,7 +305,9 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
         message: error?.errorFields ? "Validation Error" : "Error",
         ...(error?.errorFields
           ? {}
-          : { description: "Failed to update portfolio item" }),
+          : {
+              description: error?.message || "Failed to update portfolio item",
+            }),
         placement: "bottomRight",
       });
 
@@ -183,6 +316,17 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchPortfolios();
+  }, []);
+
+  if (fetching)
+    return (
+      <section className="flex flex-col gap-8 items-center justify-center min-h-[300px]">
+        <Spin size="large" />
+      </section>
+    );
 
   return (
     <section className="flex flex-col gap-8">
@@ -196,7 +340,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
 
         <Button
           style={{ fontWeight: 600 }}
-          icon={PlusIcon}
+          icon={<PlusIcon />}
           variant="solid"
           color="geekblue"
           iconPosition="end"
@@ -213,16 +357,44 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {portfolioItems.map((item) => (
+              // <Badge.Ribbon
+              //   key={item.id}
+              //   text={item.status === "ACTIVE" ? "Active" : "Inactive"}
+              //   color={item.status === "ACTIVE" ? "green" : "red"}
+              // >
               <Card
                 key={item.id}
                 hoverable
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between",
+                }}
                 onClick={() => handleOpenDetail(item)}
                 actions={[
+                  <Button
+                    key="toggle"
+                    type="text"
+                    icon={
+                      item.status === "ACTIVE" ? <StopIcon /> : <CheckIcon />
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      modal.confirm({
+                        title: `Are you sure you want to ${item.status === "ACTIVE" ? "deactivate" : "activate"} this portfolio?`,
+                        okText: "Yes",
+                        cancelText: "No",
+                        onOk: () => handleToggleStatus(item.id, item.status),
+                      });
+                    }}
+                  >
+                    {item.status === "ACTIVE" ? "Deactivate" : "Activate"}
+                  </Button>,
                   <Button
                     key="delete"
                     danger
                     type="text"
-                    icon={<DeleteOutlined />}
+                    icon={<DeleteIcon />}
                     onClick={(e) => {
                       e.stopPropagation();
                       modal.confirm({
@@ -239,52 +411,89 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
                 ]}
               >
                 <div className="flex flex-col gap-3">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <h3 className="font-semibold text-lg m-0">
+                        {item.title}
+                      </h3>
+                      <p className="text-sm text-gray-500 m-0">
+                        {getRoleLabel(item.role)}
+                      </p>
+                    </div>
+                    <div>
+                      <Tag color={item.status === "ACTIVE" ? "green" : "red"}>
+                        {item.status === "ACTIVE" ? "Active" : "Inactive"}
+                      </Tag>
+                    </div>
+                  </div>
+
                   <div>
-                    <h3 className="font-semibold text-lg m-0">{item.title}</h3>
-                    <p className="text-sm text-gray-500 m-0">
-                      {getRoleLabel(item.role)}
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-48 object-cover rounded-md"
+                    />
+                  </div>
+
+                  <div>
+                    <p className="text-sm text-gray-700 line-clamp-3">
+                      {item.description ?? "No description provided."}
                     </p>
                   </div>
 
-                  <div className="flex flex-wrap gap-1">
-                    {item.skills.map((skill) => (
-                      <Tag
-                        key={skill}
-                        color={masterDataMap[skill]?.color || "default"}
-                      >
-                        {masterDataMap[skill]?.name || skill}
-                      </Tag>
-                    ))}
+                  <div className="flex flex-wrap gap-y-1">
+                    {item.skills.map((skill) => {
+                      const Icon = logoMap[skill];
+
+                      return (
+                        <Tag
+                          key={skill}
+                          color={masterDataMap[skill]?.color || "default"}
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            gap: 4,
+                            fontWeight: 600,
+                          }}
+                        >
+                          {Icon && <Icon />}
+                          {masterDataMap[skill]?.name || skill}
+                        </Tag>
+                      );
+                    })}
                   </div>
 
-                  {item.repo_links && item.repo_links.length > 0 && (
+                  {item.webLink && (
+                    <a
+                      onClick={(e) => e.stopPropagation()}
+                      href={item.webLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 text-sm flex items-center gap-1 hover:underline truncate"
+                    >
+                      <LinkIcon /> Website Demo
+                    </a>
+                  )}
+
+                  {item.repoLinks && item.repoLinks.length > 0 && (
                     <div className="flex flex-col gap-1">
                       <span className="text-xs text-gray-500">
                         Repositories:
                       </span>
-                      {item.repo_links.map((link, idx) => (
+                      {item.repoLinks.map((link, idx) => (
                         <a
-                          key={idx}
+                          key={idx + 1}
+                          onClick={(e) => e.stopPropagation()}
                           href={link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-blue-500 text-sm flex items-center gap-1 hover:underline"
+                          className="text-blue-500 text-sm flex items-center gap-1 hover:underline truncate"
                         >
-                          <GithubOutlined /> {link}
+                          <GithubIcon /> {getGithubRepoName(link)}
                         </a>
                       ))}
                     </div>
-                  )}
-
-                  {item.web_link && (
-                    <a
-                      href={item.web_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-blue-500 text-sm flex items-center gap-1 hover:underline"
-                    >
-                      <LinkOutlined /> {item.web_link}
-                    </a>
                   )}
                 </div>
               </Card>
@@ -325,7 +534,6 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
                   variant="filled"
                   color="default"
                   size="small"
-                  icon={<CloseOutlined />}
                   onClick={handleEditToggle}
                 >
                   Cancel
@@ -333,7 +541,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
               )}
               <Button
                 style={{ fontWeight: 600 }}
-                icon={isEditMode ? <SaveOutlined /> : <EditOutlined />}
+                icon={isEditMode ? <SaveIcon /> : <EditIcon />}
                 variant="solid"
                 color={isEditMode ? "volcano" : "geekblue"}
                 iconPosition="end"
@@ -378,6 +586,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
           formProps={{ form: detailForm, disabled: !isEditMode }}
           layout={formLayout}
           optionList={options}
+          formValue={dataDetail}
         />
       </Modal>
     </section>

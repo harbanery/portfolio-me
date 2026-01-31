@@ -6,8 +6,9 @@ import { loadAntdIcon } from "@/components/custom/icon";
 import { isEmpty } from "@/utils/helpers";
 import { masterDataMap } from "@/utils/helpers/category";
 import { logoMap } from "@/utils/helpers/icon";
-import { App, Button, Form } from "antd";
+import { App, Button, Form, Spin } from "antd";
 import { useEffect, useState } from "react";
+import { getPersonal, savePersonal } from "../actions";
 
 const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
   const EditIcon = loadAntdIcon("EditOutlined");
@@ -19,17 +20,47 @@ const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
   const { notification, modal } = App.useApp();
 
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(true);
   const [isEdit, setIsEdit] = useState(false);
 
   const handleEdit = () => {
     setIsEdit(!isEdit);
   };
 
+  const fetchData = async () => {
+    setFetching(true);
+    try {
+      const result = await getPersonal();
+      if (result.success && result.data) {
+        form.setFieldsValue({
+          name: result.data.name,
+          about: result.data.about,
+          skills: result.data.skills,
+          contacts: result.data.contacts,
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching personal data:", error);
+    } finally {
+      setFetching(false);
+    }
+  };
+
   const handleSave = async () => {
     setLoading(true);
     try {
       const values = await form.validateFields();
-      console.log("values personal", values);
+
+      const result = await savePersonal({
+        name: values.name,
+        about: values.about,
+        skills: values.skills,
+        contacts: values.contacts,
+      });
+
+      if (!result.success) {
+        throw new Error(result.error);
+      }
 
       notification.success({
         key: "save-success",
@@ -44,7 +75,7 @@ const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       notification.error({
         key: "save-error",
         message: error?.errorFields ? "Validation Error" : "Error",
-        ...(error?.errorFields ? {} : { description: "Failed to saved" }),
+        ...(error?.errorFields ? {} : { description: error?.message || "Failed to saved" }),
         placement: "bottomRight",
       });
 
@@ -55,7 +86,7 @@ const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
   };
 
   const handleCancel = () => {
-    form.resetFields();
+    fetchData();
     setIsEdit(!isEdit);
   };
 
@@ -81,8 +112,16 @@ const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
   };
 
   useEffect(() => {
-    form.resetFields();
+    fetchData();
   }, []);
+
+  if (fetching) {
+    return (
+      <section className="flex flex-col gap-8 items-center justify-center min-h-[300px]">
+        <Spin size="large" />
+      </section>
+    );
+  }
 
   return (
     <section className="flex flex-col gap-8">

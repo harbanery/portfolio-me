@@ -12,3 +12,9 @@ export function isEmpty(obj: any): boolean {
     return false; // numbers, booleans, etc. are NOT empty
   });
 }
+
+export function getGithubRepoName(url: string): string | null {
+  const pathname = new URL(url).pathname;
+  const parts = pathname.split("/").filter(Boolean);
+  return parts[1] || null;
+}

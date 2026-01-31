@@ -12,6 +12,7 @@ import {
   Button,
   FormProps,
   Space,
+  Switch,
 } from "antd";
 import { InboxOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import {
@@ -24,6 +25,7 @@ import {
 const GetComponent = (
   type?: string,
   name?: any,
+  value?: any,
   placeholder?: string,
   disabled?: boolean,
   Icon?: ReactNode,
@@ -138,32 +140,54 @@ const GetComponent = (
           maxCount={1}
           beforeUpload={() => false}
         >
-          <p className="ant-upload-drag-icon">
-            <InboxOutlined />
-          </p>
-          <p className="ant-upload-text">
-            Click or drag file to this area to upload
-          </p>
-          <p className="ant-upload-hint">
-            Support for a single upload. Strictly prohibited from uploading
-            company data or other banned files.
-          </p>
+          {value && typeof value === "string" ? (
+            <img
+              src={value}
+              alt="Uploaded"
+              className="w-full h-full max-h-[200px] object-contain rounded-md"
+            />
+          ) : (
+            <>
+              <p className="ant-upload-drag-icon">
+                <InboxOutlined />
+              </p>
+              <p className="ant-upload-text">
+                Click or drag file to this area to upload
+              </p>
+              <p className="ant-upload-hint">
+                Support for a single upload. Strictly prohibited from uploading
+                company data or other banned files.
+              </p>
+            </>
+          )}
         </Upload.Dragger>
       );
+    case "switch":
+      return <Switch disabled={disabled} />;
     default:
       return null;
   }
 };
 
 const getFieldDecorator = (props: FieldProps) => {
-  const { name, label, type, placeholder, disabled, icon, rules, select } =
-    props;
+  const {
+    name,
+    label,
+    value,
+    type,
+    placeholder,
+    disabled,
+    icon,
+    rules,
+    select,
+  } = props;
 
   const Icon = loadAntdIcon(icon as string);
   const renderIcon = icon ? <Icon style={{ marginRight: "4px" }} /> : null;
   const component = GetComponent(
     type,
     label,
+    value,
     placeholder,
     disabled,
     renderIcon,
@@ -179,7 +203,12 @@ const getFieldDecorator = (props: FieldProps) => {
   };
 };
 
-const FormAdmin = ({ layout, optionList, formProps }: FormAdminProps) => {
+const FormAdmin = ({
+  layout,
+  optionList,
+  formProps,
+  formValue,
+}: FormAdminProps) => {
   const renderContactList = (item: FormLayoutItem, formProps: FormProps) => {
     const contactOptions = optionList?.[item.name] || [];
     const form = formProps.form;
@@ -227,6 +256,7 @@ const FormAdmin = ({ layout, optionList, formProps }: FormAdminProps) => {
                         {GetComponent(
                           "select",
                           [name, "type"],
+                          formValue?.[item.name]?.[name]?.type,
                           `Select contact`,
                           item.disabled,
                           undefined,
@@ -250,6 +280,7 @@ const FormAdmin = ({ layout, optionList, formProps }: FormAdminProps) => {
                         {GetComponent(
                           "input",
                           [name, "value"],
+                          formValue?.[item.name]?.[name]?.value,
                           `Enter contact`,
                           item.disabled,
                         )}
@@ -324,6 +355,7 @@ const FormAdmin = ({ layout, optionList, formProps }: FormAdminProps) => {
                           {GetComponent(
                             item.type,
                             item.name,
+                            formValue?.[item.name]?.[name],
                             `Select ${item.label} ${key + 1}`,
                             item.disabled,
                             item.icon ? (
@@ -364,6 +396,7 @@ const FormAdmin = ({ layout, optionList, formProps }: FormAdminProps) => {
               {...getFieldDecorator({
                 name: item.name,
                 label: item.label,
+                value: formValue?.[item.name],
                 type: item.type,
                 placeholder: item.placeholder,
                 icon: item.icon,
