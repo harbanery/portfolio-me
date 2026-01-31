@@ -2,7 +2,18 @@
 
 import { ReactNode } from "react";
 import { loadAntdIcon } from "@/components/custom/icon";
-import { Form, Input, Select, SelectProps, Tag } from "antd";
+import {
+  Form,
+  Input,
+  Select,
+  SelectProps,
+  Tag,
+  Upload,
+  Button,
+  FormProps,
+  Space,
+} from "antd";
+import { InboxOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import {
   FieldProps,
   FormAdminProps,
@@ -12,21 +23,21 @@ import {
 
 const GetComponent = (
   type?: string,
-  name?: string,
+  name?: any,
   placeholder?: string,
   disabled?: boolean,
   Icon?: ReactNode,
-  select?: SelectProps
+  select?: SelectProps,
 ) => {
   let templatePlaceholder;
   switch (type) {
     case "input":
     case "textarea":
-      templatePlaceholder = name && "Enter " + name;
+      templatePlaceholder = placeholder ?? (name && "Enter " + name);
       break;
     case "select":
     case "select_multiple":
-      templatePlaceholder = name && "Enter " + name;
+      templatePlaceholder = placeholder ?? (name && "Select " + name);
       break;
     default:
       templatePlaceholder = placeholder;
@@ -45,7 +56,7 @@ const GetComponent = (
 
   const tagRender: SelectProps["tagRender"] = (props) => {
     const selected = select?.options?.find(
-      (item) => item.value === props.value
+      (item) => item.value === props.value,
     );
 
     return (
@@ -68,7 +79,7 @@ const GetComponent = (
 
   const labelRender: SelectProps["labelRender"] = (props) => {
     const selected = select?.options?.find(
-      (item) => item.value === props.value
+      (item) => item.value === props.value,
     );
 
     return (
@@ -118,6 +129,27 @@ const GetComponent = (
           tagRender={tagRender}
         />
       );
+    case "upload":
+      return (
+        <Upload.Dragger
+          name={name}
+          disabled={disabled}
+          multiple={false}
+          maxCount={1}
+          beforeUpload={() => false}
+        >
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">
+            Click or drag file to this area to upload
+          </p>
+          <p className="ant-upload-hint">
+            Support for a single upload. Strictly prohibited from uploading
+            company data or other banned files.
+          </p>
+        </Upload.Dragger>
+      );
     default:
       return null;
   }
@@ -135,7 +167,7 @@ const getFieldDecorator = (props: FieldProps) => {
     placeholder,
     disabled,
     renderIcon,
-    select
+    select,
   );
 
   return {
@@ -148,6 +180,113 @@ const getFieldDecorator = (props: FieldProps) => {
 };
 
 const FormAdmin = ({ layout, optionList, formProps }: FormAdminProps) => {
+  const renderContactList = (item: FormLayoutItem, formProps: FormProps) => {
+    const contactOptions = optionList?.[item.name] || [];
+    const form = formProps.form;
+
+    return (
+      <Form.List key={item.name} name={item.name}>
+        {(fields, { add, remove }) => {
+          const usedTypes = fields
+            .map((f) => form?.getFieldValue([item.name, f.name, "type"]))
+            .filter(Boolean);
+
+          return (
+            <div className="flex flex-col gap-2">
+              <label className="ant-form-item-required">{item.label}</label>
+              {fields.map(({ key, name, ...restField }) => {
+                const currentType = form?.getFieldValue([
+                  item.name,
+                  name,
+                  "type",
+                ]);
+                const availableOptions = contactOptions.filter(
+                  (opt) =>
+                    !usedTypes.includes(opt.value) || currentType === opt.value,
+                );
+
+                return (
+                  <div key={key} className="flex gap-2">
+                    <Space.Compact key={key} style={{ width: "100%" }}>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "type"]}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Contact type is required",
+                          },
+                        ]}
+                        className="mb-0"
+                        style={{
+                          marginBottom: 0,
+                          width: "140px",
+                          flex: "none",
+                        }}
+                      >
+                        {GetComponent(
+                          "select",
+                          [name, "type"],
+                          `Select contact`,
+                          item.disabled,
+                          undefined,
+                          {
+                            options: availableOptions,
+                          },
+                        )}
+                      </Form.Item>
+                      <Form.Item
+                        {...restField}
+                        name={[name, "value"]}
+                        rules={[
+                          {
+                            required: true,
+                            message: "Contact value is required",
+                          },
+                        ]}
+                        className="mb-0"
+                        style={{ marginBottom: 0, flex: 1 }}
+                      >
+                        {GetComponent(
+                          "input",
+                          [name, "value"],
+                          `Enter contact`,
+                          item.disabled,
+                        )}
+                      </Form.Item>
+                    </Space.Compact>
+
+                    <Button
+                      danger
+                      disabled={item.disabled}
+                      onClick={() => remove(name)}
+                      icon={<DeleteOutlined />}
+                    />
+                  </div>
+                );
+              })}
+              <Button
+                type="dashed"
+                disabled={
+                  item.disabled ||
+                  formProps.disabled ||
+                  usedTypes.length >= contactOptions.length
+                }
+                onClick={() => add({ value: "" })}
+                icon={<PlusOutlined />}
+                block
+              >
+                {usedTypes.length >= contactOptions.length
+                  ? "All contacts added"
+                  : "Add Contact"}
+              </Button>
+            </div>
+          );
+        }}
+      </Form.List>
+    );
+  };
+
   const renderForm = (layout: FormLayout[]) =>
     layout.map((form: FormLayout) => (
       <div key={form?.title?.toLowerCase() ?? form.key}>
@@ -155,38 +294,107 @@ const FormAdmin = ({ layout, optionList, formProps }: FormAdminProps) => {
           {form.title}
         </h1>
         <hr hidden={!form.title} className="py-1 border-neutral-500/50" />
-        {form.items.map((item: FormLayoutItem) => (
-          <Form.Item
-            key={item.name}
-            {...getFieldDecorator({
-              name: item.name,
-              label: item.label,
-              type: item.type,
-              placeholder: item.placeholder,
-              icon: item.icon,
-              disabled: item.disabled,
-              rules: item.required
-                ? [
-                    ...(item.rules ?? []),
-                    {
-                      required: true,
-                      message: `${
-                        item.label ?? form?.title ?? "This input"
-                      } is required.`,
-                    },
-                  ]
-                : item.rules,
-              select: {
-                options: optionList?.[item.name],
-              },
-            })}
-          />
-        ))}
+        {form.items.map((item: FormLayoutItem) => {
+          if (item.type === "contact_list") {
+            return renderContactList(item, formProps as FormProps);
+          }
+
+          if (item.isList) {
+            const Icon = loadAntdIcon(item.icon as string);
+            return (
+              <Form.List key={item.name} name={item.name}>
+                {(fields, { add, remove }) => (
+                  <div className="flex flex-col gap-2">
+                    <label className="ant-form-item-required">
+                      {item.label}
+                    </label>
+                    {fields.map(({ key, name, ...restField }) => (
+                      <div key={key} className="flex gap-2">
+                        <Form.Item
+                          {...restField}
+                          name={name}
+                          rules={[
+                            {
+                              required: item.required,
+                              message: `${item.label || item.name} is required.`,
+                            },
+                          ]}
+                          className="!mb-0 flex-1"
+                        >
+                          {GetComponent(
+                            item.type,
+                            item.name,
+                            `Select ${item.label} ${key + 1}`,
+                            item.disabled,
+                            item.icon ? (
+                              <Icon style={{ marginRight: "4px" }} />
+                            ) : undefined,
+                            {
+                              options: optionList?.[item.name],
+                            },
+                          )}
+                        </Form.Item>
+                        <Button
+                          danger
+                          disabled={item.disabled}
+                          onClick={() => remove(name)}
+                          icon={<DeleteOutlined />}
+                        />
+                      </div>
+                    ))}
+                    <Button
+                      type="dashed"
+                      disabled={item.disabled}
+                      onClick={() => add()}
+                      icon={<PlusOutlined />}
+                      block
+                      style={{ margin: "0 0 24px", padding: 0 }}
+                    >
+                      Add {item.label || item.name}
+                    </Button>
+                  </div>
+                )}
+              </Form.List>
+            );
+          }
+
+          return (
+            <Form.Item
+              key={item.name}
+              {...getFieldDecorator({
+                name: item.name,
+                label: item.label,
+                type: item.type,
+                placeholder: item.placeholder,
+                icon: item.icon,
+                disabled: item.disabled,
+                rules: item.required
+                  ? [
+                      ...(item.rules ?? []),
+                      {
+                        required: true,
+                        message: `${
+                          item.label ?? form?.title ?? "This input"
+                        } is required.`,
+                      },
+                    ]
+                  : item.rules,
+                select: {
+                  options: optionList?.[item.name],
+                },
+              })}
+            />
+          );
+        })}
       </div>
     ));
 
   return (
-    <Form {...formProps} layout={formProps?.layout ?? "vertical"}>
+    <Form
+      autoComplete="off"
+      {...formProps}
+      layout={formProps?.layout ?? "vertical"}
+    >
       {renderForm(layout)}
     </Form>
   );

@@ -27,7 +27,7 @@ export type FormLayoutItem = {
 
 export interface FieldProps {
   key?: string;
-  name: string;
+  name: any;
   label?: string;
   type?: string;
   placeholder?: string;
