@@ -23,9 +23,9 @@ export const formLayout: FormLayout[] = [
     items: [
       {
         name: "skills",
-        // label: "Name",
         type: "select_multiple",
         required: true,
+        placeholder: "Select skills",
       },
     ],
   },
@@ -34,31 +34,10 @@ export const formLayout: FormLayout[] = [
     title: "Contact",
     items: [
       {
-        name: "whatsapp",
-        type: "input",
-        icon: "WhatsAppOutlined",
+        name: "contacts",
+        type: "contact_list",
+        isList: true,
       },
-      {
-        name: "linkedin",
-        type: "input",
-        icon: "LinkedinOutlined",
-      },
-      // {
-      //   name: "contact_list",
-      //   isList: true,
-      //   itemList: [
-      //     {
-      //       name: "whatsapp",
-      //       type: "input",
-      //       icon: "WhatsAppOutlined",
-      //     },
-      //     {
-      //       name: "linkedin",
-      //       type: "input",
-      //       icon: "LinkedinOutlined",
-      //     },
-      //   ],
-      // },
     ],
   },
 ];

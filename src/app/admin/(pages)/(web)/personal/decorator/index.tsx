@@ -27,6 +27,7 @@ const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
     setLoading(true);
     try {
       const values = await form.validateFields();
+      console.log("values personal", values);
 
       notification.success({
         key: "save-success",
@@ -59,6 +60,15 @@ const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
   const options = {
     skills: Object.keys(logoMap)
       .filter((key) => masterDataMap[key].category.includes("skill"))
+      .map((key) => ({
+        label: masterDataMap[key].name,
+        value: key,
+        type: masterDataMap[key].category,
+        Icon: logoMap[key],
+        color: masterDataMap[key].color,
+      })),
+    contacts: Object.keys(logoMap)
+      .filter((key) => masterDataMap[key].category.includes("contact"))
       .map((key) => ({
         label: masterDataMap[key].name,
         value: key,
