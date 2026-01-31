@@ -5,7 +5,7 @@ import { FormLayout } from "@/app/admin/interfaces/form";
 import { loadAntdIcon } from "@/components/custom/icon";
 import { masterDataMap } from "@/utils/helpers/category";
 import { logoMap } from "@/utils/helpers/icon";
-import { App, Button, Form, Modal, Card, Tag, Empty, Spin, Badge } from "antd";
+import { App, Button, Form, Modal, Card, Tag, Empty, Spin, Image } from "antd";
 import { useEffect, useState } from "react";
 import {
   getPortfolios,
@@ -427,16 +427,18 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
                     </div>
                   </div>
 
-                  <div>
-                    <img
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <Image
+                      preview={{
+                        toolbarRender: () => [],
+                      }}
                       src={item.image}
                       alt={item.title}
-                      className="w-full h-48 object-cover rounded-md"
                     />
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-700 line-clamp-3">
+                    <p className="text-sm text-gray-700 line-clamp-3 text-justify">
                       {item.description ?? "No description provided."}
                     </p>
                   </div>
