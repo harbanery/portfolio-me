@@ -9,25 +9,26 @@ import Link from "next/link";
 import { MdArrowCircleRight } from "react-icons/md";
 import { FaGithub } from "react-icons/fa";
 import { logoMap } from "@/utils/helpers/icon";
+import { getGithubRepoName } from "@/utils/helpers";
 
 const CardProject = ({ data }: any) => {
   const sourceList = data?.source?.map((item: any) => item) || [];
   const skillList = data?.tools
-    .filter((tool: string) => logoMap[tool])
+    ?.filter((tool: string) => logoMap[tool])
     .map((tool: string) => ({
       key: tool,
       icon: logoMap[tool],
     }));
 
   const renderSkillList = (list: any[]) => {
-    if (list.length === 0)
+    if (list?.length === 0)
       return (
         <CardItem translateZ={50}>
           <div className="h-10"></div>
         </CardItem>
       );
 
-    return list.map((item) => (
+    return list?.map((item) => (
       <CardItem key={item.key} translateZ={50}>
         <item.icon size={40} />
       </CardItem>
@@ -47,11 +48,11 @@ const CardProject = ({ data }: any) => {
         key={item.name}
         translateZ={50}
         as={Link}
-        href={item?.link}
+        href={item?.link ?? "#"}
         target="__blank"
         className="px-4 py-2 truncate rounded-xl text-sm font-semibold bg-black text-white dark:bg-white dark:text-white flex justify-start items-center gap-2"
       >
-        <FaGithub size={16} /> {item?.name ?? item?.link}
+        <FaGithub size={16} /> {getGithubRepoName(item?.link) ?? item?.name}
       </CardItem>
     ));
   };
@@ -74,15 +75,17 @@ const CardProject = ({ data }: any) => {
               {data?.role}
             </CardItem>
           </div>
-          <CardItem
-            translateZ={50}
-            as={Link}
-            href={data?.link}
-            target="__blank"
-            className="px-4 py-2 rounded-xl text-xs font-normal bg-[#3a52dc] text-white dark:bg-white dark:text-white flex gap-2"
-          >
-            View <MdArrowCircleRight size={16} />
-          </CardItem>
+          {data?.link && (
+            <CardItem
+              translateZ={50}
+              as={Link}
+              href={data.link}
+              target="__blank"
+              className="px-4 py-2 rounded-xl text-xs font-normal bg-[#3a52dc] text-white dark:bg-white dark:text-white flex gap-2"
+            >
+              View <MdArrowCircleRight size={16} />
+            </CardItem>
+          )}
         </CardBody>
         <CardItem translateZ="200" className="w-full">
           <Image

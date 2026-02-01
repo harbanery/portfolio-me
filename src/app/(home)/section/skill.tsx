@@ -1,18 +1,21 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import skills from "@/data/skills.json";
 import { logoMap } from "@/utils/helpers/icon";
 
-const SkillSection = () => {
+interface SkillSectionProps {
+  skills?: string[];
+}
+
+const SkillSection = ({ skills = [] }: SkillSectionProps) => {
   const sliderRef = useRef<HTMLDivElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
 
   const skillList = skills
-    .filter((skill) => logoMap[skill.key])
+    .filter((skill) => logoMap[skill])
     .map((skill) => ({
-      ...skill,
-      icon: logoMap[skill.key],
+      key: skill,
+      icon: logoMap[skill],
     }));
 
   const renderList = (list: any[]) => {

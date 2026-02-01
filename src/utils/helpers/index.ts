@@ -18,3 +18,20 @@ export function getGithubRepoName(url: string): string | null {
   const parts = pathname.split("/").filter(Boolean);
   return parts[1] || null;
 }
+
+export function formatURLContact(value: string, type: string): string {
+  switch (type) {
+    case "mail":
+      return `mailto:${value}`;
+    case "phone":
+      return `tel:${value}`;
+    case "linkedin":
+      return `https://www.linkedin.com/in/${value}`;
+    case "github":
+      return `https://github.com/${value}`;
+    case "whatsapp":
+      return `https://wa.me/${value}`;
+    default:
+      return value;
+  }
+}

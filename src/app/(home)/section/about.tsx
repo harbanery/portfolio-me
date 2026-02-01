@@ -4,9 +4,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/shadcn/ui/card";
-import abouts from "@/data/about.json";
 
-const AboutSection = () => {
+interface AboutSectionProps {
+  about?: string | null;
+}
+
+const AboutSection = ({ about }: AboutSectionProps) => {
+  if (!about) return null;
+
   return (
     <section
       id="about"
@@ -17,14 +22,11 @@ const AboutSection = () => {
           <CardTitle className="text-white text-center font-bebas tracking-wide font-bold text-7xl">
             About
           </CardTitle>
-          {abouts?.map((about, index) => (
-            <CardDescription
-              key={index}
-              className="text-white text-justify font-inter font-light text-2xl indent-14"
-            >
-              {about}
-            </CardDescription>
-          ))}
+
+          <CardDescription
+            className="text-white text-justify font-inter font-light text-2xl indent-14"
+            dangerouslySetInnerHTML={{ __html: about }}
+          />
         </CardHeader>
       </Card>
     </section>

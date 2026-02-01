@@ -5,32 +5,42 @@ import {
   CardTitle,
 } from "@/components/shadcn/ui/card";
 import Link from "next/link";
-import contacts from "@/data/socmed.json";
 import { logoMap } from "@/utils/helpers/icon";
+import { formatURLContact } from "@/utils/helpers";
 
-const ContactSection = () => {
-  const contactList = contacts
-    .filter((contact) => logoMap[contact.key] && contact.active)
-    .map((contact) => ({
-      ...contact,
-      icon: logoMap[contact.key],
-    }));
+interface Contact {
+  type: string;
+  value: string;
+}
 
-  const renderList = (list: any[]) => {
-    return list.map((item) => (
-      <Link
-        key={item.key}
-        href={item.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={item.key === "mail" ? "mx-2" : ""}
-      >
-        <item.icon
-          size={60}
-          className="text-white hover:text-white/50 transition-all duration-300 ease-in-out"
-        />
-      </Link>
-    ));
+interface ContactSectionProps {
+  contacts?: any;
+}
+
+const ContactSection = ({ contacts }: ContactSectionProps) => {
+  const contactList: Contact[] = Array.isArray(contacts)
+    ? contacts.filter((contact) => logoMap[contact.type])
+    : [];
+
+  const renderList = (list: Contact[]) => {
+    return list.map((item) => {
+      const Icon = logoMap[item.type];
+      if (!Icon) return null;
+      return (
+        <Link
+          key={`${item.type}-${item.value}`}
+          href={formatURLContact(item.value, item.type) || "#"}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={item.type === "mail" ? "mx-2" : ""}
+        >
+          <Icon
+            size={60}
+            className="text-white hover:text-white/50 transition-all duration-300 ease-in-out"
+          />
+        </Link>
+      );
+    });
   };
 
   return (

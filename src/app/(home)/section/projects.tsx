@@ -1,7 +1,19 @@
 import CardProject from "@/components/custom/card/project";
-import projects from "@/data/projects.json";
 
-const ProjectSection = () => {
+interface ProjectSectionProps {
+  projects: Array<{
+    id: number;
+    title: string;
+    role: string;
+    image: string;
+    description: string | null;
+    skills: string[];
+    repoLinks: string[];
+    webLink: string | null;
+  }>;
+}
+
+const ProjectSection = ({ projects }: ProjectSectionProps) => {
   return (
     <section
       id="projects"
@@ -11,8 +23,22 @@ const ProjectSection = () => {
         Portfolio
       </h1>
       <div className="flex justify-center flex-1 gap-x-10 md:gap-x-5 flex-wrap">
-        {projects.map((project, index) => (
-          <CardProject key={index} data={project} />
+        {projects.map((project) => (
+          <CardProject
+            key={project.id}
+            data={{
+              title: project.title,
+              role: project.role,
+              image: project.image,
+              description: project.description,
+              tools: project.skills,
+              source: project.repoLinks.map((repoLink, index) => ({
+                name: `Source ${index + 1}`,
+                link: repoLink,
+              })),
+              link: project.webLink,
+            }}
+          />
         ))}
       </div>
     </section>
