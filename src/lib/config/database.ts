@@ -1,20 +1,12 @@
-import { Pool, PoolConfig } from "pg";
-import {
-  DB_HOST,
-  DB_NAME,
-  DB_PASSWORD,
-  DB_PORT,
-  DB_USERNAME,
-} from "./variables";
+import { PrismaClient } from "@prisma/client";
+import { NODE_ENV } from "./variables";
 
-const options: PoolConfig = {
-  host: DB_HOST || "",
-  database: DB_NAME || "",
-  user: DB_USERNAME || "",
-  password: DB_PASSWORD || "",
-  port: Number(DB_PORT) || 0,
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient | undefined;
 };
 
-const db = new Pool(options);
+export const prisma = globalForPrisma.prisma ?? new PrismaClient();
 
-export default db;
+if (NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+
+export default prisma;

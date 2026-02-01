@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/lib/prisma";
+import prisma from "@/lib/config/database";
 
 export interface PersonalData {
   id?: number;
