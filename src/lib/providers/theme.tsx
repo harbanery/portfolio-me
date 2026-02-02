@@ -1,55 +1,55 @@
 "use client";
 
 import React from "react";
-import { ConfigProvider } from "antd";
-import { ThemeProvider, useTheme } from "next-themes";
+import { ConfigProvider, theme as antdTheme } from "antd";
+import { ThemeProvider, useTheme as useNextTheme } from "next-themes";
 import type { ThemeProviderProps } from "next-themes";
 import { customThemes } from "../config/themes";
 
-export interface ColorModeProviderProps extends ThemeProviderProps {}
+export interface ColorModeProviderProps extends ThemeProviderProps {
+  children: React.ReactNode;
+}
 
-export type ColorMode = keyof typeof customThemes | "system";
+export type ColorMode = "light" | "dark" | "system";
 
-export function ColorModeProvider(props: ColorModeProviderProps) {
-  const { resolvedTheme, forcedTheme } = useTheme();
-  const colorMode = (forcedTheme || resolvedTheme) as ColorMode;
-
-  const effectiveTheme: keyof typeof customThemes =
-    colorMode === "system"
-      ? window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light"
-      : colorMode;
-
-  const antdThemeConfig = customThemes[effectiveTheme] || customThemes.light;
-
+export function ColorModeProvider({ children, ...props }: ColorModeProviderProps) {
   return (
-    <ThemeProvider attribute="class" disableTransitionOnChange {...props}>
-      <ConfigProvider theme={antdThemeConfig}>{props.children}</ConfigProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem {...props}>
+      <ColorModeContent>{children}</ColorModeContent>
     </ThemeProvider>
   );
 }
 
-export function useColorMode() {
-  const { resolvedTheme, setTheme, forcedTheme } = useTheme();
-  const colorMode = (forcedTheme || resolvedTheme) as ColorMode;
-
-  const toggleColorMode = () => {
-    const modes = Object.keys(customThemes);
-    const currentIndex = modes.indexOf(colorMode);
-    const nextIndex = (currentIndex + 1) % modes.length;
-    setTheme(modes[nextIndex]);
+function ColorModeContent({ children }: { children: React.ReactNode }) {
+  const { resolvedTheme, systemTheme } = useNextTheme();
+  
+  const isDark = resolvedTheme === "dark" || (resolvedTheme === "system" && systemTheme === "dark");
+  
+  const antdThemeConfig = {
+    algorithm: isDark ? antdTheme.darkAlgorithm : antdTheme.defaultAlgorithm,
+    token: {
+      colorPrimary: isDark ? "#1f6feb" : "#1890ff",
+    },
   };
 
-  return { colorMode, setColorMode: setTheme, toggleColorMode };
+  return <ConfigProvider theme={antdThemeConfig}>{children}</ConfigProvider>;
 }
 
-const AntdThemeProvider = (props: ColorModeProviderProps) => {
-  return (
-    <ConfigProvider>
-      <ColorModeProvider {...props} />
-    </ConfigProvider>
-  );
-};
+export function useColorMode() {
+  const { theme, setTheme, resolvedTheme, systemTheme } = useNextTheme();
+  
+  const colorMode = (theme || "system") as ColorMode;
+  
+  const setColorMode = (mode: ColorMode) => {
+    setTheme(mode);
+  };
 
-export default AntdThemeProvider;
+  return { 
+    colorMode, 
+    resolvedTheme,
+    systemTheme,
+    setColorMode,
+  };
+}
+
+export default ColorModeProvider;

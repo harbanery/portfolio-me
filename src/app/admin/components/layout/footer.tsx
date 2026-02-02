@@ -1,10 +1,12 @@
 "use client";
 
+import { useColorMode } from "@/lib/providers/theme";
 import { Layout } from "antd";
 
 const { Footer } = Layout;
 
 const FooterLayout: React.FC = () => {
+  const color = useColorMode();
   return (
     <Footer
       style={{
@@ -20,7 +22,7 @@ const FooterLayout: React.FC = () => {
         paddingBlock: 16,
         paddingInline: 40,
         // temp
-        background: "white",
+        background: color.resolvedTheme === "dark" ? "#141414" : "#ffffff",
       }}
     >
       Footer

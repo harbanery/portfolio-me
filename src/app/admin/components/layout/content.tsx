@@ -1,5 +1,6 @@
 "use client";
 
+import { useColorMode } from "@/lib/providers/theme";
 import { Layout } from "antd";
 
 const { Content } = Layout;
@@ -9,6 +10,7 @@ const ContentLayout: React.FC<{ children: React.ReactNode }> = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const color = useColorMode();
   return (
     <Content
       style={{
@@ -26,7 +28,7 @@ const ContentLayout: React.FC<{ children: React.ReactNode }> = ({
       <div
         style={{
           padding: "1px",
-          background: "white",
+          background: color.resolvedTheme === "dark" ? "#141414" : "#ffffff",
           borderRadius: "5px",
         }}
       >

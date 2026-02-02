@@ -3,6 +3,7 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import { App } from "antd";
 import { ACCESS_ADMIN } from "@/lib/config/variables";
 import { notFound } from "next/navigation";
+import { ColorModeProvider } from "@/lib/providers/theme";
 
 export default function AdminRootLayout({
   children,
@@ -14,10 +15,10 @@ export default function AdminRootLayout({
   }
 
   return (
-    // <AntdThemeProvider>
-    <AntdRegistry>
-      <App>{children}</App>
-    </AntdRegistry>
-    // </AntdThemeProvider>
+    <ColorModeProvider>
+      <AntdRegistry>
+        <App>{children}</App>
+      </AntdRegistry>
+    </ColorModeProvider>
   );
 }

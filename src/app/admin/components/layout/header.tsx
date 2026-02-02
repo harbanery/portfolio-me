@@ -2,9 +2,11 @@
 
 import { loadAntdIcon } from "@/components/custom/icon";
 import { menuAdmin } from "@/utils/helpers/menu";
-import { Breadcrumb, Button, Layout, message, Modal } from "antd";
+import { Breadcrumb, Button, Layout, message, Modal, Space } from "antd";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { ThemeSelector } from "../theme-selector";
+import { useColorMode } from "@/lib/providers/theme";
 
 const { Header } = Layout;
 
@@ -13,9 +15,12 @@ const HeaderLayout: React.FC = ({
 }: {
   theme?: "dark" | "light";
 }) => {
+  const color = useColorMode();
   const pathname = usePathname();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+
+  console.log("Current color mode in HeaderLayout:", color);
 
   const LogoutIcon = loadAntdIcon("LogoutOutlined");
 
@@ -92,25 +97,23 @@ const HeaderLayout: React.FC = ({
         gap: 16,
         paddingBlock: 16,
         paddingInline: 40,
-        // temp
-        backgroundColor: "white",
+        backgroundColor: color.resolvedTheme === "dark" ? "#141414" : "#ffffff",
       }}
     >
-      {/* <nav
-        className={`flex justify-between items-start gap-4 px-10 py-4 w-full`}
-      > */}
       <Breadcrumb style={{ fontWeight: 600 }} items={breadcrumbItems} />
-      <Button
-        style={{ fontWeight: 600 }}
-        icon={<LogoutIcon />}
-        type="text"
-        iconPosition="end"
-        loading={loading}
-        onClick={handleLogout}
-      >
-        Logout
-      </Button>
-      {/* </nav> */}
+      <Space size="middle">
+        <ThemeSelector />
+        <Button
+          style={{ fontWeight: 600 }}
+          icon={<LogoutIcon />}
+          type="text"
+          iconPosition="end"
+          loading={loading}
+          onClick={handleLogout}
+        >
+          Logout
+        </Button>
+      </Space>
     </Header>
   );
 };
