@@ -4,7 +4,7 @@ export const menuAdmin = [
     label: "Dashboard",
     link: "/admin",
     icon: "DashboardOutlined",
-    active: false,
+    active: true,
   },
   {
     key: "personal",

@@ -16,6 +16,7 @@ import {
   PortfolioStatus,
 } from "../actions";
 import { getGithubRepoName } from "@/utils/helpers";
+import LoaderPage from "@/app/admin/components/loader";
 
 interface PortfolioItem {
   id: number;
@@ -321,12 +322,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
     fetchPortfolios();
   }, []);
 
-  if (fetching)
-    return (
-      <section className="flex flex-col gap-8 items-center justify-center min-h-[300px]">
-        <Spin size="large" />
-      </section>
-    );
+  if (fetching) return <LoaderPage />;
 
   return (
     <section className="flex flex-col gap-8">

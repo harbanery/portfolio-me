@@ -9,6 +9,7 @@ import { logoMap } from "@/utils/helpers/icon";
 import { App, Button, Form, Spin } from "antd";
 import { useEffect, useState } from "react";
 import { getPersonal, savePersonal } from "../actions";
+import LoaderPage from "@/app/admin/components/loader";
 
 const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
   const EditIcon = loadAntdIcon("EditOutlined");
@@ -75,7 +76,9 @@ const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       notification.error({
         key: "save-error",
         message: error?.errorFields ? "Validation Error" : "Error",
-        ...(error?.errorFields ? {} : { description: error?.message || "Failed to saved" }),
+        ...(error?.errorFields
+          ? {}
+          : { description: error?.message || "Failed to saved" }),
         placement: "bottomRight",
       });
 
@@ -115,13 +118,7 @@ const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
     fetchData();
   }, []);
 
-  if (fetching) {
-    return (
-      <section className="flex flex-col gap-8 items-center justify-center min-h-[300px]">
-        <Spin size="large" />
-      </section>
-    );
-  }
+  if (fetching) return <LoaderPage />;
 
   return (
     <section className="flex flex-col gap-8">

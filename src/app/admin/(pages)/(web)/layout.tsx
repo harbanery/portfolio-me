@@ -1,4 +1,5 @@
 import BaseLayout from "../../components/layout";
+import AdminMenuGuard from "../../components/protected";
 
 export default function AdminLayout({
   children,
@@ -7,7 +8,9 @@ export default function AdminLayout({
 }>) {
   return (
     <BaseLayout>
-      <div className="px-12 py-8">{children}</div>
+      <AdminMenuGuard>
+        <div className="px-12 py-8">{children}</div>
+      </AdminMenuGuard>
     </BaseLayout>
   );
 }
