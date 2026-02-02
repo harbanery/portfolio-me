@@ -24,7 +24,7 @@ const AboutSection = ({ about }: AboutSectionProps) => {
           </CardTitle>
 
           <CardDescription
-            className="text-white text-justify font-inter font-light text-2xl indent-14"
+            className="text-white text-justify font-inter text-2xl indent-14"
             dangerouslySetInnerHTML={{ __html: about }}
           />
         </CardHeader>
