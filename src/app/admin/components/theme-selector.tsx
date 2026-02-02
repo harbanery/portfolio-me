@@ -4,6 +4,7 @@ import { Dropdown, Button } from "antd";
 import { loadAntdIcon } from "@/components/custom/icon";
 import { useColorMode } from "@/lib/providers/theme";
 import type { MenuProps } from "antd";
+import { useEffect, useState } from "react";
 
 const SunIcon = loadAntdIcon("SunOutlined");
 const MoonIcon = loadAntdIcon("MoonOutlined");
@@ -11,6 +12,15 @@ const LaptopIcon = loadAntdIcon("LaptopOutlined");
 
 export function ThemeSelector() {
   const { colorMode, setColorMode, resolvedTheme } = useColorMode();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   const getIcon = () => {
     const effectiveTheme = resolvedTheme === "dark" ? "dark" : "light";
@@ -63,7 +73,7 @@ export function ThemeSelector() {
   return (
     <Dropdown menu={{ items }} trigger={["click"]} placement="bottomRight">
       <Button type="text" icon={getIcon()} iconPosition="end">
-        {getLabel()}
+        <span suppressHydrationWarning>{getLabel()}</span>
       </Button>
     </Dropdown>
   );
