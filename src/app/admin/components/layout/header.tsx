@@ -39,6 +39,7 @@ const HeaderLayout: React.FC = ({
       title: "Logout",
       content: "Are you sure you want to logout?",
       okText: "Yes",
+      okButtonProps: { type: "primary", danger: true },
       okType: "danger",
       cancelText: "No",
       onOk: async () => {

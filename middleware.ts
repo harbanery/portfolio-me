@@ -1,14 +1,16 @@
+import { ACCESS_ADMIN } from "@/lib/config/variables";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 // Paths that don't require authentication
 const publicPaths = ["/admin/auth", "/admin/auth/login", "/admin/auth/api"];
 
-// Paths that require authentication
-const protectedPaths = ["/admin"];
-
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+
+  if (!ACCESS_ADMIN) {
+    return NextResponse.next();
+  }
 
   // Check if the path is in the admin section
   if (pathname.startsWith("/admin")) {
