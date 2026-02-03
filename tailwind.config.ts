@@ -40,6 +40,7 @@ const config: Config = {
       fontFamily: {
         inter: ["var(--font-inter)", "sans-serif"],
         bebas: ["var(--font-bebas)", "sans-serif"],
+        "neue-haas": ["var(--font-neue-haas-display)", "sans-serif"],
       },
       colors: {
         background: "hsl(var(--background))",

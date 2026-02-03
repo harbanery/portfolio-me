@@ -1,16 +1,74 @@
 "use client";
 
-import { BiSolidFilePdf } from "react-icons/bi";
+import { Menu, X } from "lucide-react";
+import { useState } from "react";
 
 const Navbar = () => {
-  return (
-    <nav className="flex justify-between items-start gap-4 px-20 py-4 w-full bg-slate-950/90 fixed z-10 top-0 left-0">
-      <div />
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-      <button className="px-3 py-2 bg-[#3a52dc] text-lg font-inter font-bold text-white flex items-center gap-1 rounded-xl">
-        <BiSolidFilePdf size={32} /> Download
-      </button>
-    </nav>
+  const navLinks = [
+    { name: "HOME", href: "#hero" },
+    { name: "ABOUT", href: "#about" },
+    { name: "EXPERTISE", href: "#skills" },
+    { name: "PROJECTS", href: "#projects" },
+    { name: "CONTACT", href: "#contact" }
+  ];
+
+  return (
+    <>
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-gray-900">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            <div className="flex-shrink-0">
+              <span className="text-2xl font-neue-haas font-light text-white tracking-wider">
+                RY
+              </span>
+            </div>
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-12">
+              {navLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className="text-sm font-neue-haas text-gray-400 hover:text-white transition-colors tracking-wider font-light"
+                >
+                  {link.name}
+                </a>
+              ))}
+            </div>
+
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="text-white hover:text-gray-300 transition-colors"
+              >
+                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile menu */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-black border-b border-gray-900">
+            <div className="px-6 py-4 space-y-4">
+              {navLinks.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="block text-sm font-neue-haas text-gray-400 hover:text-white transition-colors tracking-wider font-light py-2"
+                >
+                  {link.name}
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </nav>
+    </>
   );
 };
 

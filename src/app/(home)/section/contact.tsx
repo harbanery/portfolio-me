@@ -1,9 +1,3 @@
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/shadcn/ui/card";
 import Link from "next/link";
 import { logoMap } from "@/utils/helpers/icon";
 import { formatURLContact } from "@/utils/helpers";
@@ -22,48 +16,55 @@ const ContactSection = ({ contacts }: ContactSectionProps) => {
     ? contacts.filter((contact) => logoMap[contact.type])
     : [];
 
-  const renderList = (list: Contact[]) => {
-    return list.map((item) => {
-      const Icon = logoMap[item.type];
-      if (!Icon) return null;
-      return (
-        <Link
-          key={`${item.type}-${item.value}`}
-          href={formatURLContact(item.value, item.type) || "#"}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={item.type === "mail" ? "mx-2" : ""}
-        >
-          <Icon
-            size={60}
-            className="text-white hover:text-white/50 transition-all duration-300 ease-in-out"
-          />
-        </Link>
-      );
-    });
-  };
-
   return (
     <section
       id="contact"
-      className="bg-gradient-to-b from-slate-900 from-0% to-transparent to-100% w-full h-auto relative p-20 max-h"
+      className="h-full bg-black flex items-center justify-center px-4 py-20"
     >
-      <Card className="w-full rounded-2xl px-10 py-7 bg-gradient-to-tl from-[#008cff] from-5% via-[#3a52dc] via-40% to-[#0051a7] to-95% flex justify-between">
-        <Card className="w-2/5">
-          <CardHeader className="gap-1">
-            <CardTitle className="text-white text-left font-bebas tracking-wide font-bold text-7xl">
-              Get in Touch
-            </CardTitle>
-            <CardDescription className="text-white font-inter font-light text-xl">
-              If you are interested in my work or want to provide feedback about
-              this website, I am open to exchanging ideas.
-            </CardDescription>
-          </CardHeader>
-        </Card>
-        <div className="flex flex-wrap max-w-lg items-end justify-end gap-4">
-          {renderList(contactList)}
+      <div className="max-w-4xl mx-auto w-full text-center">
+        <h2 className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-20">
+          Contact
+        </h2>
+
+        <p className="text-xl text-gray-400 font-neue-haas font-light mb-16 max-w-3xl mx-auto leading-relaxed">
+          I'm always interested in hearing about new projects and opportunities.
+          Whether you have a question or just want to say hi, feel free to reach
+          out!
+        </p>
+
+        <div className="flex flex-col items-center gap-12">
+          <a
+            href="mailto:hello@raihanyusuf.com"
+            className="bg-white text-black px-16 py-5 rounded-none font-neue-haas text-sm font-medium tracking-wider hover:bg-gray-200 transition-colors"
+          >
+            GET IN TOUCH
+          </a>
+
+          <div className="flex gap-12 justify-center">
+            {contactList.map((item) => {
+              const Icon = logoMap[item.type];
+              if (!Icon) return null;
+              return (
+                <Link
+                  key={`${item.type}-${item.value}`}
+                  href={formatURLContact(item.value, item.type) || "#"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <Icon size={20} />
+                </Link>
+              );
+            })}
+          </div>
+
+          <div className="text-center">
+            <p className="text-gray-500 font-neue-haas text-sm font-light tracking-wider">
+              JAKARTA, INDONESIA
+            </p>
+          </div>
         </div>
-      </Card>
+      </div>
     </section>
   );
 };

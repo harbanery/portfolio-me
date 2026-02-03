@@ -1,13 +1,13 @@
-import { DotIcon } from "lucide-react";
-
 const Footer = () => {
   return (
-    <footer
-      className={`py-4 flex justify-center items-center gap-2 font-bebas tracking-wide text-lg text-white bg-slate-950`}
-    >
-      <h1>Raihan Yusuf @ 2025</h1>
-      <DotIcon />
-      <h1>All rights reserved</h1>
+    <footer className="bg-black border-t border-gray-900">
+      <div className="w-full max-w-7xl mx-auto px-6 lg:px-8 py-6">
+        <div className="flex flex-col md:flex-row justify-center items-center gap-4">
+          <p className="text-sm font-neue-haas text-gray-300 font-light tracking-wider">
+            © 2025 Raihan Yusuf. All rights reserved.
+          </p>
+        </div>
+      </div>
     </footer>
   );
 };
