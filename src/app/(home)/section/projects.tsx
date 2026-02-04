@@ -54,7 +54,9 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
               </div>
               <div
                 className={
-                  index % 2 === 1 ? "lg:col-start-1 lg:row-start-1" : ""
+                  index % 2 === 1
+                    ? "lg:col-start-1 lg:row-start-1 lg:text-right"
+                    : ""
                 }
               >
                 <h3 className="text-3xl lg:text-4xl font-neue-haas text-white font-light mb-6">
@@ -63,7 +65,9 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                 <p className="text-lg text-gray-300 font-neue-haas leading-relaxed mb-8">
                   {project.description || "No description available"}
                 </p>
-                <div className="flex flex-wrap gap-2 mb-8">
+                <div
+                  className={`flex flex-wrap gap-2 mb-8 ${index % 2 === 1 ? "lg:justify-end" : ""}`}
+                >
                   {project.skills.slice(0, 6).map((skill) => (
                     <div
                       key={skill}
