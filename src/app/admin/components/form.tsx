@@ -188,6 +188,32 @@ const GetComponent = (
               console.error(`${info.file.name} file upload failed.`);
             }
           }}
+          onRemove={async (file) => {
+            if (file.url) {
+              try {
+                const filename = file.response.data.storagePath;
+
+                // Delete from Supabase storage
+                const response = await fetch(
+                  "/api/upload?path=" +
+                    encodeURIComponent(filename) +
+                    "&url=" +
+                    encodeURIComponent(file.url),
+                  {
+                    method: "DELETE",
+                  },
+                );
+
+                if (response.ok) {
+                  console.log(`Successfully deleted ${filename} from storage`);
+                } else {
+                  console.error(`Failed to delete ${filename} from storage`);
+                }
+              } catch (error) {
+                console.error("Error deleting file from storage:", error);
+              }
+            }
+          }}
         >
           <div>
             <PlusOutlined />

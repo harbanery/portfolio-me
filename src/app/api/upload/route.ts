@@ -80,3 +80,45 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const storagePath = searchParams.get("path");
+    const publicUrl = searchParams.get("url");
+
+    if (!storagePath || !publicUrl) {
+      return NextResponse.json(
+        { success: false, error: "Missing storage path or URL" },
+        { status: 400 },
+      );
+    }
+
+    // Delete from Supabase storage
+    const { error } = await supabase.storage
+      .from("portfolio-images")
+      .remove([storagePath]);
+
+    if (error) {
+      console.error("Delete error:", error);
+      return NextResponse.json(
+        { success: false, error: "Failed to delete file from storage" },
+        { status: 500 },
+      );
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: `Successfully deleted ${storagePath}`,
+    });
+  } catch (error: any) {
+    console.error("Delete error:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: `Failed to delete file: ${error?.message || "Unknown error"}`,
+      },
+      { status: 500 },
+    );
+  }
+}

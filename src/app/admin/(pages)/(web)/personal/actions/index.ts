@@ -66,10 +66,35 @@ export async function savePersonal(data: PersonalData) {
 
     // Handle images
     if (data.images) {
-      // Delete existing images
+      // Get existing images to delete from storage
+      const existingImages = await prisma.personalImage.findMany({
+        where: { personalId: personal.id },
+      });
+
+      // Delete existing images from database
       await prisma.personalImage.deleteMany({
         where: { personalId: personal.id },
       });
+
+      // Delete old images from Supabase storage
+      if (existingImages.length > 0) {
+        const { supabase } = await import("@/lib/config/storage");
+        for (const existingImage of existingImages) {
+          if (existingImage.storagePath) {
+            try {
+              const filename = existingImage.storagePath.split("/").pop() || "";
+              await supabase.storage
+                .from("portfolio-images")
+                .remove([filename]);
+            } catch (error) {
+              console.error(
+                `Failed to delete old image ${existingImage.storagePath}:`,
+                error,
+              );
+            }
+          }
+        }
+      }
 
       // Create new images
       if (data.images.length > 0) {
