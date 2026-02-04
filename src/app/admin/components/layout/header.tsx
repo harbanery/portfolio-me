@@ -20,8 +20,6 @@ const HeaderLayout: React.FC = ({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  console.log("Current color mode in HeaderLayout:", color);
-
   const LogoutIcon = loadAntdIcon("LogoutOutlined");
 
   const breadcrumbItems = menuAdmin
@@ -102,7 +100,7 @@ const HeaderLayout: React.FC = ({
     >
       <Breadcrumb style={{ fontWeight: 600 }} items={breadcrumbItems} />
       <Space size="middle">
-        <ThemeSelector />
+        {/* <ThemeSelector /> */}
         <Button
           style={{ fontWeight: 600 }}
           icon={<LogoutIcon />}

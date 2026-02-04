@@ -3,7 +3,13 @@ import prisma from "@/lib/config/database";
 export default async function ssrAction() {
   try {
     const [personal, projects] = await Promise.all([
-      prisma.personal.findFirst(),
+      prisma.personal.findFirst({
+        include: {
+          images: {
+            orderBy: { order: "asc" },
+          },
+        },
+      }),
       prisma.portfolio.findMany({
         where: { status: "ACTIVE" },
         orderBy: { createdAt: "desc" },

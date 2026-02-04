@@ -15,10 +15,10 @@ export default function AdminRootLayout({
   }
 
   return (
-    <ColorModeProvider>
-      <AntdRegistry>
-        <App>{children}</App>
-      </AntdRegistry>
-    </ColorModeProvider>
+    // <ColorModeProvider>
+    <AntdRegistry>
+      <App>{children}</App>
+    </AntdRegistry>
+    // </ColorModeProvider>
   );
 }

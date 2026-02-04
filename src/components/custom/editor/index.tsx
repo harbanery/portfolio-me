@@ -34,57 +34,57 @@ const Editor = ({ value, onChange, placeholder, disabled }: EditorProps) => {
     const toolbar = document.querySelector(".ql-toolbar") as HTMLElement;
     const container = document.querySelector(".ql-container") as HTMLElement;
 
-    if (resolvedTheme === "dark") {
-      if (editorContainer) {
-        editorContainer.style.backgroundColor = "#1f1f1f";
-        editorContainer.style.color = "#ffffff";
-      }
-      if (toolbar) {
-        toolbar.style.backgroundColor = "#1f1f1f";
-        toolbar.style.border = "1px solid #424242";
-        toolbar.querySelectorAll(".ql-stroke").forEach((el: any) => {
-          el.style.stroke = "#ffffff";
-        });
-        toolbar.querySelectorAll(".ql-fill").forEach((el: any) => {
-          el.style.fill = "#ffffff";
-        });
-        toolbar.querySelectorAll("button").forEach((btn: any) => {
-          btn.style.color = "#ffffff";
-        });
-        toolbar.querySelectorAll(".ql-picker-label").forEach((label: any) => {
-          label.style.color = "#ffffff";
-        });
-      }
-      if (container) {
-        container.style.backgroundColor = "#1f1f1f";
-        container.style.border = "1px solid #424242";
-      }
-    } else {
-      if (editorContainer) {
-        editorContainer.style.backgroundColor = "";
-        editorContainer.style.color = "";
-      }
-      if (toolbar) {
-        toolbar.style.backgroundColor = "";
-        toolbar.style.border = "";
-        toolbar.querySelectorAll(".ql-stroke").forEach((el: any) => {
-          el.style.stroke = "";
-        });
-        toolbar.querySelectorAll(".ql-fill").forEach((el: any) => {
-          el.style.fill = "";
-        });
-        toolbar.querySelectorAll("button").forEach((btn: any) => {
-          btn.style.color = "";
-        });
-        toolbar.querySelectorAll(".ql-picker-label").forEach((label: any) => {
-          label.style.color = "";
-        });
-      }
-      if (container) {
-        container.style.backgroundColor = "";
-        container.style.border = "";
-      }
+    // if (resolvedTheme === "dark") {
+    //   if (editorContainer) {
+    //     editorContainer.style.backgroundColor = "#1f1f1f";
+    //     editorContainer.style.color = "#ffffff";
+    //   }
+    //   if (toolbar) {
+    //     toolbar.style.backgroundColor = "#1f1f1f";
+    //     toolbar.style.border = "1px solid #424242";
+    //     toolbar.querySelectorAll(".ql-stroke").forEach((el: any) => {
+    //       el.style.stroke = "#ffffff";
+    //     });
+    //     toolbar.querySelectorAll(".ql-fill").forEach((el: any) => {
+    //       el.style.fill = "#ffffff";
+    //     });
+    //     toolbar.querySelectorAll("button").forEach((btn: any) => {
+    //       btn.style.color = "#ffffff";
+    //     });
+    //     toolbar.querySelectorAll(".ql-picker-label").forEach((label: any) => {
+    //       label.style.color = "#ffffff";
+    //     });
+    //   }
+    //   if (container) {
+    //     container.style.backgroundColor = "#1f1f1f";
+    //     container.style.border = "1px solid #424242";
+    //   }
+    // } else {
+    if (editorContainer) {
+      editorContainer.style.backgroundColor = "#ffffff";
+      editorContainer.style.color = "#000000";
     }
+    if (toolbar) {
+      toolbar.style.backgroundColor = "#ffffff";
+      toolbar.style.border = "1px solid #e0e0e0";
+      toolbar.querySelectorAll(".ql-stroke").forEach((el: any) => {
+        el.style.stroke = "#000000";
+      });
+      toolbar.querySelectorAll(".ql-fill").forEach((el: any) => {
+        el.style.fill = "#000000";
+      });
+      toolbar.querySelectorAll("button").forEach((btn: any) => {
+        btn.style.color = "#000000";
+      });
+      toolbar.querySelectorAll(".ql-picker-label").forEach((label: any) => {
+        label.style.color = "#000000";
+      });
+    }
+    if (container) {
+      container.style.backgroundColor = "#ffffff";
+      container.style.border = "1px solid #e0e0e0";
+    }
+    // }
   }, [resolvedTheme]);
 
   return (

@@ -24,6 +24,8 @@ export type FormLayoutItem = {
   icon?: string;
   rules?: Rule[];
   isList?: boolean;
+  multiple?: boolean;
+  accept?: string;
 };
 
 export interface FieldProps {

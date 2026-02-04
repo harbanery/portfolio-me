@@ -49,8 +49,26 @@ model Personal {
   about     String?
   skills    String[]
   contacts  Json?
+  images    PersonalImage[]
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+}
+
+model PersonalImage {
+  id         Int      @id @default(autoincrement())
+  personalId Int
+  data       String   // Base64 image data
+  mimeType   String   // MIME type of the image
+  size       Int      // File size in bytes
+  caption    String?
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  personal Personal @relation(fields: [personalId], references: [id], onDelete: Cascade)
+
+  @@index([personalId])
+  @@index([order])
 }
 
 model Portfolio {

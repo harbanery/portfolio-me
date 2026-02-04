@@ -2,7 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { Form, Input, Button, message, Typography, Card, Space, Alert } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  message,
+  Typography,
+  Card,
+  Space,
+  Alert,
+} from "antd";
 import { LockOutlined } from "@ant-design/icons";
 import { ThemeSelector } from "@/app/admin/components/theme-selector";
 
@@ -12,7 +21,9 @@ export default function AuthPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
-  const [remainingAttempts, setRemainingAttempts] = useState<number | null>(null);
+  const [remainingAttempts, setRemainingAttempts] = useState<number | null>(
+    null,
+  );
   const [blockedUntil, setBlockedUntil] = useState<Date | null>(null);
   const [countdown, setCountdown] = useState<number>(0);
 
@@ -28,16 +39,16 @@ export default function AuthPage() {
         const now = new Date().getTime();
         const blockedTime = blockedUntil.getTime();
         const remaining = Math.max(0, Math.ceil((blockedTime - now) / 1000));
-        
+
         setCountdown(remaining);
-        
+
         if (remaining <= 0) {
           setBlockedUntil(null);
           setCountdown(0);
         }
       }, 1000);
     }
-    
+
     return () => {
       if (interval) clearInterval(interval);
     };
@@ -59,7 +70,7 @@ export default function AuthPage() {
         method: "GET",
       });
       const data = await response.json();
-      
+
       if (data.authenticated) {
         router.replace("/admin");
       }
@@ -117,9 +128,9 @@ export default function AuthPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4 relative">
-      <div className="absolute top-4 right-4">
+      {/* <div className="absolute top-4 right-4">
         <ThemeSelector />
-      </div>
+      </div> */}
       <Card
         className="w-full max-w-md shadow-2xl"
         bordered={false}
@@ -149,14 +160,16 @@ export default function AuthPage() {
             />
           )}
 
-          {remainingAttempts !== null && remainingAttempts <= 3 && !blockedUntil && (
-            <Alert
-              message={`${remainingAttempts} attempt${remainingAttempts > 1 ? "s" : ""} remaining`}
-              description="Please be careful, too many failed attempts will temporarily lock your account."
-              type="warning"
-              showIcon
-            />
-          )}
+          {remainingAttempts !== null &&
+            remainingAttempts <= 3 &&
+            !blockedUntil && (
+              <Alert
+                message={`${remainingAttempts} attempt${remainingAttempts > 1 ? "s" : ""} remaining`}
+                description="Please be careful, too many failed attempts will temporarily lock your account."
+                type="warning"
+                showIcon
+              />
+            )}
 
           <Form
             name="login"

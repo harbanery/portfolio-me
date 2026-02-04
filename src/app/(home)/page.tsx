@@ -16,6 +16,7 @@ const HomePage = async () => {
         <AboutSection
           about={data?.personal?.about}
           skills={data?.personal?.skills || []}
+          images={data?.personal?.images?.map((img: any) => `data:${img.mimeType};base64,${img.data}`) || []}
         />
         <ProjectSection projects={data?.projects || []} />
         <ContactSection contacts={data?.personal?.contacts || []} />

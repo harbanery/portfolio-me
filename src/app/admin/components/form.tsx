@@ -166,6 +166,34 @@ const GetComponent = (
       );
     case "switch":
       return <Switch disabled={disabled} />;
+    case "image_upload":
+      return (
+        <Upload
+          name={name}
+          disabled={disabled}
+          multiple={true}
+          listType="picture-card"
+          accept="image/*"
+          onChange={(info) => {
+            const { status } = info.file;
+            if (status === "done") {
+              console.log(`${info.file.name} file uploaded successfully.`);
+              // Update the file response to include dataUrl for proper display
+              if (info.file.response && info.file.response.data) {
+                info.file.url = info.file.response.url;
+                info.file.thumbUrl = info.file.response.url;
+              }
+            } else if (status === "error") {
+              console.error(`${info.file.name} file upload failed.`);
+            }
+          }}
+        >
+          <div>
+            <PlusOutlined />
+            <div style={{ marginTop: 8 }}>Upload</div>
+          </div>
+        </Upload>
+      );
     case "editor":
       return <Editor placeholder={templatePlaceholder} disabled={disabled} />;
     default:
@@ -391,6 +419,35 @@ const FormAdmin = ({
                   </div>
                 )}
               </Form.List>
+            );
+          }
+
+          if (item.type === "image_upload") {
+            return (
+              <Form.Item
+                key={item.name}
+                name={item.name}
+                label={item.label}
+                valuePropName="fileList"
+                getValueFromEvent={(e) => {
+                  if (Array.isArray(e)) {
+                    return e;
+                  }
+                  return e?.fileList;
+                }}
+              >
+                {GetComponent(
+                  item.type,
+                  item.name,
+                  formValue?.[item.name],
+                  item.placeholder,
+                  item.disabled,
+                  undefined,
+                  {
+                    options: optionList?.[item.name],
+                  },
+                )}
+              </Form.Item>
             );
           }
 

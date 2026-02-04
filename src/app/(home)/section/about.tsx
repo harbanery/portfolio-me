@@ -16,11 +16,7 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
 
   const trackRef = useRef<HTMLDivElement>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const profileImages = Array.isArray(images)
-    ? images.map((img) => ({
-        src: img,
-      }))
-    : [profileImage];
+  const profileImages = Array.isArray(images) ? images : [];
 
   const skillList = skills
     .filter((skill) => logoMap[skill])
@@ -70,16 +66,26 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
           </div>
           <div className="relative">
             <div className="aspect-square bg-gray-800 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 overflow-hidden">
-              {profileImages.map((image, index) => (
-                <img
-                  key={index + 1}
-                  src={image.src}
-                  alt={`RY ${index + 1}`}
-                  className={`absolute w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
-                    index === currentImageIndex ? "opacity-100" : "opacity-0"
-                  }`}
-                />
-              ))}
+              {profileImages?.length > 0 ? (
+                profileImages.map((image, index) => (
+                  <img
+                    key={index + 1}
+                    src={image}
+                    alt={`RY ${index + 1}`}
+                    className={`absolute w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
+                      index === currentImageIndex ? "opacity-100" : "opacity-0"
+                    }`}
+                  />
+                ))
+              ) : (
+                <div className="text-center">
+                  <div className="w-32 h-32 mx-auto mb-8 rounded-full border-2 border-gray-600 flex items-center justify-center">
+                    <span className="text-4xl font-neue-haas font-light text-white">
+                      RY
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
             {profileImages?.length > 1 && (
               <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">

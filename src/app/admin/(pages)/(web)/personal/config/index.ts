@@ -18,6 +18,16 @@ export const formLayout: FormLayout[] = [
     ],
   },
   {
+    key: "images",
+    title: "Images",
+    items: [
+      {
+        name: "images",
+        type: "image_upload",
+      },
+    ],
+  },
+  {
     key: "skills",
     title: "Skills",
     items: [

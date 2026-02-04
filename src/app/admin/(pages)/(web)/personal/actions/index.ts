@@ -8,12 +8,27 @@ export interface PersonalData {
   about?: string;
   skills: string[];
   contacts?: any;
+  images?: PersonalImageData[];
+}
+
+export interface PersonalImageData {
+  id?: number;
+  data: string;
+  mimeType: string;
+  size: number;
+  caption?: string;
+  order?: number;
 }
 
 export async function getPersonal() {
   try {
     const personal = await prisma.personal.findFirst({
       orderBy: { createdAt: "desc" },
+      include: {
+        images: {
+          orderBy: { order: "asc" },
+        },
+      },
     });
     return { success: true, data: personal };
   } catch (error) {
@@ -46,6 +61,28 @@ export async function savePersonal(data: PersonalData) {
           contacts: data.contacts,
         },
       });
+    }
+
+    // Handle images
+    if (data.images) {
+      // Delete existing images
+      await prisma.personalImage.deleteMany({
+        where: { personalId: personal.id },
+      });
+
+      // Create new images
+      if (data.images.length > 0) {
+        await prisma.personalImage.createMany({
+          data: data.images.map((image, index) => ({
+            personalId: personal.id,
+            data: image.data,
+            mimeType: image.mimeType,
+            size: image.size,
+            caption: image.caption,
+            order: image.order ?? index,
+          })),
+        });
+      }
     }
 
     return { success: true, data: personal };
