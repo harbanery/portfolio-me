@@ -1,11 +1,15 @@
-import { notFound } from "next/navigation";
+"use client";
+
+import { notFound, useRouter } from "next/navigation";
 import BaseLayout from "@/components/custom/layout";
-import Image from "next/image";
+import { useState, useEffect } from "react";
+import HeroSection from "./section/hero";
+import ContentSection from "./section/content";
 
 // Dummy project details for demonstration
 const ProjectDetailPage = ({ params }: { params: { slug: string } }) => {
   const { slug } = params;
-
+  const router = useRouter();
   const projects: Record<string, any> = {
     "modern-dashboard": {
       id: 1,
@@ -35,6 +39,12 @@ const ProjectDetailPage = ({ params }: { params: { slug: string } }) => {
         "Optimized for performance",
         "Scalable architecture",
       ],
+      story:
+        "Transform complex datasets into actionable insights with an intuitive interface that adapts to user behavior and preferences. This dashboard leverages cutting-edge web technologies to deliver seamless performance across all devices while maintaining data security and integrity.",
+      client:
+        "Fortune 500 tech company seeking data visualization solution for their executive dashboard. Required advanced filtering, real-time updates, and mobile-optimized experience.",
+      impact:
+        "Increased data-driven decision making by 40% across the organization, reducing report generation time from hours to minutes.",
     },
     "ecommerce-platform": {
       id: 2,
@@ -64,6 +74,10 @@ const ProjectDetailPage = ({ params }: { params: { slug: string } }) => {
         "SEO optimized",
         "Performance focused",
       ],
+      story:
+        "Revolutionized online shopping experience with personalized recommendations and one-click purchasing. This platform increased conversion rates by 35% and reduced cart abandonment through intelligent UX design and streamlined checkout process.",
+      client:
+        "Growing retail startup looking to scale their digital presence. Needed a robust e-commerce solution that could handle high traffic volumes while maintaining performance and security.",
     },
     "mobile-banking": {
       id: 3,
@@ -92,6 +106,10 @@ const ProjectDetailPage = ({ params }: { params: { slug: string } }) => {
         "Security first approach",
         "Offline functionality",
       ],
+      story:
+        "Secure banking made simple and accessible with cutting-edge biometric technology. This app processes over 1 million transactions daily with 99.9% uptime, providing users with peace of mind and unprecedented convenience.",
+      client:
+        "Leading financial institution seeking to modernize their mobile banking experience. Required a solution that would maintain security while improving user engagement and satisfaction.",
     },
     "ai-content-generator": {
       id: 4,
@@ -120,6 +138,10 @@ const ProjectDetailPage = ({ params }: { params: { slug: string } }) => {
         "Scalable architecture",
         "API-first design",
       ],
+      story:
+        "Empowering content creators with AI-driven tools that adapt to writing style and audience needs. This platform supports 12 languages and serves over 10,000 content creators daily, reducing content creation time by 70% while improving quality and consistency.",
+      client:
+        "Tech startup building the future of content creation. Needed an enterprise-grade AI platform that could scale to millions of users while maintaining performance and reliability.",
     },
   };
 
@@ -128,6 +150,13 @@ const ProjectDetailPage = ({ params }: { params: { slug: string } }) => {
   if (!project) {
     notFound();
   }
+
+  const [isVisible, setIsVisible] = useState(false);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
   // const skillList = project.skills
   //   .filter((skill) => logoMap[skill])
@@ -139,209 +168,23 @@ const ProjectDetailPage = ({ params }: { params: { slug: string } }) => {
 
   return (
     <BaseLayout navbar={true} footer={true}>
-      <div className="w-full bg-black min-h-screen">
-        <div className="container mx-auto px-4 py-16">
-          {/* Back Navigation */}
-          <div className="mb-8">
-            <a
-              href="/project"
-              className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors duration-200"
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 12H5m7 7H5a2 2 0 00-2-2v10a2 2 0 002 2h10a2 2 0 002 2v7a2 2 0 00-2-2h-4m0 0a2 2 0 00-2 2v4a2 2 0 00-2-2h4a2 2 0 00-2-2z"
-                />
-              </svg>
-              <span>Back to Projects</span>
-            </a>
-          </div>
+      <div className="min-h-screen bg-gray-950 text-white relative">
+        {/* Hero Section with Parallax */}
+        <HeroSection project={project} />
 
-          {/* Project Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-thin text-white mb-4">
-              {project.title}
-            </h1>
-            <p className="text-lg text-gray-400 font-light mb-2">
-              {project.role}
-            </p>
-            <div className="flex justify-center items-center gap-2">
-              {project.webLink ? (
-                <a
-                  href={project.webLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-white text-sm font-medium transition-colors duration-200"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002 2v-4a2 2 0 00-2-2h-4a2 2 0 00-2-2v-1a2 2 0 002-2h10a2 2 0 002 2v4a2 2 0 00-2-2z"
-                    />
-                  </svg>
-                  <span>Live Demo</span>
-                </a>
-              ) : null}
+        {/* Content Section with Editorial Layout */}
+        <ContentSection project={project} />
 
-              {project.repoLinks.map((repo: any, index: number) => (
-                <a
-                  key={index + 1}
-                  href={repo}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-white text-sm font-medium transition-colors duration-200"
-                >
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002 2v-4a2 2 0 00-2-2h-4a2 2 0 00-2-2v-1a2 2 0 002-2h10a2 2 0 002 2v4a2 2 0 00-2-2z"
-                    />
-                  </svg>
-                  <span>Source Code</span>
-                </a>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Project Image */}
-            <div className="aspect-video lg:col-span-1 bg-gray-800 rounded-xl overflow-hidden">
-              <Image
-                src={project.image}
-                alt={project.title}
-                width={800}
-                height={600}
-                className="object-cover"
-                priority
-              />
-            </div>
-
-            {/* Project Details */}
-            <div className="lg:col-span-1 space-y-8">
-              {/* Description */}
-              <div>
-                <h2 className="text-2xl font-semibold text-white mb-4">
-                  About
-                </h2>
-                <p className="text-gray-300 leading-relaxed">
-                  {project.description}
-                </p>
-              </div>
-
-              {/* Technologies */}
-              <div>
-                <h2 className="text-2xl font-semibold text-white mb-4">
-                  Technologies
-                </h2>
-                <div className="space-y-6">
-                  {Object.entries(project.technologies).map(
-                    ([category, techs]) => (
-                      <div key={category}>
-                        <h3 className="text-lg font-medium text-gray-400 mb-3 capitalize">
-                          {category}
-                        </h3>
-                        <div className="flex flex-wrap gap-2">
-                          {(techs as string[])?.map((tech, index) => (
-                            <div
-                              key={index}
-                              className="flex items-center gap-2 px-3 py-1 bg-gray-700 rounded-full"
-                              title={tech}
-                            >
-                              <span className="text-xs text-white font-medium">
-                                {tech}
-                              </span>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    ),
-                  )}
-                </div>
-              </div>
-
-              {/* Features */}
-              <div>
-                <h2 className="text-2xl font-semibold text-white mb-4">
-                  Key Features
-                </h2>
-                <ul className="space-y-2">
-                  {project.features.map((feature: any, index: number) => (
-                    <li
-                      key={index}
-                      className="flex items-start gap-3 text-gray-300"
-                    >
-                      <svg
-                        className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12l2 2m0 0l2-2m-2 0l-2 2m0 0a2 2 0 00-2 2v4a2 2 0 002 2h-4a2 2 0 00-2-2z"
-                        />
-                      </svg>
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Highlights */}
-              <div>
-                <h2 className="text-2xl font-semibold text-white mb-4">
-                  Project Highlights
-                </h2>
-                <ul className="space-y-2">
-                  {project.highlights.map((highlight: any, index: number) => (
-                    <li
-                      key={index}
-                      className="flex items-start gap-3 text-gray-300"
-                    >
-                      <svg
-                        className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M9 12l2 2m0 0l2-2m-2 0l-2 2m0 0a2 2 0 00-2 2v4a2 2 0 002 2h-4a2 2 0 00-2-2z"
-                        />
-                      </svg>
-                      <span>{highlight}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Back Navigation */}
+        {/* <div className="fixed bottom-8 left-8 z-50 flex justify-start">
+          <button
+            onClick={() => router.back()}
+            className="flex items-center gap-3 px-4 py-2 bg-gray-800 bg-opacity-50 backdrop-blur-sm border border border-gray-700 border-opacity-50 rounded-lg text-gray-300 hover:text-white hover:bg-opacity-75 transition-all duration-300"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span>Back to Projects</span>
+          </button>
+        </div> */}
       </div>
     </BaseLayout>
   );

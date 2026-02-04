@@ -3,7 +3,6 @@
 import { masterDataMap } from "@/utils/helpers/category";
 import { logoMap } from "@/utils/helpers/icon";
 import { useEffect, useRef, useState } from "react";
-import profileImage from "@/assets/template/profile-1.jpg";
 
 interface AboutSectionProps {
   about?: string | null;

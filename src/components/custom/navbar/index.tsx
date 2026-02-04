@@ -1,26 +1,28 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 const Navbar = () => {
   const pathname = usePathname();
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPastHero, setIsPastHero] = useState(false);
 
-  const handleSmoothScroll = (
-    e: React.MouseEvent<HTMLAnchorElement>,
-    targetId: string,
-  ) => {
-    if (!targetId.startsWith("#")) return; // Only handle in-page links
-    e.preventDefault();
-    const element = document.getElementById(targetId.replace("#", ""));
-    if (element) {
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
+  const handleNavigation = (href: string) => {
+    if (href.startsWith("#")) {
+      // Handle in-page links with smooth scroll
+      const element = document.getElementById(href.replace("#", ""));
+      if (element) {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+    } else {
+      // Handle external links with router
+      router.push(href);
     }
     setIsMenuOpen(false);
   };
@@ -71,14 +73,13 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-12">
             {navLinks.map((link) => (
-              <a
+              <button
                 key={link.name}
-                href={link.href}
-                onClick={(e) => handleSmoothScroll(e, link.href)}
-                className="text-sm font-neue-haas text-gray-400 hover:text-white transition-colors tracking-wider font-light"
+                onClick={() => handleNavigation(link.href)}
+                className="text-sm font-neue-haas text-gray-300 hover:text-white transition-colors tracking-wider font-light bg-transparent border-none cursor-pointer"
               >
                 {link.name}
-              </a>
+              </button>
             ))}
           </div>
 
@@ -99,14 +100,13 @@ const Navbar = () => {
         <div className="md:hidden bg-black border-b border-gray-900">
           <div className="px-6 py-4 space-y-4">
             {navLinks.map((link) => (
-              <a
+              <button
                 key={link.name}
-                href={link.href}
-                onClick={(e) => handleSmoothScroll(e, link.href)}
-                className="block text-sm font-neue-haas text-gray-400 hover:text-white transition-colors tracking-wider font-light py-2"
+                onClick={() => handleNavigation(link.href)}
+                className="block text-sm font-neue-haas text-gray-400 hover:text-white transition-colors tracking-wider font-light py-2 bg-transparent border-none cursor-pointer text-left w-full"
               >
                 {link.name}
-              </a>
+              </button>
             ))}
           </div>
         </div>

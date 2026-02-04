@@ -1,9 +1,12 @@
+"use client";
+
 import { ExternalLink } from "lucide-react";
 import { logoMap } from "@/utils/helpers/icon";
 import { masterDataMap } from "@/utils/helpers/category";
 import { getProjectSlug } from "@/utils/slug";
 import { StarsBackground } from "@/components/aceternity/ui/bg-stars";
 import { ShootingStars } from "@/components/aceternity/ui/shooting-stars";
+import { useRouter } from "next/navigation";
 
 interface ProjectSectionProps {
   projects: Array<{
@@ -19,6 +22,8 @@ interface ProjectSectionProps {
 }
 
 const ListProjectSection = ({ projects }: ProjectSectionProps) => {
+  const router = useRouter();
+
   if (projects.length === 0) return null;
 
   const renderSkillIcon = (skill: string) => {
@@ -92,13 +97,15 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                   </div>
                 ) : null}
                 <div className="mb-4">
-                  <a
-                    href={`/project/${getProjectSlug(project)}`}
+                  <button
+                    onClick={() =>
+                      router.push(`/projects/${getProjectSlug(project)}`)
+                    }
                     className="inline-flex items-center gap-2 text-white font-neue-haas font-medium tracking-wider hover:underline"
                   >
                     VIEW PROJECT
                     <ExternalLink size={16} />
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
