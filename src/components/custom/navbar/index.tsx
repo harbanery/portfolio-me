@@ -1,19 +1,25 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 
 const Navbar = () => {
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPastHero, setIsPastHero] = useState(false);
 
-  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+  const handleSmoothScroll = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    targetId: string,
+  ) => {
+    if (!targetId.startsWith("#")) return; // Only handle in-page links
     e.preventDefault();
-    const element = document.getElementById(targetId.replace('#', ''));
+    const element = document.getElementById(targetId.replace("#", ""));
     if (element) {
       element.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start'
+        behavior: "smooth",
+        block: "start",
       });
     }
     setIsMenuOpen(false);
@@ -38,8 +44,11 @@ const Navbar = () => {
   }, []);
 
   const navLinks = [
-    { name: "HOME", href: "#hero" },
-    { name: "PROJECTS", href: "#projects" },
+    { name: "HOME", href: pathname === "/" ? "#hero" : "/" },
+    {
+      name: "PROJECTS",
+      href: pathname === "/projects" ? "#projects" : "/projects",
+    },
     { name: "CONTACT", href: "#contact" },
   ];
 

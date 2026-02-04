@@ -1,10 +1,9 @@
 import BaseLayout from "@/components/custom/layout";
 import HeroSection from "./section/hero";
 import AboutSection from "./section/about";
-import ContactSection from "./section/contact";
 import ProjectSection from "./section/projects";
-import hero from "@/assets/template/person-with-bg.png";
 import ssrAction from "./actions";
+import ContactSection from "@/components/custom/section/contact";
 
 const HomePage = async () => {
   const { data } = await ssrAction();
