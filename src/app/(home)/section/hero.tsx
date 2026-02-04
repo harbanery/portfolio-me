@@ -9,8 +9,8 @@ const HeroSection = ({ image }: { image: string | StaticImport }) => {
       id="hero"
       className="min-h-screen bg-black flex items-center justify-center px-4 relative"
     >
-      <StarsBackground />
-      <ShootingStars />
+      <StarsBackground className="pointer-events-none" />
+      <ShootingStars className="pointer-events-none" />
       <div className="max-w-7xl mx-auto w-full">
         <div className="text-center">
           <h1 className="text-6xl md:text-8xl lg:text-9xl font-inter text-white font-bold mb-8 leading-tight">

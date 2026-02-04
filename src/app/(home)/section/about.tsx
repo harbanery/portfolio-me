@@ -3,13 +3,15 @@
 import { masterDataMap } from "@/utils/helpers/category";
 import { logoMap } from "@/utils/helpers/icon";
 import { useEffect, useRef } from "react";
+import profileImage from "@/assets/template/profile-1.jpg";
 
 interface AboutSectionProps {
   about?: string | null;
   skills?: string[];
+  image?: string;
 }
 
-const AboutSection = ({ about, skills = [] }: AboutSectionProps) => {
+const AboutSection = ({ about, skills = [], image }: AboutSectionProps) => {
   if (!about) return null;
 
   const trackRef = useRef<HTMLDivElement>(null);
@@ -51,14 +53,22 @@ const AboutSection = ({ about, skills = [] }: AboutSectionProps) => {
             />
           </div>
           <div className="relative">
-            <div className="aspect-square bg-gray-800 flex items-center justify-center">
-              <div className="text-center">
-                <div className="w-32 h-32 mx-auto mb-8 rounded-full border-2 border-gray-600 flex items-center justify-center">
-                  <span className="text-4xl font-neue-haas font-light text-white">
-                    RY
-                  </span>
+            <div className="aspect-square bg-gray-800 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 ">
+              {/* {image ? ( */}
+              <img
+                src={profileImage.src}
+                alt="RY"
+                className="w-full h-full object-cover"
+              />
+              {/* ) : (
+                <div className="text-center">
+                  <div className="w-32 h-32 mx-auto mb-8 rounded-full border-2 border-gray-600 flex items-center justify-center">
+                    <span className="text-4xl font-neue-haas font-light text-white">
+                      RY
+                    </span>
+                  </div>
                 </div>
-              </div>
+              )} */}
             </div>
           </div>
         </div>

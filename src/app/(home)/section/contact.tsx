@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { logoMap } from "@/utils/helpers/icon";
 import { formatURLContact } from "@/utils/helpers";
+import { masterDataMap } from "@/utils/helpers/category";
 
 interface Contact {
   type: string;
@@ -15,6 +16,17 @@ const ContactSection = ({ contacts }: ContactSectionProps) => {
   const contactList: Contact[] = Array.isArray(contacts)
     ? contacts.filter((contact) => logoMap[contact.type])
     : [];
+
+  const socialContacts = contactList.filter((contact) =>
+    masterDataMap[contact.type]?.category?.includes("social"),
+  );
+
+  const mailContact: Contact | undefined =
+    contactList.find(
+      (contact) =>
+        contact.type === "mail" &&
+        masterDataMap[contact.type]?.category?.includes("messaging"),
+    ) || undefined;
 
   return (
     <section
@@ -34,14 +46,14 @@ const ContactSection = ({ contacts }: ContactSectionProps) => {
 
         <div className="flex flex-col items-center gap-12">
           <a
-            href="mailto:hello@raihanyusuf.com"
+            href={formatURLContact(mailContact?.value || "", "mail") || "#"}
             className="bg-white text-black px-16 py-5 rounded-none font-neue-haas text-sm font-medium tracking-wider hover:bg-gray-200 transition-colors"
           >
             GET IN TOUCH
           </a>
 
           <div className="flex gap-12 justify-center">
-            {contactList.map((item) => {
+            {socialContacts.map((item) => {
               const Icon = logoMap[item.type];
               if (!Icon) return null;
               return (

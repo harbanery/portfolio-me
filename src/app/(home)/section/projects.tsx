@@ -17,14 +17,12 @@ interface ProjectSectionProps {
 }
 
 const ProjectSection = ({ projects }: ProjectSectionProps) => {
+  if (projects.length === 0) return null;
+
   const renderSkillIcon = (skill: string) => {
     const Icon = logoMap[skill];
-    return Icon ? (
-      <Icon size={20} color={masterDataMap[skill].color || "white"} />
-    ) : null;
+    return Icon ? <Icon size={20} /> : null;
   };
-
-  console.log("projects:", projects);
 
   return (
     <section
@@ -45,7 +43,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
               }`}
             >
               <div className={index % 2 === 1 ? "lg:col-start-2" : ""}>
-                <div className="aspect-square bg-gray-800 rounded-none overflow-hidden">
+                <div className="aspect-square bg-gray-800 rounded-none overflow-hidden grayscale hover:grayscale-0 transition-all duration-300">
                   {project.image && (
                     <img
                       src={project.image}
@@ -70,7 +68,11 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                   {project.skills.slice(0, 6).map((skill) => (
                     <div
                       key={skill}
-                      className="p-2 bg-gray-800 rounded border border-gray-700"
+                      className="p-2 bg-gray-800 rounded border border-gray-700 transition-all duration-300 text-gray-500 hover:text-[var(--skill-color)]"
+                      style={{
+                        ["--skill-color" as any]:
+                          masterDataMap[skill].color || "#FFFFFF",
+                      }}
                     >
                       {renderSkillIcon(skill)}
                     </div>
@@ -88,20 +90,6 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                       <ExternalLink size={16} />
                     </a>
                   )}
-                </div>
-                <div className="flex flex-col gap-1">
-                  {project.repoLinks.map((repoLink, repoIndex) => (
-                    <a
-                      key={repoIndex}
-                      href={repoLink}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 text-gray-400 font-neue-haas font-medium tracking-wider hover:text-white hover:underline uppercase"
-                    >
-                      <Github size={16} />
-                      {getGithubRepoName(repoLink)}
-                    </a>
-                  ))}
                 </div>
               </div>
             </div>
