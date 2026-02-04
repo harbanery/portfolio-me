@@ -57,9 +57,12 @@ model Personal {
 model PersonalImage {
   id         Int      @id @default(autoincrement())
   personalId Int
-  data       String   // Base64 image data
+  url        String   // Supabase storage URL
+  storagePath String   // Supabase storage path @default("")
   mimeType   String   // MIME type of the image
   size       Int      // File size in bytes
+  width      Int?     // Image width
+  height     Int?     // Image height
   caption    String?
   order      Int      @default(0)
   createdAt  DateTime @default(now())

@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { prisma } from "./database";
+import { NODE_ENV } from "./variables";
 
 const SESSION_COOKIE_NAME = "admin_session";
 const SESSION_MAX_AGE = 60 * 60 * 2; // 2 hours in seconds
@@ -30,7 +31,7 @@ export async function createSession(userId: number): Promise<string> {
   const cookieStore = await cookies();
   cookieStore.set(SESSION_COOKIE_NAME, sessionId, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    secure: NODE_ENV === "production",
     sameSite: "strict",
     maxAge: SESSION_MAX_AGE,
     path: "/admin",
@@ -88,11 +89,13 @@ export async function deleteSession(sessionId: string): Promise<void> {
   const cookieStore = await cookies();
   cookieStore.delete(SESSION_COOKIE_NAME);
 
-  await prisma.session.delete({
-    where: { id: sessionId },
-  }).catch(() => {
-    // Session might not exist anymore
-  });
+  await prisma.session
+    .delete({
+      where: { id: sessionId },
+    })
+    .catch(() => {
+      // Session might not exist anymore
+    });
 }
 
 export async function deleteAllSessions(userId: number): Promise<void> {

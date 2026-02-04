@@ -174,14 +174,15 @@ const GetComponent = (
           multiple={true}
           listType="picture-card"
           accept="image/*"
+          action="/api/upload"
           onChange={(info) => {
             const { status } = info.file;
             if (status === "done") {
               console.log(`${info.file.name} file uploaded successfully.`);
               // Update the file response to include dataUrl for proper display
               if (info.file.response && info.file.response.data) {
-                info.file.url = info.file.response.url;
-                info.file.thumbUrl = info.file.response.url;
+                info.file.url = info.file.response.data.url;
+                info.file.thumbUrl = info.file.response.data.url;
               }
             } else if (status === "error") {
               console.error(`${info.file.name} file upload failed.`);

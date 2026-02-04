@@ -1,9 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
+const { supabase } = require("@/lib/config/storage");
+
+interface SupabaseUploadResult {
+  path: string;
+  fullPath: string;
+  publicUrl: string;
+}
 
 export async function POST(request: NextRequest) {
   try {
     const data = await request.formData();
-    const file: File | null = data.get("images") as unknown as File;
+    const file: File | null = (data.get("file") ||
+      data.get("images")) as unknown as File;
 
     if (!file) {
       return NextResponse.json(
@@ -15,27 +23,59 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Convert to base64
-    const base64 = buffer.toString("base64");
+    // Generate unique filename
+    const timestamp = Date.now();
+    const filename = `${timestamp}-${file.name}`;
 
-    // Create data URL
-    const mimeType = file.type;
-    const dataUrl = `data:${mimeType};base64,${base64}`;
+    // Upload to Supabase
+    const { data: dataStorage, error } = await supabase.storage
+      .from("portfolio-images")
+      .upload(filename, buffer, {
+        contentType: file.type,
+        upsert: false,
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    // Get public URL
+    const {
+      data: { publicUrl },
+    } = supabase.storage
+      .from("portfolio-images")
+      .getPublicUrl(dataStorage.path);
 
     return NextResponse.json({
       success: true,
       data: {
-        url: dataUrl,
-        data: base64,
+        url: publicUrl,
+        storagePath: dataStorage.path,
         mimeType: file.type,
         size: file.size,
         name: file.name,
       },
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Upload error:", error);
+
+    // Handle specific Supabase errors
+    if (error?.statusCode === "403" || error?.status === 403) {
+      return NextResponse.json(
+        {
+          success: false,
+          error:
+            "Storage permission denied. Please check Supabase RLS policies and ensure SUPABASE_SERVICE_ROLE_KEY is set correctly.",
+        },
+        { status: 403 },
+      );
+    }
+
     return NextResponse.json(
-      { success: false, error: "Failed to upload file" },
+      {
+        success: false,
+        error: `Failed to upload file: ${error?.message || "Unknown error"}`,
+      },
       { status: 500 },
     );
   }

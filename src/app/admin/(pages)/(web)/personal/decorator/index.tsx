@@ -38,16 +38,14 @@ const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
           about: result.data.about,
           skills: result.data.skills,
           contacts: result.data.contacts,
-          images: result.data.images?.map(img => {
-            const dataUrl = `data:${img.mimeType};base64,${img.data}`;
-            return {
+          images:
+            result.data.images?.map((img) => ({
               uid: img.id,
               name: img.caption || `Image ${img.order + 1}`,
-              status: 'done',
-              url: dataUrl,
-              thumbUrl: dataUrl,
-            };
-          }) || [],
+              status: "done",
+              url: img.url,
+              thumbUrl: img.url,
+            })) || [],
         });
       }
     } catch (error) {
@@ -63,19 +61,27 @@ const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       const values = await form.validateFields();
 
       // Process images
-      const images = values.images?.map((img: any, index: number) => {
-        const url = img.url || img.response?.url || img.thumbUrl;
-        const base64Data = url.includes(',') ? url.split(',')[1] : '';
-        const mimeType = url.includes(';') ? url.split(';')[0].split(':')[1] : 'image/jpeg';
-        
-        return {
-          data: base64Data,
-          mimeType: mimeType,
-          size: img.size || img.response?.size || 0,
-          caption: img.name || `Image ${index + 1}`,
-          order: index,
-        };
-      }) || [];
+      const images =
+        values.images?.map((img: any, index: number) => {
+          const url =
+            img.url ||
+            img.response?.data?.url ||
+            img.response?.url ||
+            img.thumbUrl;
+
+          return {
+            url: url,
+            storagePath:
+              img.storagePath ||
+              img.response?.data?.storagePath ||
+              img.response?.storagePath ||
+              "",
+            mimeType: img.response?.mimeType || "image/jpeg",
+            size: img.size || img.response?.size || 0,
+            caption: img.name || `Image ${index + 1}`,
+            order: index,
+          };
+        }) || [];
 
       const result = await savePersonal({
         name: values.name,

@@ -13,7 +13,8 @@ export interface PersonalData {
 
 export interface PersonalImageData {
   id?: number;
-  data: string;
+  url: string;
+  storagePath: string;
   mimeType: string;
   size: number;
   caption?: string;
@@ -75,7 +76,8 @@ export async function savePersonal(data: PersonalData) {
         await prisma.personalImage.createMany({
           data: data.images.map((image, index) => ({
             personalId: personal.id,
-            data: image.data,
+            url: image.url,
+            storagePath: image.storagePath,
             mimeType: image.mimeType,
             size: image.size,
             caption: image.caption,

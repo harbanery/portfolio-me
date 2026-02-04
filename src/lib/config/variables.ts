@@ -8,3 +8,9 @@ export const DATABASE_URL: any = process.env.DATABASE_URL || "";
 export const DIRECT_URL: any = process.env.DIRECT_URL || "";
 
 export const ACCESS_ADMIN: boolean = process.env.ACCESS_ADMIN === "true";
+
+export const SUPABASE_URL: any = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
+export const SUPABASE_ROLE_KEY: any =
+  process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+export const SUPABASE_ANON_KEY: any =
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
