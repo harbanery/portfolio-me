@@ -1,6 +1,5 @@
-import { Github, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { logoMap } from "@/utils/helpers/icon";
-import { getGithubRepoName } from "@/utils/helpers";
 import { masterDataMap } from "@/utils/helpers/category";
 
 interface ProjectSectionProps {

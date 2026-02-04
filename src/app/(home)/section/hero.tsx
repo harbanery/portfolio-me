@@ -1,9 +1,9 @@
 "use client";
+
 import { StarsBackground } from "@/components/aceternity/ui/bg-stars";
 import { ShootingStars } from "@/components/aceternity/ui/shooting-stars";
-import { StaticImport } from "next/dist/shared/lib/get-img-props";
 
-const HeroSection = ({ image }: { image: string | StaticImport }) => {
+const HeroSection = ({ name }: { name?: string }) => {
   return (
     <section
       id="hero"
@@ -13,8 +13,8 @@ const HeroSection = ({ image }: { image: string | StaticImport }) => {
       <ShootingStars className="pointer-events-none" />
       <div className="max-w-7xl mx-auto w-full">
         <div className="text-center">
-          <h1 className="text-6xl md:text-8xl lg:text-9xl font-inter text-white font-bold mb-8 leading-tight">
-            RAIHAN YUSUF
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-inter text-white font-bold mb-8 leading-tight uppercase">
+            {name ?? "RAIHAN YUSUF"}
           </h1>
 
           <p className="text-xl md:text-2xl text-gray-400 font-neue-haas font-light mb-12 max-w-4xl mx-auto leading-relaxed">

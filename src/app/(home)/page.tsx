@@ -12,7 +12,7 @@ const HomePage = async () => {
   return (
     <BaseLayout navbar={true} footer={true}>
       <div className="w-full bg-black">
-        <HeroSection image={hero} />
+        <HeroSection name={data?.personal?.name} />
         <AboutSection
           about={data?.personal?.about}
           skills={data?.personal?.skills || []}

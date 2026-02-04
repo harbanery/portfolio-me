@@ -2,19 +2,25 @@
 
 import { masterDataMap } from "@/utils/helpers/category";
 import { logoMap } from "@/utils/helpers/icon";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import profileImage from "@/assets/template/profile-1.jpg";
 
 interface AboutSectionProps {
   about?: string | null;
   skills?: string[];
-  image?: string;
+  images?: string | string[];
 }
 
-const AboutSection = ({ about, skills = [], image }: AboutSectionProps) => {
+const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
   if (!about) return null;
 
   const trackRef = useRef<HTMLDivElement>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const profileImages = Array.isArray(images)
+    ? images.map((img) => ({
+        src: img,
+      }))
+    : [profileImage];
 
   const skillList = skills
     .filter((skill) => logoMap[skill])
@@ -36,6 +42,16 @@ const AboutSection = ({ about, skills = [], image }: AboutSectionProps) => {
     });
   }, []);
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex(
+        (prevIndex) => (prevIndex + 1) % profileImages.length,
+      );
+    }, 3000); // Change image every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [profileImages.length]);
+
   return (
     <section
       id="about"
@@ -53,23 +69,34 @@ const AboutSection = ({ about, skills = [], image }: AboutSectionProps) => {
             />
           </div>
           <div className="relative">
-            <div className="aspect-square bg-gray-800 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 ">
-              {/* {image ? ( */}
-              <img
-                src={profileImage.src}
-                alt="RY"
-                className="w-full h-full object-cover"
-              />
-              {/* ) : (
-                <div className="text-center">
-                  <div className="w-32 h-32 mx-auto mb-8 rounded-full border-2 border-gray-600 flex items-center justify-center">
-                    <span className="text-4xl font-neue-haas font-light text-white">
-                      RY
-                    </span>
-                  </div>
-                </div>
-              )} */}
+            <div className="aspect-square bg-gray-800 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 overflow-hidden">
+              {profileImages.map((image, index) => (
+                <img
+                  key={index + 1}
+                  src={image.src}
+                  alt={`RY ${index + 1}`}
+                  className={`absolute w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
+                    index === currentImageIndex ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+              ))}
             </div>
+            {profileImages?.length > 1 && (
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {profileImages.map((_, index) => (
+                  <button
+                    key={index + 1}
+                    onClick={() => setCurrentImageIndex(index)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      index === currentImageIndex
+                        ? "bg-white w-8"
+                        : "bg-white/50 hover:bg-white/75"
+                    }`}
+                    aria-label={`Go to image ${index + 1}`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         </div>
         <div className="overflow-hidden w-full relative py-16">
