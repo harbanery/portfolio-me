@@ -75,7 +75,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                 <p className="text-lg text-gray-300 font-neue-haas leading-relaxed mb-8">
                   {project.description || "No description available"}
                 </p>
-                {project?.skills?.length ? (
+                {/* {project?.skills?.length ? (
                   <div
                     className={`flex flex-wrap gap-2 mb-8 ${index % 2 === 1 ? "lg:justify-end" : ""}`}
                   >
@@ -95,7 +95,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                         </div>
                       ))}
                   </div>
-                ) : null}
+                ) : null} */}
                 <div className="mb-4">
                   <button
                     onClick={() =>

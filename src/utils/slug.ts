@@ -20,14 +20,7 @@ export function toKebabCase(text: string): string {
  * @returns kebab-case slug for URL
  */
 export function getProjectSlug(project: { title: string; id?: number }): string {
-  // If project has an ID-based slug, use that
-  const knownSlugs: Record<string, string> = {
-    '1': 'modern-dashboard',
-    '2': 'ecommerce-platform',
-    '3': 'mobile-banking',
-    '4': 'ai-content-generator'
-  };
-  
-  // Return known slug if exists, otherwise convert title to kebab-case
-  return knownSlugs[project.id?.toString()] || toKebabCase(project.title);
+  // For Prisma data, we'll use the ID as the slug for simplicity
+  // This avoids slug collisions and ensures stable URLs
+  return project.id?.toString() || toKebabCase(project.title);
 }

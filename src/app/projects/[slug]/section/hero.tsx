@@ -14,7 +14,7 @@ const HeroSection = ({ project }: { project?: any }) => {
           src={project.image}
           alt={project.title}
           fill
-          className="object-cover opacity-60"
+          className="object-cover opacity-25 grayscale"
           priority
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw"
           quality={85}
@@ -25,22 +25,28 @@ const HeroSection = ({ project }: { project?: any }) => {
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-thin mb-8 tracking-tight leading-none">
             {project.title}
           </h1>
+          <h1 className="text-2xl font-thin mb-8 tracking-tight leading-none text-gray-400">
+            Hire Job Implementation
+          </h1>
 
           <div className="flex justify-center items-center gap-4 mb-16">
-            {project.webLink ? (
+            {!project.webLink ? (
               <a
                 href={project.webLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 px-6 py-3 bg-white bg-opacity-10 backdrop-blur-sm border border-white border-opacity-20 rounded-full text-white hover:text-gray-900 hover:bg-opacity-60 transition-all duration-500"
+                className="flex justify-center items-center gap-2 bg-white text-black px-12 py-4 rounded-none font-neue-haas text-sm font-medium tracking-wider hover:bg-gray-200 transition-colors"
               >
-                <span className="font-medium">Live Demo</span>
-                <ExternalLink className="w-5 h-5" />
+                LIVE DEMO
+                <ExternalLink size={16} />
               </a>
             ) : (
-              <span className="px-6 py-3 bg-gray-800 bg-opacity-50 backdrop-blur-sm border border-gray-950 border-opacity-50 rounded-full text-gray-300 font-medium">
-                Coming Soon
-              </span>
+              <button
+                disabled
+                className="bg-white disabled:bg-gray-300 text-black px-12 py-4 rounded-none font-neue-haas text-sm font-medium tracking-wider"
+              >
+                COMING SOON
+              </button>
             )}
           </div>
         </div>

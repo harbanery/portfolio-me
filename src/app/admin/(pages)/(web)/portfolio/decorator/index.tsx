@@ -17,6 +17,7 @@ import {
 } from "../actions";
 import { getGithubRepoName } from "@/utils/helpers";
 import LoaderPage from "@/app/admin/components/loader";
+import { menuRole } from "@/utils/helpers/menu";
 
 interface PortfolioItem {
   id: number;
@@ -218,15 +219,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
         Icon: logoMap[key],
         color: masterDataMap[key].color,
       })),
-    role: [
-      { label: "Full Stack Developer", value: "fullstack" },
-      { label: "Frontend Developer", value: "frontend" },
-      { label: "Backend Developer", value: "backend" },
-      { label: "Mobile Developer", value: "mobile" },
-      { label: "DevOps Engineer", value: "devops" },
-      { label: "UI/UX Designer", value: "designer" },
-      { label: "Data Engineer", value: "data" },
-    ],
+    role: menuRole,
   };
 
   const getRoleLabel = (role: string) => {
