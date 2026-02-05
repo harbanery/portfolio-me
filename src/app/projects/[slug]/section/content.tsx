@@ -84,7 +84,9 @@ const ContentSection = ({ project }: { project?: any }) => {
                 <h3 className="text-xl font-semibold text-white mb-2 font-inter">
                   Role
                 </h3>
-                <p className="text-lg text-white font-light mb-8">{role}</p>
+                <p className="text-lg text-white font-light mb-8 font-neue-haas">
+                  {role}
+                </p>
               </div>
 
               {/* Technologies Section */}
@@ -117,7 +119,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                             </div>
                           )}
                         </div>
-                        <span className="text-gray-300 font-light text-sm">
+                        <span className="text-gray-300 font-neue-haas font-light text-sm">
                           {techData?.name || tech}
                         </span>
                       </div>
@@ -154,8 +156,10 @@ const ContentSection = ({ project }: { project?: any }) => {
           <div className="space-y-12 lg:max-w-xl">
             {/* Description */}
             <div>
-              <h3 className="text-4xl font-thin text-white mb-8">About</h3>
-              <p className="text-lg text-gray-300 font-light leading-relaxed mb-12">
+              <h3 className="text-4xl font-neue-haas font-thin text-white mb-8">
+                About
+              </h3>
+              <p className="text-lg text-gray-300 font-neue-haas font-light leading-relaxed mb-12">
                 {project.description}
               </p>
             </div>

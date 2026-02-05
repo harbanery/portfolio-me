@@ -4,6 +4,7 @@ import HeroSection from "./section/hero";
 import ContentSection from "./section/content";
 import { prisma } from "@/lib/config/database";
 import OtherSection from "./section/others";
+import { getProjectSlug } from "@/utils/slug";
 
 // Server-side function to fetch single project from Prisma
 async function getProjectBySlug(slug: string) {
@@ -28,23 +29,27 @@ async function getProjectBySlug(slug: string) {
   }
 }
 
-// Generate static params for static generation
-async function generateStaticParams() {
+// Server-side function to fetch all active projects except current one
+async function getOtherProjects(currentProjectId: number) {
   try {
     const projects = await prisma.portfolio.findMany({
       where: {
+        id: { not: currentProjectId },
         status: "ACTIVE",
       },
-      select: {
-        id: true,
+      orderBy: {
+        createdAt: "desc",
       },
     });
 
     return projects.map((project) => ({
-      slug: project.id.toString(),
+      id: project.id,
+      name: project.title,
+      slug: getProjectSlug(project),
+      image: project.image,
     }));
   } catch (error) {
-    console.error("Error generating static params:", error);
+    console.error("Error fetching other projects:", error);
     return [];
   }
 }
@@ -57,6 +62,8 @@ const ProjectDetailPage = async ({ params }: { params: { slug: string } }) => {
     notFound();
   }
 
+  const otherProjects = await getOtherProjects(project.id);
+
   return (
     <BaseLayout navbar={true} footer={true}>
       <div className="min-h-screen bg-gray-950 text-white relative">
@@ -67,7 +74,7 @@ const ProjectDetailPage = async ({ params }: { params: { slug: string } }) => {
         <ContentSection project={project} />
 
         {/* More Projects Section */}
-        <OtherSection />
+        <OtherSection projects={otherProjects} />
       </div>
     </BaseLayout>
   );

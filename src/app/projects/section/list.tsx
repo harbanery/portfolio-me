@@ -1,8 +1,6 @@
 "use client";
 
 import { ExternalLink } from "lucide-react";
-import { logoMap } from "@/utils/helpers/icon";
-import { masterDataMap } from "@/utils/helpers/category";
 import { getProjectSlug } from "@/utils/slug";
 import { StarsBackground } from "@/components/aceternity/ui/bg-stars";
 import { ShootingStars } from "@/components/aceternity/ui/shooting-stars";
@@ -24,12 +22,25 @@ interface ProjectSectionProps {
 const ListProjectSection = ({ projects }: ProjectSectionProps) => {
   const router = useRouter();
 
-  if (projects.length === 0) return null;
-
-  const renderSkillIcon = (skill: string) => {
-    const Icon = logoMap[skill];
-    return Icon ? <Icon size={20} /> : null;
-  };
+  if (!projects || projects.length === 0) {
+    return (
+      <section
+        id="projects"
+        className="min-h-screen bg-black flex items-center justify-center px-4 py-20"
+      >
+        <StarsBackground className="pointer-events-none" />
+        <ShootingStars className="pointer-events-none" />
+        <div className="max-w-7xl mx-auto w-full text-center">
+          <h2 className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-20 text-center">
+            Projects
+          </h2>
+          <p className="text-2xl text-gray-400 font-neue-haas font-light">
+            No projects available at the moment.
+          </p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -51,7 +62,12 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                 index % 2 === 1 ? "lg:grid-flow-col-dense" : ""
               }`}
             >
-              <div className={index % 2 === 1 ? "lg:col-start-2" : ""}>
+              <button
+                onClick={() =>
+                  router.push(`/projects/${getProjectSlug(project)}`)
+                }
+                className={index % 2 === 1 ? "lg:col-start-2" : ""}
+              >
                 <div className="aspect-video bg-gray-800 rounded-none overflow-hidden grayscale hover:grayscale-0 transition-all duration-300">
                   {project.image && (
                     <img
@@ -61,7 +77,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                     />
                   )}
                 </div>
-              </div>
+              </button>
               <div
                 className={
                   index % 2 === 1
@@ -75,27 +91,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                 <p className="text-lg text-gray-300 font-neue-haas leading-relaxed mb-8">
                   {project.description || "No description available"}
                 </p>
-                {/* {project?.skills?.length ? (
-                  <div
-                    className={`flex flex-wrap gap-2 mb-8 ${index % 2 === 1 ? "lg:justify-end" : ""}`}
-                  >
-                    {project.skills
-                      .filter((skill) => logoMap[skill])
-                      .slice(0, 6)
-                      .map((skill) => (
-                        <div
-                          key={skill}
-                          className="p-2 bg-gray-800 rounded border border-gray-700 transition-all duration-300 text-gray-500 hover:text-[var(--skill-color)]"
-                          style={{
-                            ["--skill-color" as any]:
-                              masterDataMap[skill].color || "#FFFFFF",
-                          }}
-                        >
-                          {renderSkillIcon(skill)}
-                        </div>
-                      ))}
-                  </div>
-                ) : null} */}
+
                 <div className="mb-4">
                   <button
                     onClick={() =>
