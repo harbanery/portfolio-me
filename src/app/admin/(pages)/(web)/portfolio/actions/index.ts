@@ -7,9 +7,21 @@ export type PortfolioStatus = "ACTIVE" | "NONACTIVE";
 export interface PortfolioData {
   id?: number;
   title: string;
+  subtitle?: string;
+  projectType?: string;
+  clientName?: string;
+  companyName?: string;
   role: string;
   image?: string;
+  images?: string[];
   description?: string;
+  apiDocumentation?: string;
+  features?: string[];
+  highlights?: string[];
+  challenges?: string;
+  solutions?: string;
+  story?: string;
+  outcomes?: string[];
   skills: string[];
   repoLinks?: string[];
   webLink?: string;
@@ -45,9 +57,21 @@ export async function createPortfolio(data: PortfolioData) {
     const portfolio = await prisma.portfolio.create({
       data: {
         title: data.title,
+        subtitle: data.subtitle,
+        projectType: data.projectType || "personal",
+        clientName: data.clientName,
+        companyName: data.companyName,
         role: data.role,
         image: data.image || "",
+        images: data.images || [],
         description: data.description,
+        apiDocumentation: data.apiDocumentation,
+        features: data.features || [],
+        highlights: data.highlights || [],
+        challenges: data.challenges,
+        solutions: data.solutions,
+        story: data.story,
+        outcomes: data.outcomes || [],
         skills: data.skills,
         repoLinks: data.repoLinks || [],
         webLink: data.webLink,
@@ -67,9 +91,21 @@ export async function updatePortfolio(id: number, data: PortfolioData) {
       where: { id },
       data: {
         title: data.title,
+        subtitle: data.subtitle,
+        projectType: data.projectType || "personal",
+        clientName: data.clientName,
+        companyName: data.companyName,
         role: data.role,
         ...(data.image && { image: data.image }),
+        ...(data.images && { images: data.images }),
         description: data.description,
+        apiDocumentation: data.apiDocumentation,
+        features: data.features || [],
+        highlights: data.highlights || [],
+        challenges: data.challenges,
+        solutions: data.solutions,
+        story: data.story,
+        outcomes: data.outcomes || [],
         skills: data.skills,
         repoLinks: data.repoLinks || [],
         webLink: data.webLink,

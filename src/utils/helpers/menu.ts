@@ -38,3 +38,9 @@ export const menuRole = [
   { label: "UI/UX Designer", value: "designer" },
   { label: "Data Engineer", value: "data" },
 ];
+
+export const menuProjectType = [
+  { label: "Personal", value: "personal" },
+  { label: "Internal/Company", value: "internal" },
+  { label: "Client", value: "client" },
+];

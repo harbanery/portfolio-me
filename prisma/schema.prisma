@@ -75,15 +75,27 @@ model PersonalImage {
 }
 
 model Portfolio {
-  id          Int             @id @default(autoincrement())
-  title       String
-  role        String
-  image       String
-  description String?
-  skills      String[]
-  repoLinks   String[]        @map("repo_links")
-  webLink     String?         @map("web_link")
-  status      PortfolioStatus @default(ACTIVE)
-  createdAt   DateTime        @default(now())
-  updatedAt   DateTime        @updatedAt
+  id              Int             @id @default(autoincrement())
+  title           String
+  subtitle        String?
+  projectType     String          @map("project_type") @default("personal") // "personal", "internal", "client"
+  clientName      String?         @map("client_name")
+  companyName     String?         @map("company_name")
+  role            String
+  image           String
+  images          String[]
+  description     String?
+  apiDocumentation String?         @map("api_documentation")
+  features        String[]
+  highlights      String[]
+  challenges      String?
+  solutions       String?
+  story           String?
+  outcomes        String[]
+  skills          String[]
+  repoLinks       String[]         @map("repo_links")
+  webLink         String?          @map("web_link")
+  status          PortfolioStatus  @default(ACTIVE)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
 }

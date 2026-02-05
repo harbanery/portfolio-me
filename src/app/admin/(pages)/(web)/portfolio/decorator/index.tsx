@@ -17,17 +17,29 @@ import {
 } from "../actions";
 import { getGithubRepoName } from "@/utils/helpers";
 import LoaderPage from "@/app/admin/components/loader";
-import { menuRole } from "@/utils/helpers/menu";
+import { menuProjectType, menuRole } from "@/utils/helpers/menu";
 
 interface PortfolioItem {
   id: number;
   title: string;
+  subtitle?: string;
+  projectType?: string;
+  clientName?: string;
+  companyName?: string;
   role: string;
   skills: string[];
   image: string;
+  images?: string[];
   repoLinks: string[];
   webLink: string | null;
   description?: string | null;
+  apiDocumentation?: string | null;
+  features?: string[];
+  highlights?: string[];
+  challenges?: string | null;
+  solutions?: string | null;
+  story?: string | null;
+  outcomes?: string[];
   status: PortfolioStatus;
 }
 
@@ -111,12 +123,30 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
     try {
       const values = await form.validateFields();
       const imageString = await getImageString(values.image?.fileList);
+      const imagesArray =
+        values.images?.map(
+          (file: any) => file.url || file.response.data.url || file.thumbUrl,
+        ) || [];
 
       const result = await createPortfolio({
         title: values.title,
+        subtitle: values.subtitle,
+        projectType: values.project_type,
+        clientName:
+          values.project_type === "client" ? values.client_name : undefined,
+        companyName:
+          values.project_type === "internal" ? values.company_name : undefined,
         role: values.role,
         image: imageString,
+        images: imagesArray,
         description: values.description,
+        apiDocumentation: values.api_documentation,
+        features: values.features,
+        highlights: values.highlights,
+        challenges: values.challenges,
+        solutions: values.solutions,
+        story: values.story,
+        outcomes: values.outcomes,
         skills: values.skills,
         repoLinks: values.repo_links || [],
         webLink: values.web_link,
@@ -220,6 +250,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
         color: masterDataMap[key].color,
       })),
     role: menuRole,
+    project_type: menuProjectType,
   };
 
   const getRoleLabel = (role: string) => {
@@ -232,6 +263,18 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       ...item,
       repo_links: item.repoLinks,
       web_link: item.webLink,
+      project_type: item.projectType,
+      client_name: item.clientName,
+      company_name: item.companyName,
+      subtitle: item.subtitle,
+      images: item.images?.map((url: string) => ({ url, thumbUrl: url })),
+      api_documentation: item.apiDocumentation,
+      features: item.features,
+      highlights: item.highlights,
+      challenges: item.challenges,
+      solutions: item.solutions,
+      story: item.story,
+      outcomes: item.outcomes,
     });
     setIsDetailModalOpen(true);
     setIsEditMode(false);
@@ -250,6 +293,21 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
         ...selectedItem,
         repo_links: selectedItem.repoLinks,
         web_link: selectedItem.webLink,
+        project_type: selectedItem.projectType,
+        client_name: selectedItem.clientName,
+        company_name: selectedItem.companyName,
+        subtitle: selectedItem.subtitle,
+        images: selectedItem.images?.map((url: string) => ({
+          url,
+          thumbUrl: url,
+        })),
+        api_documentation: selectedItem.apiDocumentation,
+        features: selectedItem.features,
+        highlights: selectedItem.highlights,
+        challenges: selectedItem.challenges,
+        solutions: selectedItem.solutions,
+        story: selectedItem.story,
+        outcomes: selectedItem.outcomes,
       });
     }
     setIsEditMode(!isEditMode);
@@ -260,12 +318,30 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
     try {
       const values = await detailForm.validateFields();
       const imageString = await getImageString(values.image?.fileList);
+      const imagesArray =
+        values.images?.map(
+          (file: any) => file.url || file.response.data.url || file.thumbUrl,
+        ) || [];
 
       const result = await updatePortfolio(selectedItem!.id, {
         title: values.title,
+        subtitle: values.subtitle,
+        projectType: values.project_type,
+        clientName:
+          values.project_type === "client" ? values.client_name : undefined,
+        companyName:
+          values.project_type === "internal" ? values.company_name : undefined,
         role: values.role,
         image: imageString,
+        images: imagesArray,
         description: values.description,
+        apiDocumentation: values.api_documentation,
+        features: values.features,
+        highlights: values.highlights,
+        challenges: values.challenges,
+        solutions: values.solutions,
+        story: values.story,
+        outcomes: values.outcomes,
         skills: values.skills,
         repoLinks: values.repo_links || [],
         webLink: values.web_link,
@@ -539,8 +615,8 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
                 size="small"
                 onClick={
                   isEditMode
-                    ? async () =>
-                        await modal.confirm({
+                    ? () =>
+                        modal.confirm({
                           title: "Are you sure you want to save?",
                           okText: "Yes",
                           cancelText: "No",
