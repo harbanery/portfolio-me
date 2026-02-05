@@ -11,7 +11,7 @@ const BaseLayout = ({
   footer?: boolean;
 }) => {
   return (
-    <main className="w-full overflow-hidden hide-scrollbar select-none">
+    <main className="w-full hide-scrollbar select-none">
       {navbar && <Navbar />}
       {children}
       {footer && <Footer />}
