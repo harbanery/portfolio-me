@@ -35,7 +35,7 @@ const ContactSection = ({ contacts }: ContactSectionProps) => {
     >
       <div className="max-w-4xl mx-auto w-full text-center">
         <h2 className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-20">
-          Contact
+          Say Hello
         </h2>
 
         <p className="text-xl text-gray-400 font-neue-haas font-light mb-16 max-w-3xl mx-auto leading-relaxed">
