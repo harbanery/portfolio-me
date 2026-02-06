@@ -71,16 +71,16 @@ const OtherSection = ({ projects }: { projects?: any[] }) => {
                   <div key={project.id} className="w-full flex-shrink-0 px-2">
                     <div
                       className="relative aspect-video cursor-pointer overflow-hidden rounded-lg group grayscale transition-color duration-300"
-                      onClick={() => handleProjectClick(project.slug)}
+                      onClick={() => handleProjectClick(project.id)}
                     >
                       <img
                         src={project.image}
-                        alt={project.name}
+                        alt={project.title}
                         className="w-full h-full object-cover"
                       />
                       <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-center justify-center">
                         <span className="text-white font-neue-haas text-2xl md:text-3xl lg:text-5xl font-light opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                          {project.name}
+                          {project.title}
                         </span>
                       </div>
                     </div>
@@ -114,16 +114,16 @@ const OtherSection = ({ projects }: { projects?: any[] }) => {
               <div
                 key={project.id}
                 className="relative aspect-video cursor-pointer overflow-hidden rounded-lg group grayscale transition-color duration-300"
-                onClick={() => handleProjectClick(project.slug)}
+                onClick={() => handleProjectClick(project.id)}
               >
                 <img
                   src={project.image}
-                  alt={project.name}
+                  alt={project.title}
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-center justify-center">
                   <span className="text-white font-neue-haas text-2xl lg:text-3xl font-light opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    {project.name}
+                    {project.title}
                   </span>
                 </div>
               </div>

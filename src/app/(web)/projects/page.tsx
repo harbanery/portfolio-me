@@ -9,8 +9,10 @@ const ProjectsPage = async () => {
 
   return (
     <BaseLayout navbar={true} footer={true}>
-      <ListProjectSection projects={data?.projects || []} />
-      <ContactSection contacts={data?.personal?.contacts || []} />
+      <div className="w-full bg-black">
+        <ListProjectSection projects={data?.projects || []} />
+        <ContactSection contacts={data?.personal?.contacts || []} />
+      </div>
     </BaseLayout>
   );
 };

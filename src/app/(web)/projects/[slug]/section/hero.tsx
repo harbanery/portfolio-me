@@ -25,9 +25,11 @@ const HeroSection = ({ project }: { project?: any }) => {
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-inter font-semibold mb-8 tracking-normal leading-none">
             {project.title}
           </h1>
-          <h1 className="text-2xl font-neue-haas font-light mb-8 tracking-tight leading-none text-gray-400">
-            Hire Job Implementation
-          </h1>
+          {project.subtitle && (
+            <h1 className="text-2xl font-neue-haas font-light mb-8 tracking-tight leading-none text-gray-400">
+              {project.subtitle}
+            </h1>
+          )}
 
           <div className="flex justify-center items-center gap-4 mb-16">
             {project.webLink ? (

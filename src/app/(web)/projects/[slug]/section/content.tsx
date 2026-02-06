@@ -24,72 +24,20 @@ import { FaCaretRight } from "react-icons/fa6";
 const ContentSection = ({ project }: { project?: any }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Generate multiple images for carousel (using same image with different variations for demo)
-  const projectImages = [project.image];
+  // Use images array if available, otherwise fallback to single image
+  const projectImages =
+    project.images && project.images.length > 0
+      ? project.images
+      : [project.image];
   const role = menuRole.find((r) => r.value === project.role)?.label;
 
-  // Dummy data for features if not migrated from DB
-  const dummyFeatures = [
-    "Responsive design with modern UI/UX",
-    "Real-time data synchronization",
-    "Optimized performance and loading times",
-    "Secure authentication and authorization",
-    "Scalable architecture for future growth",
-  ];
+  // Project type display
+  const projectType = project.projectType;
+  const clientName = project.clientName;
+  const companyName = project.companyName;
 
-  // Dummy data for highlights if not migrated from DB
-  const dummyHighlights = [
-    "Award-winning design implementation",
-    "Successfully deployed to production",
-    "High user satisfaction rate",
-    "Integrated with third-party services",
-  ];
-
-  // Dummy data for story if not migrated from DB
-  const dummyStory = `This project began with a vision to create something truly impactful. Through extensive research and collaboration, we developed innovative solutions that addressed real-world challenges. The journey was filled with learning opportunities and breakthrough moments that shaped the final product into what it is today. We focused on delivering excellence at every stage, from initial concept to final implementation.`;
-
-  // Dummy data for challenges & solutions
-  const dummyChallengesAndSolutions = [
-    {
-      challenge:
-        "Complex data management across multiple systems presented significant technical challenges. The application needed to sync data in real-time between various components while maintaining consistency and preventing conflicts.",
-      solution:
-        "Implemented a centralized state management system with real-time sync capabilities that ensures data consistency across all components while minimizing latency.",
-    },
-    {
-      challenge:
-        "Performance optimization for large datasets was critical. Users were experiencing slow load times and sluggish interactions when working with substantial amounts of data, which affected overall user experience.",
-      solution:
-        "Developed efficient caching strategies and lazy loading mechanisms that significantly improved performance and reduced initial load times by over 60%.",
-    },
-    {
-      challenge:
-        "Balancing feature richness with simplicity required careful design consideration. The application needed to offer advanced functionality without overwhelming users with complexity.",
-      solution:
-        "Created intuitive user journeys with progressive disclosure of advanced features, ensuring that power users have access to all capabilities while keeping the interface clean for casual users.",
-    },
-  ];
-
-  // Dummy data for outcome/impact
-  const dummyOutcomes = [
-    "Increased user engagement by 40%",
-    "Reduced loading times by 60%",
-    "Achieved 99.9% uptime reliability",
-    "Received excellent user feedback ratings",
-  ];
-
-  // Dummy project type data
-  const dummyProjectType = "client"; // Options: "personal", "internal", "client"
-  const dummyClientName = "ABC Corporation";
-  const dummyCompanyName = "Tech Solutions Inc.";
-
-  // Determine project type display
-  const projectType = project.projectType || dummyProjectType;
-  const clientName = project.clientName || dummyClientName;
-  const companyName = project.companyName || dummyCompanyName;
-
-  // Dummy Postman link data
-  const dummyPostmanLink = project.postmanLink || "#";
+  // API documentation link
+  const postmanLink = project.apiDocumentation || "#";
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -113,14 +61,14 @@ const ContentSection = ({ project }: { project?: any }) => {
             <div className="space-y-8 self-start h-full">
               {/* Main Image with Dynamic Carousel */}
               <div className="aspect-video bg-gray-800 overflow-hidden group relative">
-                <div className="relative w-full h-full">
-                  {projectImages.map((image, index) => (
+                <div className="relative w-full h-full group">
+                  {projectImages.map((image: any, index: number) => (
                     <Image
                       key={index + 1}
                       src={image}
                       alt={`${project.title} - ${index + 1}`}
                       fill
-                      className={`object-cover transition-all duration-1000 ease-in-out grayscale hover:grayscale-0 ${
+                      className={`object-cover transition-all duration-1000 ease-in-out grayscale group-hover:grayscale-0 ${
                         index === currentImageIndex
                           ? "opacity-100 scale-100"
                           : "opacity-0 scale-105"
@@ -134,7 +82,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                 {/* Image Navigation Dots */}
                 {projectImages.length > 1 && (
                   <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
-                    {projectImages.map((_, index) => (
+                    {projectImages.map((_: any, index: number) => (
                       <button
                         key={index + 1}
                         onClick={() => setCurrentImageIndex(index)}
@@ -150,7 +98,9 @@ const ContentSection = ({ project }: { project?: any }) => {
                 )}
 
                 {/* Hover Effect Overlay */}
-                {/* <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" /> */}
+                {projectImages.length > 1 ? (
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                ) : null}
               </div>
 
               {/* Project Metadata */}
@@ -245,17 +195,19 @@ const ContentSection = ({ project }: { project?: any }) => {
                 )}
 
                 {/* API Documentation - Postman Link */}
-                <div>
-                  <a
-                    href={dummyPostmanLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex justify-center items-center px-3 py-2 max-w-48 rounded bg-orange-600 gap-2 text-white font-neue-haas font-medium tracking-wider"
-                  >
-                    <FaCaretRight size={16} />
-                    Run in Postman
-                  </a>
-                </div>
+                {postmanLink && postmanLink !== "#" && (
+                  <div>
+                    <a
+                      href={postmanLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex justify-center items-center px-3 py-2 max-w-48 rounded bg-orange-600 gap-2 text-white font-neue-haas font-medium tracking-wider"
+                    >
+                      <FaCaretRight size={16} />
+                      Run in Postman
+                    </a>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -272,134 +224,122 @@ const ContentSection = ({ project }: { project?: any }) => {
               </div>
 
               {/* Highlights */}
-              {((project.highlights && project.highlights.length > 0) ||
-                dummyHighlights) && (
+              {project.highlights && project.highlights.length > 0 && (
                 <div>
                   <h3 className="text-2xl font-neue-haas font-thin text-white mb-8">
                     Technical Highlights
                   </h3>
                   <ul className="space-y-4">
-                    {(project.highlights || dummyHighlights).map(
-                      (highlight: any, index: number) => (
-                        <li key={index + 1} className="flex items-center gap-4">
-                          <div className="w-8 h-8 text-yellow-400 flex items-center justify-center">
-                            <Star className="w-5 h-5" />
-                          </div>
-                          <span className="text-gray-300 font-neue-haas font-light">
-                            {highlight}
-                          </span>
-                        </li>
-                      ),
-                    )}
+                    {project.highlights.map((highlight: any, index: number) => (
+                      <li key={index + 1} className="flex items-center gap-4">
+                        <div className="w-8 h-8 text-yellow-400 flex items-center justify-center">
+                          <Star className="w-5 h-5" />
+                        </div>
+                        <span className="text-gray-300 font-neue-haas font-light">
+                          {highlight}
+                        </span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               )}
 
               {/* Outcome/Impact */}
-              {(project.outcomes || dummyOutcomes) && (
+              {project.outcomes && project.outcomes.length > 0 && (
                 <div className="mt-16 p-8 bg-gray-800 rounded-2xl">
-                  <h3 className="text-2xl font-thin text-white mb-6 flex items-center gap-3">
+                  <h3 className="text-2xl font-neue-haas font-thin text-white mb-6 flex items-center gap-3">
                     <TrendingUp size={24} className="text-blue-400" />
                     Outcome & Impact
                   </h3>
                   <ul className="space-y-4">
-                    {(project.outcomes || dummyOutcomes).map(
-                      (outcome: any, index: number) => (
-                        <li key={index + 1} className="flex items-center gap-4">
-                          <div className="w-8 h-8 text-blue-400 flex items-center justify-center">
-                            <CheckCircle className="w-5 h-5" />
-                          </div>
-                          <span className="text-gray-300 font-light">
-                            {outcome}
-                          </span>
-                        </li>
-                      ),
-                    )}
+                    {project.outcomes.map((outcome: any, index: number) => (
+                      <li key={index + 1} className="flex items-center gap-4">
+                        <div className="w-8 h-8 text-blue-400 flex items-center justify-center">
+                          <CheckCircle className="w-5 h-5" />
+                        </div>
+                        <span className="text-gray-300 font-neue-haas font-light">
+                          {outcome}
+                        </span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               )}
 
               {/* Features */}
-              {((project.features && project.features.length > 0) ||
-                dummyFeatures) && (
+              {project.features && project.features.length > 0 && (
                 <div>
                   <h3 className="text-2xl font-neue-haas font-thin text-white mb-8">
                     Features
                   </h3>
                   <ul className="space-y-4">
-                    {(project.features || dummyFeatures).map(
-                      (feature: any, index: number) => (
-                        <li key={index + 1} className="flex items-center gap-4">
-                          <div className="w-8 h-8 text-green-400 flex items-center justify-center">
-                            <CheckCircle className="w-5 h-5" />
-                          </div>
-                          <span className="text-gray-300 font-neue-haas font-light">
-                            {feature}
-                          </span>
-                        </li>
-                      ),
-                    )}
+                    {project.features.map((feature: any, index: number) => (
+                      <li key={index + 1} className="flex items-center gap-4">
+                        <div className="w-8 h-8 text-green-400 flex items-center justify-center">
+                          <CheckCircle className="w-5 h-5" />
+                        </div>
+                        <span className="text-gray-300 font-neue-haas font-light">
+                          {feature}
+                        </span>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               )}
 
               {/* Challenges & Solutions */}
-              {(project.challengesAndSolutions ||
-                dummyChallengesAndSolutions) && (
+              {(project.challenges || project.solutions) && (
                 <div className="mt-16 p-8 bg-gray-800 rounded-2xl">
                   {/* Challenges Section */}
                   <div className="mb-12">
-                    <h4 className="text-xl font-thin text-white mb-6 pb-3 border-b border-gray-700 flex items-center gap-3">
+                    <h4 className="text-xl font-neue-haas font-thin text-white mb-6 pb-3 border-b border-gray-700 flex items-center gap-3">
                       <AlertTriangle size={20} className="text-red-400" />
                       The Challenge
                     </h4>
                     <div className="space-y-6">
-                      {(
-                        project.challengesAndSolutions ||
-                        dummyChallengesAndSolutions
-                      ).map((item: any, index: number) => (
+                      {project.challenges && (
                         <p
-                          key={index + 1}
-                          className="text-gray-300 font-light leading-relaxed"
-                        >
-                          {item.challenge}
-                        </p>
-                      ))}
+                          className="text-gray-300 font-neue-haas font-light leading-relaxed"
+                          dangerouslySetInnerHTML={{
+                            __html: project.challenges,
+                          }}
+                        />
+                      )}
                     </div>
                   </div>
 
                   {/* Solutions Section */}
                   <div>
-                    <h4 className="text-xl font-thin text-white mb-6 pb-3 border-b border-gray-700 flex items-center gap-3">
+                    <h4 className="text-xl font-neue-haas font-thin text-white mb-6 pb-3 border-b border-gray-700 flex items-center gap-3">
                       <Lightbulb size={20} className="text-green-400" />
                       The Solution
                     </h4>
                     <div className="space-y-6">
-                      {(
-                        project.challengesAndSolutions ||
-                        dummyChallengesAndSolutions
-                      ).map((item: any, index: number) => (
+                      {project.solutions && (
                         <p
-                          key={index + 1}
-                          className="text-gray-300 font-light leading-relaxed"
-                        >
-                          {item.solution}
-                        </p>
-                      ))}
+                          className="text-gray-300 font-neue-haas font-light leading-relaxed"
+                          dangerouslySetInnerHTML={{
+                            __html: project.solutions,
+                          }}
+                        />
+                      )}
                     </div>
                   </div>
                 </div>
               )}
 
               {/* Story */}
-              {project.story || dummyStory ? (
+              {project.story && (
                 <div className="mt-16 p-8 bg-gray-800 rounded-2xl">
-                  <h3 className="text-2xl font-thin text-white mb-6">Story</h3>
-                  <p className="text-gray-300 font-light leading-relaxed">
-                    {project.story || dummyStory}
-                  </p>
+                  <h3 className="text-2xl font-neue-haas font-thin text-white mb-6">
+                    Story
+                  </h3>
+                  <p
+                    className="text-gray-300 font-neue-haas font-light leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: project.story }}
+                  />
                 </div>
-              ) : null}
+              )}
             </div>
           </div>
         </div>
