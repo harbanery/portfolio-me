@@ -4,14 +4,14 @@ import TimelineSection from "./section/timeline";
 import ssrAction from "./actions";
 
 const WorkPage = async () => {
-  // Fetch work experiences from dummy data
+  // Fetch work experiences from database
   const { data } = await ssrAction();
 
   return (
     <BaseLayout navbar={true} footer={true}>
       <div className="w-full bg-[#0B0B0B]">
         <TimelineSection experiences={data?.experiences || []} />
-        <ContactSection contacts={data?.personal.contacts || []} />
+        <ContactSection contacts={data?.personal?.contacts || []} />
       </div>
     </BaseLayout>
   );
