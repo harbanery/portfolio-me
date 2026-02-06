@@ -14,6 +14,7 @@ import {
   FormProps,
   Space,
   Switch,
+  DatePicker,
 } from "antd";
 import { InboxOutlined, PlusOutlined, DeleteOutlined } from "@ant-design/icons";
 import {
@@ -223,6 +224,10 @@ const GetComponent = (
       );
     case "editor":
       return <Editor placeholder={templatePlaceholder} disabled={disabled} />;
+    case "date_range":
+      return (
+        <DatePicker.RangePicker disabled={disabled} style={{ width: "100%" }} />
+      );
     default:
       return null;
   }
@@ -267,6 +272,7 @@ const FormAdmin = ({
   optionList,
   formProps,
   formValue,
+  customComponent,
 }: FormAdminProps) => {
   const renderContactList = (item: FormLayoutItem, formProps: FormProps) => {
     const contactOptions = optionList?.[item.name] || [];
@@ -474,6 +480,20 @@ const FormAdmin = ({
                     options: optionList?.[item.name],
                   },
                 )}
+              </Form.Item>
+            );
+          }
+
+          // Handle custom component
+          if (customComponent && customComponent[item.name]) {
+            return (
+              <Form.Item
+                key={item.name}
+                name={item.name}
+                label={item.label}
+                // disabled={formProps?.disabled || item.disabled}
+              >
+                {customComponent[item.name]}
               </Form.Item>
             );
           }

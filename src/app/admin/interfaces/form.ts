@@ -1,11 +1,13 @@
 import { FormProps, SelectProps } from "antd";
 import { Rule } from "antd/es/form";
+import { ReactNode } from "react";
 
 export interface FormAdminProps {
   layout: FormLayout[];
   formProps?: FormProps;
   optionList?: Record<string, any[]>;
   formValue?: any;
+  customComponent?: Record<string, ReactNode>;
 }
 
 export type FormLayout = {

@@ -14,6 +14,13 @@ export const menuAdmin = [
     active: true,
   },
   {
+    key: "experiences",
+    label: "Experiences",
+    link: "/admin/experiences",
+    icon: "HistoryOutlined",
+    active: true,
+  },
+  {
     key: "portfolio",
     label: "Portfolio",
     link: "/admin/portfolio",
