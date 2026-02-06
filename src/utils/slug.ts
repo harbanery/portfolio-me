@@ -6,12 +6,7 @@
 export function toKebabCase(text: string): string {
   return text
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, (match) => {
-      if (match.length > 1) {
-        return match[0] + '-' + match.slice(1).join('-');
-      }
-      return match[0];
-    });
+    .replace(/[^a-z0-9]+/g, '-');
 }
 
 /**
