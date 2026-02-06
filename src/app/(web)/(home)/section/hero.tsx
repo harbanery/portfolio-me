@@ -2,8 +2,10 @@
 
 import { StarsBackground } from "@/components/aceternity/ui/bg-stars";
 import { ShootingStars } from "@/components/aceternity/ui/shooting-stars";
+import { useRouter } from "next/navigation";
 
 const HeroSection = ({ name }: { name?: string }) => {
+  const router = useRouter();
   return (
     <section
       id="hero"
@@ -22,7 +24,10 @@ const HeroSection = ({ name }: { name?: string }) => {
           </p>
 
           <div className="flex flex-col items-center gap-8">
-            <button className="bg-white text-black px-12 py-4 rounded-none font-neue-haas text-sm font-medium tracking-wider hover:bg-gray-200 transition-colors">
+            <button
+              onClick={() => router.push("/work")}
+              className="bg-white text-black px-12 py-4 rounded-none font-neue-haas text-sm font-medium tracking-wider hover:bg-gray-200 transition-colors"
+            >
               EXPLORE MY WORK
             </button>
           </div>

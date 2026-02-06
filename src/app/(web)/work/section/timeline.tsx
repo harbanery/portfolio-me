@@ -32,9 +32,10 @@ const ExperienceContent = ({ content }: { content: ExperienceContent }) => {
       <p className="text-lg text-[#8A8A8A] italic font-neue-haas mb-6">
         {content.companyName}
       </p>
-      <p className="text-base text-[#B5B5B5] font-neue-haas leading-relaxed mb-6">
-        {content.description}
-      </p>
+      <p
+        className="text-base text-[#B5B5B5] font-neue-haas leading-relaxed mb-6"
+        dangerouslySetInnerHTML={{ __html: content.description }}
+      />
 
       {/* Tech Stack Badges */}
       <div
@@ -73,13 +74,7 @@ const ExperienceContent = ({ content }: { content: ExperienceContent }) => {
 
       {/* Images Grid */}
       {content.images && content.images.length > 0 && (
-        <div
-          className={`grid gap-4 ${
-            content.images.length > 3
-              ? "grid-cols-3"
-              : `grid-cols-${content.images.length}`
-          }`}
-        >
+        <div className={`grid gap-4 grid-cols-2 xl:grid-cols-3`}>
           {content.images.map((imgUrl, imgIndex) => (
             <div
               key={`${content.companyName}-${imgIndex}`}
@@ -130,7 +125,7 @@ const TimelineSection = ({ experiences }: TimelineSectionProps) => {
                   <div className="h-3 w-3 rounded-full bg-white border border-black" />
                 </div>
                 <div className="pl-20 md:pl-20">
-                  <h3 className="text-sm md:text-2xl font-neue-haas text-white font-light">
+                  <h3 className="text-sm md:text-xl lg:text-2xl font-neue-haas text-white font-light">
                     {item.title}
                   </h3>
                 </div>

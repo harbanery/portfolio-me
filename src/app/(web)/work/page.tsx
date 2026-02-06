@@ -11,7 +11,7 @@ const WorkPage = async () => {
     <BaseLayout navbar={true} footer={true}>
       <div className="w-full bg-[#0B0B0B]">
         <TimelineSection experiences={data?.experiences || []} />
-        <ContactSection contacts={[]} />
+        <ContactSection contacts={data?.personal.contacts || []} />
       </div>
     </BaseLayout>
   );
