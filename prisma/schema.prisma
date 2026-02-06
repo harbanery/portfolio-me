@@ -14,6 +14,11 @@ enum PortfolioStatus {
   NONACTIVE
 }
 
+enum ExperienceStatus {
+  ACTIVE
+  NONACTIVE
+}
+
 model Admin {
   id        Int      @id @default(autoincrement())
   password  String
@@ -98,4 +103,19 @@ model Portfolio {
   status          PortfolioStatus  @default(ACTIVE)
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
+}
+
+model Experience {
+  id              Int                @id @default(autoincrement())
+  jobTitle        String             @map("job_title")
+  companyName     String             @map("company_name")
+  description     String?
+  skills          String[]
+  images          String[]
+  startDate       DateTime           @map("start_date")
+  endDate         DateTime?          @map("end_date")
+  isPresent       Boolean            @default(false) @map("is_present")
+  status          ExperienceStatus    @default(ACTIVE)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
 }
