@@ -9,7 +9,7 @@ export default async function ssrAction() {
           status: "ACTIVE",
         },
         orderBy: {
-          id: "desc",
+          createdAt: "desc",
         },
       }),
     ]);

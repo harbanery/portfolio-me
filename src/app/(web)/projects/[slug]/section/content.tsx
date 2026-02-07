@@ -218,7 +218,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                 <h3 className="text-4xl font-neue-haas font-thin text-white mb-8">
                   About
                 </h3>
-                <p className="text-lg text-gray-300 font-neue-haas font-light leading-relaxed mb-12">
+                <p className="text-lg text-gray-300 font-neue-haas font-light text-justify leading-relaxed mb-12">
                   {project.description}
                 </p>
               </div>
@@ -231,8 +231,11 @@ const ContentSection = ({ project }: { project?: any }) => {
                   </h3>
                   <ul className="space-y-4">
                     {project.highlights.map((highlight: any, index: number) => (
-                      <li key={index + 1} className="flex items-center gap-4">
-                        <div className="w-8 h-8 text-yellow-400 flex items-center justify-center">
+                      <li
+                        key={index + 1}
+                        className="flex items-center justify-start gap-4"
+                      >
+                        <div className="w-5 h-5 text-yellow-400 flex items-center justify-center">
                           <Star className="w-5 h-5" />
                         </div>
                         <span className="text-gray-300 font-neue-haas font-light">
@@ -253,8 +256,11 @@ const ContentSection = ({ project }: { project?: any }) => {
                   </h3>
                   <ul className="space-y-4">
                     {project.outcomes.map((outcome: any, index: number) => (
-                      <li key={index + 1} className="flex items-center gap-4">
-                        <div className="w-8 h-8 text-blue-400 flex items-center justify-center">
+                      <li
+                        key={index + 1}
+                        className="flex justify-start items-center gap-4"
+                      >
+                        <div className="w-5 h-5 text-blue-400 flex items-center justify-center">
                           <CheckCircle className="w-5 h-5" />
                         </div>
                         <span className="text-gray-300 font-neue-haas font-light">
@@ -274,8 +280,11 @@ const ContentSection = ({ project }: { project?: any }) => {
                   </h3>
                   <ul className="space-y-4">
                     {project.features.map((feature: any, index: number) => (
-                      <li key={index + 1} className="flex items-center gap-4">
-                        <div className="w-8 h-8 text-green-400 flex items-center justify-center">
+                      <li
+                        key={index + 1}
+                        className="flex items-center justify-start gap-4"
+                      >
+                        <div className="w-5 h-5 text-green-400 flex items-center justify-center">
                           <CheckCircle className="w-5 h-5" />
                         </div>
                         <span className="text-gray-300 font-neue-haas font-light">
@@ -299,7 +308,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                     <div className="space-y-6">
                       {project.challenges && (
                         <p
-                          className="text-gray-300 font-neue-haas font-light leading-relaxed"
+                          className="text-gray-300 font-neue-haas text-justify leading-relaxed"
                           dangerouslySetInnerHTML={{
                             __html: project.challenges,
                           }}
@@ -317,7 +326,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                     <div className="space-y-6">
                       {project.solutions && (
                         <p
-                          className="text-gray-300 font-neue-haas font-light leading-relaxed"
+                          className="text-gray-300 font-neue-haas text-justify leading-relaxed"
                           dangerouslySetInnerHTML={{
                             __html: project.solutions,
                           }}
@@ -335,7 +344,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                     Story
                   </h3>
                   <p
-                    className="text-gray-300 font-neue-haas font-light leading-relaxed"
+                    className="text-gray-300 font-neue-haas text-justify leading-relaxed"
                     dangerouslySetInnerHTML={{ __html: project.story }}
                   />
                 </div>

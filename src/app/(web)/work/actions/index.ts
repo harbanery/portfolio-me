@@ -23,8 +23,16 @@ export default async function ssrAction() {
           })
         : "Present";
 
+      // If end date is Present, show "Start – Present"
+      // Otherwise if start and end date are same, only show start date
+      const title = !exp.endDate
+        ? `${startMonth} – Present`
+        : exp.endDate && startMonth === endMonth
+        ? startMonth
+        : `${startMonth} – ${endMonth}`;
+
       return {
-        title: `${startMonth} – ${endMonth}`,
+        title,
         content: {
           jobTitle: exp.jobTitle,
           companyName: exp.companyName,

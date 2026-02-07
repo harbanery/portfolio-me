@@ -431,22 +431,26 @@ const ExperienceDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
                     </div>
                   </div>
 
-                  {item.images && item.images.length > 0 && (
-                    <div onClick={(e) => e.stopPropagation()}>
-                      <Image
-                        preview={{
-                          toolbarRender: () => [],
-                        }}
-                        src={item.images[0]}
-                        alt={item.jobTitle}
-                      />
-                    </div>
-                  )}
+                  <div className="text-xs text-gray-500">
+                    {item.isPresent
+                      ? dayjs(item.startDate).format("MMMM YYYY") + " - Present"
+                      : item.endDate
+                        ? dayjs(item.startDate).format("MMMM YYYY") ===
+                          dayjs(item.endDate).format("MMMM YYYY")
+                          ? dayjs(item.startDate).format("MMMM YYYY")
+                          : dayjs(item.startDate).format("MMMM YYYY") +
+                            " - " +
+                            dayjs(item.endDate).format("MMMM YYYY")
+                        : dayjs(item.startDate).format("MMMM YYYY")}
+                  </div>
 
                   <div>
-                    <p className="text-sm text-gray-700 line-clamp-3 text-justify">
-                      {item.description ?? "No description provided."}
-                    </p>
+                    <p
+                      className="text-sm text-gray-700 text-justify"
+                      dangerouslySetInnerHTML={{
+                        __html: item.description ?? "No description provided.",
+                      }}
+                    />
                   </div>
 
                   <div className="flex flex-wrap gap-y-1">
@@ -472,13 +476,23 @@ const ExperienceDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
                     })}
                   </div>
 
-                  <div className="text-xs text-gray-500">
-                    {new Date(item.startDate).toLocaleDateString()} -{" "}
-                    {item.isPresent
-                      ? "Present"
-                      : item.endDate
-                        ? new Date(item.endDate).toLocaleDateString()
-                        : ""}
+                  <div className="grid grid-cols-2 gap-2">
+                    {item.images &&
+                      item.images.length > 0 &&
+                      item.images?.map((image: any, index: number) => (
+                        <div
+                          key={index + 1}
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Image
+                            preview={{
+                              toolbarRender: () => [],
+                            }}
+                            src={image}
+                            alt={item.jobTitle}
+                          />
+                        </div>
+                      ))}
                   </div>
                 </div>
               </Card>
@@ -511,6 +525,7 @@ const ExperienceDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
               <DatePicker.RangePicker
                 disabled={[false, isPresent]}
                 style={{ width: "100%" }}
+                picker="month"
               />
             ),
           }}
@@ -585,6 +600,7 @@ const ExperienceDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
               <DatePicker.RangePicker
                 disabled={!isEditMode || [false, isPresentDetail]}
                 style={{ width: "100%" }}
+                picker="month"
               />
             ),
           }}

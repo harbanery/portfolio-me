@@ -88,7 +88,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                 <h3 className="text-3xl lg:text-4xl font-neue-haas text-white font-light mb-6">
                   {project.title}
                 </h3>
-                <p className="text-lg text-gray-300 font-neue-haas leading-relaxed mb-8">
+                <p className="text-lg text-gray-300 font-neue-haas leading-relaxed line-clamp-3 mb-8">
                   {project.description || "No description available"}
                 </p>
 

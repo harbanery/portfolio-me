@@ -35,7 +35,7 @@ const ContactSection = ({ contacts }: ContactSectionProps) => {
     >
       <div className="max-w-4xl mx-auto w-full text-center">
         <h2 className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-20">
-          Say Hello
+          Get In Touch
         </h2>
 
         <p className="text-xl text-gray-400 font-neue-haas font-light mb-16 max-w-3xl mx-auto leading-relaxed">
@@ -49,7 +49,7 @@ const ContactSection = ({ contacts }: ContactSectionProps) => {
             href={formatURLContact(mailContact?.value || "", "mail") || "#"}
             className="bg-white text-black px-16 py-5 rounded-none font-neue-haas text-sm font-medium tracking-wider hover:bg-gray-200 transition-colors"
           >
-            GET IN TOUCH
+            SAY HELLO
           </a>
 
           <div className="flex gap-12 justify-center">
