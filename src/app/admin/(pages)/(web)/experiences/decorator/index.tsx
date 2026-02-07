@@ -28,9 +28,6 @@ import {
 } from "../actions";
 import LoaderPage from "@/app/admin/components/loader";
 import dayjs, { Dayjs } from "dayjs";
-import utc from "dayjs/plugin/utc";
-
-dayjs.extend(utc);
 
 interface ExperienceItem {
   id: number;
@@ -108,10 +105,10 @@ const ExperienceDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       const imagesArray = await getImagesString(values.images);
 
       const startDate = values.period
-        ? dayjs(values.period[0]).utc().startOf("month").toDate()
+        ? dayjs(values.period[0]).startOf("month").toDate()
         : new Date();
       const endDate = values.period
-        ? dayjs(values.period[1]).utc().startOf("month").toDate()
+        ? dayjs(values.period[1]).startOf("month").toDate()
         : null;
 
       const result = await createExperience({
@@ -277,10 +274,10 @@ const ExperienceDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       const imagesArray = await getImagesString(values.images);
 
       const startDate = values.period
-        ? dayjs(values.period[0]).utc().startOf("month").toDate()
+        ? dayjs(values.period[0]).startOf("month").toDate()
         : new Date();
       const endDate = values.period
-        ? dayjs(values.period[1]).utc().startOf("month").toDate()
+        ? dayjs(values.period[1]).startOf("month").toDate()
         : null;
 
       const result = await updateExperience(selectedItem!.id, {
