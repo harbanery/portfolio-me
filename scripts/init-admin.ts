@@ -1,7 +1,14 @@
 import { PrismaClient } from "@prisma/client";
 import { hashPassword, generateAdminPassword } from "../src/lib/auth/password";
 
-const prisma = new PrismaClient();
+// Use DIRECT_URL for scripts that need direct database access
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: process.env.DIRECT_URL
+    }
+  }
+});
 
 async function main() {
   console.log("Initializing admin account...");
