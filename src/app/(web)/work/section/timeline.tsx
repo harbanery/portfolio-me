@@ -33,7 +33,7 @@ const ExperienceContent = ({ content }: { content: ExperienceContent }) => {
         {content.companyName}
       </p>
       <p
-        className="text-base text-[#B5B5B5] font-neue-haas leading-relaxed mb-6"
+        className="text-base text-[#B5B5B5] font-neue-haas text-justify leading-relaxed mb-6"
         dangerouslySetInnerHTML={{ __html: content.description }}
       />
 

@@ -104,8 +104,8 @@ const ExperienceDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       const values = await form.validateFields();
       const imagesArray = await getImagesString(values.images);
 
-      const startDate = values.period ? values.period[0] : new Date();
-      const endDate = values.period ? values.period[1] : null;
+      const startDate = values.period ? values.period[0].startOf('month').toDate() : new Date();
+      const endDate = values.period ? values.period[1].startOf('month').toDate() : null;
 
       const result = await createExperience({
         jobTitle: values.job_title,
@@ -269,8 +269,8 @@ const ExperienceDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       const values = await detailForm.validateFields();
       const imagesArray = await getImagesString(values.images);
 
-      const startDate = values.period ? values.period[0] : new Date();
-      const endDate = values.period ? values.period[1] : null;
+      const startDate = values.period ? values.period[0].startOf('month').toDate() : new Date();
+      const endDate = values.period ? values.period[1].startOf('month').toDate() : null;
 
       const result = await updateExperience(selectedItem!.id, {
         jobTitle: values.job_title,
