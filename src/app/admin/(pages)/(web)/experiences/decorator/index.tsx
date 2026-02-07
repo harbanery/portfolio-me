@@ -28,6 +28,9 @@ import {
 } from "../actions";
 import LoaderPage from "@/app/admin/components/loader";
 import dayjs, { Dayjs } from "dayjs";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 
 interface ExperienceItem {
   id: number;
@@ -37,7 +40,7 @@ interface ExperienceItem {
   skills: string[];
   images?: string[];
   startDate: Date;
-  endDate?: Date;
+  endDate?: Date | null;
   isPresent: boolean;
   status: ExperienceStatus;
 }
@@ -104,8 +107,12 @@ const ExperienceDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       const values = await form.validateFields();
       const imagesArray = await getImagesString(values.images);
 
-      const startDate = values.period ? values.period[0].utc().startOf('month').toDate() : new Date();
-      const endDate = values.period ? values.period[1].utc().startOf('month').toDate() : null;
+      const startDate = values.period
+        ? dayjs(values.period[0]).utc().startOf("month").toDate()
+        : new Date();
+      const endDate = values.period
+        ? dayjs(values.period[1]).utc().startOf("month").toDate()
+        : null;
 
       const result = await createExperience({
         jobTitle: values.job_title,
@@ -269,8 +276,12 @@ const ExperienceDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       const values = await detailForm.validateFields();
       const imagesArray = await getImagesString(values.images);
 
-      const startDate = values.period ? values.period[0].utc().startOf('month').toDate() : new Date();
-      const endDate = values.period ? values.period[1].utc().startOf('month').toDate() : null;
+      const startDate = values.period
+        ? dayjs(values.period[0]).utc().startOf("month").toDate()
+        : new Date();
+      const endDate = values.period
+        ? dayjs(values.period[1]).utc().startOf("month").toDate()
+        : null;
 
       const result = await updateExperience(selectedItem!.id, {
         jobTitle: values.job_title,

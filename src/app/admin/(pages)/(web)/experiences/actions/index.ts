@@ -12,7 +12,7 @@ export interface ExperienceData {
   skills: string[];
   images?: string[];
   startDate: Date;
-  endDate?: Date;
+  endDate?: Date | null;
   isPresent?: boolean;
   status?: ExperienceStatus;
 }
