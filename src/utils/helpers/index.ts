@@ -31,6 +31,12 @@ export function formatURLContact(value: string, type: string): string {
       return `https://github.com/${value}`;
     case "whatsapp":
       return `https://wa.me/${value}`;
+    case "twitter":
+      return `https://x.com/${value}`;
+    case "instagram":
+      return `https://www.instagram.com/${value}`;
+    case "facebook":
+      return `https://www.facebook.com/${value}`;
     default:
       return value;
   }
