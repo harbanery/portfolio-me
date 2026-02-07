@@ -3,14 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "dotenv -e .env.development -- next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "init-admin": "tsx scripts/init-admin.ts",
-    "init-admin:dev": "dotenv -e .env.development -- tsx scripts/init-admin.ts",
-    "prisma:dev": "dotenv -e .env.development -- npx prisma",
-    "prisma:prod": "dotenv -e .env -- npx prisma",
     "seed:dev": "tsx prisma/seed.ts"
   },
   "prisma": {
