@@ -28,8 +28,10 @@ import {
 import LoaderPage from "@/app/admin/components/loader";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 
 dayjs.extend(utc);
+dayjs.extend(timezone);
 
 interface ExperienceItem {
   id: number;
@@ -107,10 +109,10 @@ const ExperienceDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       const imagesArray = await getImagesString(values.images);
 
       const startDate = values.period
-        ? dayjs(values.period[0]).startOf("day").toDate()
+        ? dayjs(values.period[0]).tz("Asia/Jakarta").startOf("day").toDate()
         : new Date();
       const endDate = values.period
-        ? dayjs(values.period[1]).endOf("day").toDate()
+        ? dayjs(values.period[1]).tz("Asia/Jakarta").endOf("day").toDate()
         : null;
 
       const result = await createExperience({
@@ -276,10 +278,10 @@ const ExperienceDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       const imagesArray = await getImagesString(values.images);
 
       const startDate = values.period
-        ? dayjs(values.period[0]).startOf("day").toDate()
+        ? dayjs(values.period[0]).tz("Asia/Jakarta").startOf("day").toDate()
         : new Date();
       const endDate = values.period
-        ? dayjs(values.period[1]).endOf("day").toDate()
+        ? dayjs(values.period[1]).tz("Asia/Jakarta").endOf("day").toDate()
         : null;
 
       const result = await updateExperience(selectedItem!.id, {
