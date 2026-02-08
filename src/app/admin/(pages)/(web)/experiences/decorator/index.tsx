@@ -109,10 +109,10 @@ const ExperienceDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       const imagesArray = await getImagesString(values.images);
 
       const startDate = values.period
-        ? dayjs(values.period[0]).tz("Asia/Jakarta").startOf("day").toDate()
+        ? dayjs(values.period[0]).endOf("day").toDate()
         : new Date();
       const endDate = values.period
-        ? dayjs(values.period[1]).tz("Asia/Jakarta").endOf("day").toDate()
+        ? dayjs(values.period[1]).endOf("day").toDate()
         : null;
 
       const result = await createExperience({
@@ -278,10 +278,10 @@ const ExperienceDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       const imagesArray = await getImagesString(values.images);
 
       const startDate = values.period
-        ? dayjs(values.period[0]).tz("Asia/Jakarta").startOf("day").toDate()
+        ? dayjs(values.period[0]).endOf("day").toDate()
         : new Date();
       const endDate = values.period
-        ? dayjs(values.period[1]).tz("Asia/Jakarta").endOf("day").toDate()
+        ? dayjs(values.period[1]).endOf("day").toDate()
         : null;
 
       const result = await updateExperience(selectedItem!.id, {
