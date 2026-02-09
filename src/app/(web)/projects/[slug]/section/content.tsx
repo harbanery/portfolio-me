@@ -184,10 +184,12 @@ const ContentSection = ({ project }: { project?: any }) => {
                           href={repo}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 text-white font-neue-haas font-medium tracking-wider hover:underline"
+                          className="inline-flex items-center gap-2 font-neue-haas font-medium tracking-wider hover:translate-x-1 transition-transform duration-200"
                         >
-                          <Github size={16} />
-                          {getGithubRepoName(repo)}
+                          <Github size={16} className="text-white" />
+                          <span className="paragraph-wrapper text-white">
+                            {getGithubRepoName(repo)}
+                          </span>
                         </a>
                       ))}
                     </div>
@@ -201,7 +203,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                       href={postmanLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex justify-center items-center px-3 py-2 max-w-48 rounded bg-orange-600 gap-2 text-white font-neue-haas font-medium tracking-wider"
+                      className="flex justify-center items-center px-3 py-2 max-w-48 rounded bg-orange-600 hover:bg-orange-700 gap-2 text-white font-neue-haas font-medium tracking-wider transition-colors duration-300"
                     >
                       <FaCaretRight size={16} />
                       Run in Postman
@@ -261,7 +263,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                     {project.outcomes.map((outcome: any, index: number) => (
                       <li
                         key={index + 1}
-                        className="flex justify-start items-center gap-4"
+                        className="flex justify-start items-center gap-4 hover:translate-x-1 transition-transform duration-200"
                       >
                         <div className="w-5 h-5 text-blue-400 flex items-center justify-center">
                           <CheckCircle className="w-5 h-5" />
@@ -285,7 +287,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                     {project.features.map((feature: any, index: number) => (
                       <li
                         key={index + 1}
-                        className="flex items-center justify-start gap-4"
+                        className="flex items-center justify-start gap-4 hover:translate-x-1 transition-transform duration-200"
                       >
                         <div className="w-5 h-5 text-green-400 flex items-center justify-center">
                           <CheckCircle className="w-5 h-5" />

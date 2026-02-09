@@ -17,6 +17,7 @@ const HomePage = async () => {
           skills={data?.personal?.skills || []}
           images={data?.personal?.images?.map((img: any) => img.url) || []}
         />
+        <ProjectSection projects={data?.projects || []} />
         <ContactSection contacts={data?.personal?.contacts || []} />
       </div>
     </BaseLayout>

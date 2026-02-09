@@ -47,7 +47,7 @@ const ContactSection = ({ contacts }: ContactSectionProps) => {
         <div className="flex flex-col items-center gap-12">
           <a
             href={formatURLContact(mailContact?.value || "", "mail") || "#"}
-            className="bg-white text-black px-16 py-5 rounded-none font-neue-haas text-sm font-medium tracking-wider hover:bg-gray-200 transition-colors"
+            className="bg-white text-black px-16 py-5 rounded-none font-neue-haas text-sm font-medium tracking-wider hover:bg-gray-200 transition-colors duration-300"
           >
             SAY HELLO
           </a>
@@ -62,7 +62,7 @@ const ContactSection = ({ contacts }: ContactSectionProps) => {
                   href={formatURLContact(item.value, item.type) || "#"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="text-gray-400 hover:text-white transition-colors duration-300"
                 >
                   <Icon size={20} />
                 </Link>

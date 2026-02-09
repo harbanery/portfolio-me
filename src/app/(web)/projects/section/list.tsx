@@ -51,8 +51,8 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
     >
       <StarsBackground className="pointer-events-none" />
       <ShootingStars className="pointer-events-none" />
-      <div className="max-w-7xl mx-auto w-full">
-        <h2 className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-20 text-center">
+      <div className="max-w-7xl mx-auto w-full mt-16">
+        <h2 className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-32 text-center">
           Projects
         </h2>
 
@@ -98,35 +98,27 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                 />
 
                 <div
-                  className={`flex flex-wrap ${index % 2 === 1 ? "justify-end" : ""} gap-3`}
+                  className={`flex flex-wrap ${index % 2 === 1 ? "justify-end" : ""} gap-4`}
                 >
                   {(project.skills || []).map((tech: string, index: number) => {
                     const Icon = logoMap[tech.toLowerCase()];
-                    const techData = masterDataMap[tech.toLowerCase()];
 
                     return (
                       <div
                         key={index + 1}
-                        className="group flex items-center gap-3 px-3 py-2 bg-gray-800 bg-opacity-50 backdrop-blur-sm border border-gray-700 border-opacity-50 rounded-full hover:bg-opacity-75 transition-all duration-300"
+                        className="w-5 h-5 flex items-center justify-center transition-all duration-300 text-gray-200 hover:text-[var(--skill-color)]"
+                        style={{
+                          ["--skill-color" as any]:
+                            masterDataMap[tech]?.color || "#FFFFFF",
+                        }}
                       >
-                        <div
-                          className="w-5 h-5 flex items-center justify-center transition-all duration-300 text-gray-500 group-hover:text-[var(--skill-color)]"
-                          style={{
-                            ["--skill-color" as any]:
-                              masterDataMap[tech]?.color || "#FFFFFF",
-                          }}
-                        >
-                          {Icon ? (
-                            <Icon className="w-full h-full" />
-                          ) : (
-                            <div className="w-full h-full bg-gray-600 rounded-full flex items-center justify-center text-xs text-white font-medium">
-                              {tech.charAt(0)}
-                            </div>
-                          )}
-                        </div>
-                        <span className="text-gray-300 font-neue-haas font-light text-sm">
-                          {techData?.name || tech}
-                        </span>
+                        {Icon ? (
+                          <Icon className="w-full h-full" />
+                        ) : (
+                          <div className="w-full h-full bg-gray-600 rounded-full flex items-center justify-center text-xs text-white font-medium">
+                            {tech.charAt(0)}
+                          </div>
+                        )}
                       </div>
                     );
                   })}
@@ -137,7 +129,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                     onClick={() =>
                       router.push(`/projects/${getProjectSlug(project)}`)
                     }
-                    className="inline-flex items-center gap-2 text-white font-neue-haas font-medium tracking-wider hover:underline"
+                    className={`inline-flex items-center gap-2 text-white font-neue-haas font-medium tracking-wider ${index % 2 === 1 ? "hover:-translate-x-1" : "hover:translate-x-1"} transition-transform duration-200`}
                   >
                     VIEW PROJECT
                     <ExternalLink size={16} />

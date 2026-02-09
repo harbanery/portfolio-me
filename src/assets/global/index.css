@@ -40,6 +40,28 @@
   transform-origin: bottom left;
 }
 
+.paragraph-wrapper span {
+  @apply relative inline-block;
+}
+
+.paragraph-wrapper span::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 2px;
+  left: 0;
+  background-color: currentColor;
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+.paragraph-wrapper span:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
 @layer utilities {
   .hide-scrollbar::-webkit-scrollbar {
     display: none;

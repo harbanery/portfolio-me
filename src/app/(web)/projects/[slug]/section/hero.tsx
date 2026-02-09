@@ -37,7 +37,7 @@ const HeroSection = ({ project }: { project?: any }) => {
                 href={project.webLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex justify-center items-center gap-2 bg-white text-black px-12 py-4 rounded-none font-neue-haas text-sm font-medium tracking-wider hover:bg-gray-200 transition-colors"
+                className="flex justify-center items-center gap-2 bg-white text-black px-12 py-4 rounded-none font-neue-haas text-sm font-medium tracking-wider hover:bg-gray-200 transition-colors duration-300"
               >
                 LIVE DEMO
                 <ExternalLink size={16} />

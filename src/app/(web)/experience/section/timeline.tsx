@@ -108,7 +108,7 @@ const TimelineSection = ({ experiences }: TimelineSectionProps) => {
             Work Experience
           </h2>
           <p className="text-xl text-[#B5B5B5] font-neue-haas font-light max-w-3xl mx-auto mb-20 text-center leading-relaxed">
-            A timeline of my professional journey in software development
+            A timeline of my professional journey in web development
           </p>
         </div>
 
