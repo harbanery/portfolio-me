@@ -47,7 +47,10 @@ const Navbar = () => {
 
   const navLinks = [
     { name: "HOME", href: pathname === "/" ? "#hero" : "/" },
-    { name: "WORK", href: pathname === "/work" ? "#work" : "/work" },
+    {
+      name: "EXPERIENCE",
+      href: pathname === "/experience" ? "#experience" : "/experience",
+    },
     {
       name: "PROJECTS",
       href: pathname === "/projects" ? "#projects" : "/projects",

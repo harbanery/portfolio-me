@@ -2,9 +2,9 @@
 
 import prisma from "@/lib/config/database";
 
-export type PortfolioStatus = "ACTIVE" | "NONACTIVE";
+export type ProjectStatus = "ACTIVE" | "NONACTIVE";
 
-export interface PortfolioData {
+export interface ProjectData {
   id?: number;
   title: string;
   subtitle?: string;
@@ -25,36 +25,36 @@ export interface PortfolioData {
   skills: string[];
   repoLinks?: string[];
   webLink?: string;
-  status?: PortfolioStatus;
+  status?: ProjectStatus;
 }
 
-export async function getPortfolios() {
+export async function getProjects() {
   try {
-    const portfolios = await prisma.portfolio.findMany({
+    const projects = await prisma.portfolio.findMany({
       orderBy: { createdAt: "desc" },
     });
-    return { success: true, data: portfolios };
+    return { success: true, data: projects };
   } catch (error) {
-    console.error("Error fetching portfolios:", error);
-    return { success: false, error: "Failed to fetch portfolios" };
+    console.error("Error fetching projects:", error);
+    return { success: false, error: "Failed to fetch projects" };
   }
 }
 
-export async function getPortfolioById(id: number) {
+export async function getProjectById(id: number) {
   try {
-    const portfolio = await prisma.portfolio.findUnique({
+    const project = await prisma.portfolio.findUnique({
       where: { id },
     });
-    return { success: true, data: portfolio };
+    return { success: true, data: project };
   } catch (error) {
-    console.error("Error fetching portfolio:", error);
-    return { success: false, error: "Failed to fetch portfolio" };
+    console.error("Error fetching project:", error);
+    return { success: false, error: "Failed to fetch project" };
   }
 }
 
-export async function createPortfolio(data: PortfolioData) {
+export async function createProject(data: ProjectData) {
   try {
-    const portfolio = await prisma.portfolio.create({
+    const project = await prisma.portfolio.create({
       data: {
         title: data.title,
         subtitle: data.subtitle,
@@ -78,16 +78,16 @@ export async function createPortfolio(data: PortfolioData) {
         status: "ACTIVE",
       },
     });
-    return { success: true, data: portfolio };
+    return { success: true, data: project };
   } catch (error) {
-    console.error("Error creating portfolio:", error);
-    return { success: false, error: "Failed to create portfolio" };
+    console.error("Error creating project:", error);
+    return { success: false, error: "Failed to create project" };
   }
 }
 
-export async function updatePortfolio(id: number, data: PortfolioData) {
+export async function updateProject(id: number, data: ProjectData) {
   try {
-    const portfolio = await prisma.portfolio.update({
+    const project = await prisma.portfolio.update({
       where: { id },
       data: {
         title: data.title,
@@ -111,37 +111,34 @@ export async function updatePortfolio(id: number, data: PortfolioData) {
         webLink: data.webLink,
       },
     });
-    return { success: true, data: portfolio };
+    return { success: true, data: project };
   } catch (error) {
-    console.error("Error updating portfolio:", error);
-    return { success: false, error: "Failed to update portfolio" };
+    console.error("Error updating project:", error);
+    return { success: false, error: "Failed to update project" };
   }
 }
 
-export async function togglePortfolioStatus(
-  id: number,
-  status: PortfolioStatus,
-) {
+export async function toggleProjectStatus(id: number, status: ProjectStatus) {
   try {
-    const portfolio = await prisma.portfolio.update({
+    const project = await prisma.portfolio.update({
       where: { id },
       data: { status: status as any },
     });
-    return { success: true, data: portfolio };
+    return { success: true, data: project };
   } catch (error) {
-    console.error("Error toggling portfolio status:", error);
-    return { success: false, error: "Failed to toggle portfolio status" };
+    console.error("Error toggling project status:", error);
+    return { success: false, error: "Failed to toggle project status" };
   }
 }
 
-export async function deletePortfolio(id: number) {
+export async function deleteProject(id: number) {
   try {
     await prisma.portfolio.delete({
       where: { id },
     });
     return { success: true };
   } catch (error) {
-    console.error("Error deleting portfolio:", error);
-    return { success: false, error: "Failed to delete portfolio" };
+    console.error("Error deleting project:", error);
+    return { success: false, error: "Failed to delete project" };
   }
 }

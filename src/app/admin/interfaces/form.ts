@@ -28,6 +28,7 @@ export type FormLayoutItem = {
   isList?: boolean;
   multiple?: boolean;
   accept?: string;
+  dependencies?: string[];
 };
 
 export interface FieldProps {

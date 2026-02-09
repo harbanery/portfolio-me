@@ -59,7 +59,7 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
               About
             </h2>
             <div
-              className="text-lg text-gray-300 font-neue-haas leading-relaxed space-y-6"
+              className="text-lg text-gray-300 font-neue-haas leading-relaxed space-y-6 paragraph-wrapper"
               dangerouslySetInnerHTML={{ __html: about }}
             />
           </div>

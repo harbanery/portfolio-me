@@ -27,12 +27,14 @@ export const formLayout: FormLayout[] = [
         label: "Client Name",
         type: "input",
         required: false,
+        dependencies: ["project_type", "client"],
       },
       {
         name: "company_name",
         label: "Company Name",
         type: "input",
         required: false,
+        dependencies: ["project_type", "internal"],
       },
       {
         name: "role",
@@ -55,7 +57,7 @@ export const formLayout: FormLayout[] = [
       {
         name: "description",
         label: "Description",
-        type: "textarea",
+        type: "editor",
         required: false,
       },
       {

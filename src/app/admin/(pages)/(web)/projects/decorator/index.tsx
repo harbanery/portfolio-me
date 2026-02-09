@@ -5,21 +5,21 @@ import { FormLayout } from "@/app/admin/interfaces/form";
 import { loadAntdIcon } from "@/components/custom/icon";
 import { masterDataMap } from "@/utils/helpers/category";
 import { logoMap } from "@/utils/helpers/icon";
-import { App, Button, Form, Modal, Card, Tag, Empty, Spin, Image } from "antd";
+import { App, Button, Form, Modal, Card, Tag, Empty, Image } from "antd";
 import { useEffect, useState } from "react";
 import {
-  getPortfolios,
-  createPortfolio,
-  updatePortfolio,
-  deletePortfolio,
-  togglePortfolioStatus,
-  PortfolioStatus,
+  getProjects,
+  createProject,
+  updateProject,
+  deleteProject,
+  toggleProjectStatus,
+  ProjectStatus,
 } from "../actions";
 import { getGithubRepoName } from "@/utils/helpers";
 import LoaderPage from "@/app/admin/components/loader";
 import { menuProjectType, menuRole } from "@/utils/helpers/menu";
 
-interface PortfolioItem {
+interface ProjectItem {
   id: number;
   title: string;
   subtitle?: string;
@@ -40,10 +40,10 @@ interface PortfolioItem {
   solutions?: string | null;
   story?: string | null;
   outcomes?: string[];
-  status: PortfolioStatus;
+  status: ProjectStatus;
 }
 
-const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
+const ProjectDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
   const PlusIcon = loadAntdIcon("PlusOutlined");
   const EditIcon = loadAntdIcon("EditOutlined");
   const SaveIcon = loadAntdIcon("SaveOutlined");
@@ -61,26 +61,26 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
+  const [projectItems, setProjectItems] = useState<ProjectItem[]>([]);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
-  const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null);
+  const [selectedItem, setSelectedItem] = useState<ProjectItem | null>(null);
   const [isEditMode, setIsEditMode] = useState(false);
 
-  const fetchPortfolios = async () => {
+  const fetchProjects = async () => {
     setFetching(true);
     try {
-      const result = await getPortfolios();
+      const result = await getProjects();
       if (result.success && result.data) {
-        setPortfolioItems(result.data as unknown as PortfolioItem[]);
+        setProjectItems(result.data as unknown as ProjectItem[]);
       }
     } catch (error) {
-      console.error("Error fetching portfolios:", error);
+      console.error("Error fetching projects:", error);
     } finally {
       setFetching(false);
     }
   };
 
-  const handleAddPortfolio = () => {
+  const handleAddProject = () => {
     form.resetFields();
     setIsModalOpen(true);
   };
@@ -128,7 +128,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
           (file: any) => file.url || file.response.data.url || file.thumbUrl,
         ) || [];
 
-      const result = await createPortfolio({
+      const result = await createProject({
         title: values.title,
         subtitle: values.subtitle,
         projectType: values.project_type,
@@ -159,13 +159,13 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       notification.success({
         key: "save-success",
         message: "Success",
-        description: "Portfolio item added successfully",
+        description: "Project item added successfully",
         placement: "bottomRight",
       });
 
       setIsModalOpen(false);
       form.resetFields();
-      fetchPortfolios();
+      fetchProjects();
       return Promise.resolve();
     } catch (error: any) {
       notification.error({
@@ -173,7 +173,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
         message: error?.errorFields ? "Validation Error" : "Error",
         ...(error?.errorFields
           ? {}
-          : { description: error?.message || "Failed to add portfolio item" }),
+          : { description: error?.message || "Failed to add project item" }),
         placement: "bottomRight",
       });
 
@@ -190,22 +190,22 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
 
   const handleDelete = async (id: number) => {
     try {
-      const result = await deletePortfolio(id);
+      const result = await deleteProject(id);
       if (!result.success) {
         throw new Error(result.error);
       }
-      fetchPortfolios();
+      fetchProjects();
       notification.success({
         key: "delete-success",
         message: "Success",
-        description: "Portfolio item deleted successfully",
+        description: "Project item deleted successfully",
         placement: "bottomRight",
       });
     } catch (error: any) {
       notification.error({
         key: "delete-error",
         message: "Error",
-        description: error?.message || "Failed to delete portfolio item",
+        description: error?.message || "Failed to delete project item",
         placement: "bottomRight",
       });
     }
@@ -213,27 +213,27 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
 
   const handleToggleStatus = async (
     id: number,
-    currentStatus: PortfolioStatus,
+    currentStatus: ProjectStatus,
   ) => {
-    const newStatus: PortfolioStatus =
+    const newStatus: ProjectStatus =
       currentStatus === "ACTIVE" ? "NONACTIVE" : "ACTIVE";
     try {
-      const result = await togglePortfolioStatus(id, newStatus);
+      const result = await toggleProjectStatus(id, newStatus);
       if (!result.success) {
         throw new Error(result.error);
       }
-      fetchPortfolios();
+      fetchProjects();
       notification.success({
         key: "toggle-status-success",
         message: "Success",
-        description: `Portfolio status changed to ${newStatus === "ACTIVE" ? "Active" : "Inactive"}`,
+        description: `Project status changed to ${newStatus === "ACTIVE" ? "Active" : "Inactive"}`,
         placement: "bottomRight",
       });
     } catch (error: any) {
       notification.error({
         key: "toggle-status-error",
         message: "Error",
-        description: error?.message || "Failed to toggle portfolio status",
+        description: error?.message || "Failed to toggle project status",
         placement: "bottomRight",
       });
     }
@@ -257,7 +257,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
     return options.role.find((r) => r.value === role)?.label || role;
   };
 
-  const handleOpenDetail = (item: PortfolioItem) => {
+  const handleOpenDetail = (item: ProjectItem) => {
     setSelectedItem(item);
     detailForm.setFieldsValue({
       ...item,
@@ -323,7 +323,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
           (file: any) => file.url || file.response.data.url || file.thumbUrl,
         ) || [];
 
-      const result = await updatePortfolio(selectedItem!.id, {
+      const result = await updateProject(selectedItem!.id, {
         title: values.title,
         subtitle: values.subtitle,
         projectType: values.project_type,
@@ -362,12 +362,12 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       notification.success({
         key: "edit-success",
         message: "Success",
-        description: "Portfolio item updated successfully",
+        description: "Project item updated successfully",
         placement: "bottomRight",
       });
 
       setIsEditMode(false);
-      fetchPortfolios();
+      fetchProjects();
       return Promise.resolve();
     } catch (error: any) {
       notification.error({
@@ -376,7 +376,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
         ...(error?.errorFields
           ? {}
           : {
-              description: error?.message || "Failed to update portfolio item",
+              description: error?.message || "Failed to update project item",
             }),
         placement: "bottomRight",
       });
@@ -388,7 +388,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
   };
 
   useEffect(() => {
-    fetchPortfolios();
+    fetchProjects();
   }, []);
 
   if (fetching) return <LoaderPage />;
@@ -397,9 +397,9 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
     <section className="flex flex-col gap-8">
       <div className="flex gap-8 justify-between items-center">
         <div className="flex flex-col gap-2 w-full max-w-[50%]">
-          <h1 className="font-semibold text-3xl m-0">Portfolio</h1>
+          <h1 className="font-semibold text-3xl m-0">Project</h1>
           <p className="font-light text-sm leading-tight">
-            Manage your portfolio projects
+            Manage your projects
           </p>
         </div>
 
@@ -410,18 +410,18 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
           color="geekblue"
           iconPosition="end"
           size="large"
-          onClick={handleAddPortfolio}
+          onClick={handleAddProject}
         >
-          Add Portfolio
+          Add Project
         </Button>
       </div>
 
       <div className="flex flex-col gap-4">
-        {portfolioItems.length === 0 ? (
-          <Empty description="No portfolio items yet. Click 'Add Portfolio' to create one." />
+        {projectItems.length === 0 ? (
+          <Empty description="No project items yet. Click 'Add Project' to create one." />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {portfolioItems.map((item) => (
+            {projectItems.map((item) => (
               // <Badge.Ribbon
               //   key={item.id}
               //   text={item.status === "ACTIVE" ? "Active" : "Inactive"}
@@ -446,7 +446,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
                     onClick={(e) => {
                       e.stopPropagation();
                       modal.confirm({
-                        title: `Are you sure you want to ${item.status === "ACTIVE" ? "deactivate" : "activate"} this portfolio?`,
+                        title: `Are you sure you want to ${item.status === "ACTIVE" ? "deactivate" : "activate"} this project?`,
                         okText: "Yes",
                         cancelText: "No",
                         onOk: () => handleToggleStatus(item.id, item.status),
@@ -464,7 +464,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
                       e.stopPropagation();
                       modal.confirm({
                         title:
-                          "Are you sure you want to delete this portfolio item?",
+                          "Are you sure you want to delete this project item?",
                         okText: "Yes",
                         cancelText: "No",
                         onOk: () => handleDelete(item.id),
@@ -503,9 +503,12 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
                   </div>
 
                   <div>
-                    <p className="text-sm text-gray-700 line-clamp-3 text-justify">
-                      {item.description ?? "No description provided."}
-                    </p>
+                    <p
+                      className="text-sm text-gray-700 line-clamp-3 text-justify"
+                      dangerouslySetInnerHTML={{
+                        __html: item.description ?? "No description provided.",
+                      }}
+                    />
                   </div>
 
                   <div className="flex flex-wrap gap-y-1">
@@ -570,7 +573,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       </div>
 
       <Modal
-        title="Add Portfolio"
+        title="Add Project"
         open={isModalOpen}
         onOk={handleSave}
         onCancel={handleCancelModal}
@@ -594,7 +597,7 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
       <Modal
         title={
           <div className="flex justify-between items-center pr-8">
-            <span>Portfolio Detail</span>
+            <span>Project Detail</span>
             <div className="flex gap-2">
               {isEditMode && (
                 <Button
@@ -660,4 +663,4 @@ const PortfolioDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
   );
 };
 
-export default PortfolioDecorator;
+export default ProjectDecorator;

@@ -33,7 +33,7 @@ const ExperienceContent = ({ content }: { content: ExperienceContent }) => {
         {content.companyName}
       </p>
       <p
-        className="text-base text-[#B5B5B5] font-neue-haas text-justify leading-relaxed mb-6"
+        className="text-base text-[#B5B5B5] font-neue-haas text-justify leading-relaxed mb-6 paragraph-wrapper"
         dangerouslySetInnerHTML={{ __html: content.description }}
       />
 
@@ -97,7 +97,7 @@ const ExperienceContent = ({ content }: { content: ExperienceContent }) => {
 const TimelineSection = ({ experiences }: TimelineSectionProps) => {
   return (
     <section
-      id="work"
+      id="experience"
       className="min-h-screen bg-black flex items-center px-4 py-20 md:py-32"
     >
       <StarsBackground className="pointer-events-none" />

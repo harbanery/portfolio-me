@@ -21,9 +21,9 @@ export const menuAdmin = [
     active: true,
   },
   {
-    key: "portfolio",
-    label: "Portfolio",
-    link: "/admin/portfolio",
+    key: "projects",
+    label: "Projects",
+    link: "/admin/projects",
     icon: "ProjectOutlined",
     active: true,
   },

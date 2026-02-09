@@ -18,6 +18,28 @@
   pointer-events: none; /* Make sure it doesn't interfere with image interaction */
 }
 
+.paragraph-wrapper a {
+  @apply font-medium text-blue-400 relative inline-block;
+}
+
+.paragraph-wrapper a::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 2px;
+  left: 0;
+  background-color: currentColor;
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+.paragraph-wrapper a:hover::after {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
 @layer utilities {
   .hide-scrollbar::-webkit-scrollbar {
     display: none;

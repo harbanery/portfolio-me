@@ -218,9 +218,12 @@ const ContentSection = ({ project }: { project?: any }) => {
                 <h3 className="text-4xl font-neue-haas font-thin text-white mb-8">
                   About
                 </h3>
-                <p className="text-lg text-gray-300 font-neue-haas font-light text-justify leading-relaxed mb-12">
-                  {project.description}
-                </p>
+                <p
+                  className="text-lg text-gray-300 font-neue-haas text-justify leading-relaxed mb-12 paragraph-wrapper"
+                  dangerouslySetInnerHTML={{
+                    __html: project.description || "No description available",
+                  }}
+                />
               </div>
 
               {/* Highlights */}
@@ -308,7 +311,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                     <div className="space-y-6">
                       {project.challenges && (
                         <p
-                          className="text-gray-300 font-neue-haas text-justify leading-relaxed"
+                          className="text-gray-300 font-neue-haas text-justify leading-relaxed paragraph-wrapper"
                           dangerouslySetInnerHTML={{
                             __html: project.challenges,
                           }}
@@ -326,7 +329,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                     <div className="space-y-6">
                       {project.solutions && (
                         <p
-                          className="text-gray-300 font-neue-haas text-justify leading-relaxed"
+                          className="text-gray-300 font-neue-haas text-justify leading-relaxed paragraph-wrapper"
                           dangerouslySetInnerHTML={{
                             __html: project.solutions,
                           }}
@@ -344,7 +347,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                     Story
                   </h3>
                   <p
-                    className="text-gray-300 font-neue-haas text-justify leading-relaxed"
+                    className="text-gray-300 font-neue-haas text-justify leading-relaxed paragraph-wrapper"
                     dangerouslySetInnerHTML={{ __html: project.story }}
                   />
                 </div>

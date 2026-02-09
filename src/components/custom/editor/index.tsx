@@ -20,10 +20,10 @@ interface EditorProps {
 }
 
 const modules = {
-  toolbar: [["bold", "italic", "underline"], ["blockquote"]],
+  toolbar: [["bold", "italic", "underline"], ["link"], ["blockquote"]],
 };
 
-const formats = ["bold", "italic", "underline", "blockquote"];
+const formats = ["bold", "italic", "underline", "link", "blockquote"];
 
 const Editor = ({ value, onChange, placeholder, disabled }: EditorProps) => {
   const { resolvedTheme } = useColorMode();
