@@ -1,5 +1,10 @@
+"use client";
+
 import Footer from "../footer";
 import Navbar from "../navbar";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
 
 const BaseLayout = ({
   navbar = false,
@@ -10,6 +15,10 @@ const BaseLayout = ({
   children: React.ReactNode;
   footer?: boolean;
 }) => {
+  useEffect(() => {
+    AOS.init();
+  }, []);
+
   return (
     <main className="w-full hide-scrollbar select-none">
       {navbar && <Navbar />}

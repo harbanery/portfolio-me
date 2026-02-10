@@ -55,15 +55,21 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
       <div className="max-w-6xl mx-auto w-full">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div>
-            <h2 className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-12">
+            <h2
+              data-aos="fade-right"
+              data-aos-delay="200"
+              className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-12"
+            >
               About
             </h2>
             <div
+              data-aos="fade-right"
+              data-aos-delay="250"
               className="text-lg text-gray-300 font-neue-haas leading-relaxed space-y-6 paragraph-wrapper"
               dangerouslySetInnerHTML={{ __html: about }}
             />
           </div>
-          <div className="relative">
+          <div data-aos="fade-left" data-aos-delay="200" className="relative">
             <div className="aspect-square bg-gray-800 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 overflow-hidden">
               {profileImages?.length > 0 ? (
                 profileImages.map((image, index) => (
@@ -104,7 +110,11 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
             )}
           </div>
         </div>
-        <div className="overflow-hidden w-full relative py-16">
+        <div
+          data-aos="fade-up"
+          data-aos-delay="100"
+          className="overflow-hidden w-full relative py-16"
+        >
           <div className="bg-gradient-to-r from-gray-950 from-0% to-transparent to-100% absolute left-0 z-10 w-4/12 h-full pointer-events-none" />
           <div className="bg-gradient-to-l from-gray-950 from-0% to-transparent to-100% absolute right-0 z-10 w-4/12 h-full pointer-events-none" />
           <div

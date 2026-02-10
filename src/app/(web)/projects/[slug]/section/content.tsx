@@ -60,7 +60,11 @@ const ContentSection = ({ project }: { project?: any }) => {
             {/* Left Column - Project Image Gallery */}
             <div className="space-y-8 self-start h-full">
               {/* Main Image with Dynamic Carousel */}
-              <div className="aspect-video bg-gray-800 overflow-hidden group relative">
+              <div
+                data-aos="fade-up"
+                data-aos-delay="200"
+                className="aspect-video bg-gray-800 overflow-hidden group relative"
+              >
                 <div className="relative w-full h-full group">
                   {projectImages.map((image: any, index: number) => (
                     <Image
@@ -105,35 +109,61 @@ const ContentSection = ({ project }: { project?: any }) => {
 
               {/* Project Metadata */}
               <div
+                data-aos="fade-up"
+                data-aos-delay="250"
                 className="space-y-8"
                 style={{ position: "sticky", top: "7rem" }}
               >
-                <div className="border-[0.5px] border-gray-900 mx-auto" />
+                <div
+                  // data-aos="fade-zoom-in"
+                  // data-aos-delay="250"
+                  className="border-[0.5px] rounded-full border-white/50 mx-auto"
+                />
 
                 {/* Project Type - Only show if not personal */}
-                {projectType !== "personal" && (
+                {projectType == "personal" && (
                   <div>
-                    <h3 className="text-xl font-semibold text-white mb-4 font-inter">
+                    <h3
+                      // data-aos="fade-up"
+                      // data-aos-delay="300"
+                      className="text-xl font-semibold text-white mb-4 font-inter"
+                    >
                       {projectType === "client" ? "Client" : "Company"}
                     </h3>
-                    <p className="text-lg text-white font-light mb-8 font-neue-haas">
-                      {projectType === "client" ? clientName : companyName}
+                    <p
+                      // data-aos="fade-up"
+                      // data-aos-delay="300"
+                      className="text-lg text-white font-light mb-8 font-neue-haas"
+                    >
+                      {projectType === "client" ? clientName : "Oy"}
                     </p>
                   </div>
                 )}
 
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-2 font-inter">
+                  <h3
+                    // data-aos="fade-up"
+                    // data-aos-delay="300"
+                    className="text-xl font-semibold text-white mb-2 font-inter"
+                  >
                     Role
                   </h3>
-                  <p className="text-lg text-white font-light mb-8 font-neue-haas">
+                  <p
+                    // data-aos="fade-up"
+                    // data-aos-delay="300"
+                    className="text-lg text-white font-light mb-8 font-neue-haas"
+                  >
                     {role}
                   </p>
                 </div>
 
                 {/* Technologies Section */}
                 <div>
-                  <h3 className="text-xl font-semibold text-white mb-4 font-inter">
+                  <h3
+                    // data-aos="fade-up"
+                    // data-aos-delay="300"
+                    className="text-xl font-semibold text-white mb-4 font-inter"
+                  >
                     Tech Stack
                   </h3>
                   <div className="flex flex-wrap gap-3">
@@ -145,6 +175,8 @@ const ContentSection = ({ project }: { project?: any }) => {
                         return (
                           <div
                             key={index + 1}
+                            // data-aos="fade-up"
+                            // data-aos-delay={`${(index + 6) * 50}`}
                             className="group flex items-center gap-3 px-3 py-2 bg-gray-800 bg-opacity-50 backdrop-blur-sm border border-gray-700 border-opacity-50 rounded-full hover:bg-opacity-75 transition-all duration-300"
                           >
                             <div
@@ -174,13 +206,19 @@ const ContentSection = ({ project }: { project?: any }) => {
 
                 {project.repoLinks && project.repoLinks.length > 0 && (
                   <div>
-                    <h3 className="text-xl font-semibold text-white mb-4 font-inter">
+                    <h3
+                      // data-aos="fade-up"
+                      // data-aos-delay="300"
+                      className="text-xl font-semibold text-white mb-4 font-inter"
+                    >
                       Repository Link
                     </h3>
                     <div className="flex flex-col gap-4">
                       {project.repoLinks?.map((repo: any, index: number) => (
                         <a
                           key={index + 1}
+                          // data-aos="fade-up"
+                          // data-aos-delay={`${(index + 6) * 50}`}
                           href={repo}
                           target="_blank"
                           rel="noopener noreferrer"
@@ -200,6 +238,8 @@ const ContentSection = ({ project }: { project?: any }) => {
                 {postmanLink && postmanLink !== "#" && (
                   <div>
                     <a
+                      // data-aos="fade-up"
+                      // data-aos-delay="400"
                       href={postmanLink}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -217,27 +257,39 @@ const ContentSection = ({ project }: { project?: any }) => {
             <div className="space-y-12 lg:max-w-xl">
               {/* Description */}
               <div>
-                <h3 className="text-4xl font-neue-haas font-thin text-white mb-8">
+                <h3
+                  data-aos="fade-right"
+                  data-aos-delay="50"
+                  className="text-4xl font-neue-haas font-thin text-white mb-8"
+                >
                   About
                 </h3>
-                <p
-                  className="text-lg text-gray-300 font-neue-haas text-justify leading-relaxed mb-12 paragraph-wrapper"
-                  dangerouslySetInnerHTML={{
-                    __html: project.description || "No description available",
-                  }}
-                />
+                <div data-aos="fade-zoom-in" data-aos-delay="150">
+                  <p
+                    className="text-lg text-gray-300 font-neue-haas text-justify leading-relaxed mb-12 paragraph-wrapper"
+                    dangerouslySetInnerHTML={{
+                      __html: project.description || "No description available",
+                    }}
+                  />
+                </div>
               </div>
 
               {/* Highlights */}
               {project.highlights && project.highlights.length > 0 && (
                 <div>
-                  <h3 className="text-2xl font-neue-haas font-thin text-white mb-8">
+                  <h3
+                    data-aos="fade-right"
+                    data-aos-delay="50"
+                    className="text-2xl font-neue-haas font-thin text-white mb-8"
+                  >
                     Technical Highlights
                   </h3>
                   <ul className="space-y-4">
                     {project.highlights.map((highlight: any, index: number) => (
                       <li
                         key={index + 1}
+                        data-aos="fade-left"
+                        data-aos-delay={`${(index + 1) * 50}`}
                         className="flex items-center justify-start gap-4"
                       >
                         <div className="w-5 h-5 text-yellow-400 flex items-center justify-center">
@@ -254,8 +306,16 @@ const ContentSection = ({ project }: { project?: any }) => {
 
               {/* Outcome/Impact */}
               {project.outcomes && project.outcomes.length > 0 && (
-                <div className="mt-16 p-8 bg-gray-800 rounded-2xl">
-                  <h3 className="text-2xl font-neue-haas font-thin text-white mb-6 flex items-center gap-3">
+                <div
+                  data-aos="fade-zoom-in"
+                  data-aos-delay="50"
+                  className="mt-16 p-8 bg-gray-800 rounded-2xl"
+                >
+                  <h3
+                    data-aos="fade-left"
+                    data-aos-delay="100"
+                    className="text-2xl font-neue-haas font-thin text-white mb-6 flex items-center gap-3"
+                  >
                     <TrendingUp size={24} className="text-blue-400" />
                     Outcome & Impact
                   </h3>
@@ -263,6 +323,8 @@ const ContentSection = ({ project }: { project?: any }) => {
                     {project.outcomes.map((outcome: any, index: number) => (
                       <li
                         key={index + 1}
+                        data-aos="fade-zoom-in"
+                        data-aos-delay={`${(index + 3) * 50}`}
                         className="flex justify-start items-center gap-4 hover:translate-x-1 transition-transform duration-200"
                       >
                         <div className="w-5 h-5 text-blue-400 flex items-center justify-center">
@@ -280,13 +342,19 @@ const ContentSection = ({ project }: { project?: any }) => {
               {/* Features */}
               {project.features && project.features.length > 0 && (
                 <div>
-                  <h3 className="text-2xl font-neue-haas font-thin text-white mb-8">
+                  <h3
+                    data-aos="fade-right"
+                    data-aos-delay="50"
+                    className="text-2xl font-neue-haas font-thin text-white mb-8"
+                  >
                     Features
                   </h3>
                   <ul className="space-y-4">
                     {project.features.map((feature: any, index: number) => (
                       <li
                         key={index + 1}
+                        data-aos="fade-left"
+                        data-aos-delay={`${(index + 1) * 50}`}
                         className="flex items-center justify-start gap-4 hover:translate-x-1 transition-transform duration-200"
                       >
                         <div className="w-5 h-5 text-green-400 flex items-center justify-center">
@@ -303,14 +371,26 @@ const ContentSection = ({ project }: { project?: any }) => {
 
               {/* Challenges & Solutions */}
               {(project.challenges || project.solutions) && (
-                <div className="mt-16 p-8 bg-gray-800 rounded-2xl">
+                <div
+                  data-aos="fade-zoom-in"
+                  data-aos-delay="50"
+                  className="mt-16 p-8 bg-gray-800 rounded-2xl"
+                >
                   {/* Challenges Section */}
                   <div className="mb-12">
-                    <h4 className="text-xl font-neue-haas font-thin text-white mb-6 pb-3 border-b border-gray-700 flex items-center gap-3">
+                    <h4
+                      data-aos="fade-left"
+                      data-aos-delay="50"
+                      className="text-xl font-neue-haas font-thin text-white mb-6 pb-3 border-b border-gray-700 flex items-center gap-3"
+                    >
                       <AlertTriangle size={20} className="text-red-400" />
                       The Challenge
                     </h4>
-                    <div className="space-y-6">
+                    <div
+                      data-aos="fade-zoom-in"
+                      data-aos-delay="50"
+                      className="space-y-6"
+                    >
                       {project.challenges && (
                         <p
                           className="text-gray-300 font-neue-haas text-justify leading-relaxed paragraph-wrapper"
@@ -324,11 +404,19 @@ const ContentSection = ({ project }: { project?: any }) => {
 
                   {/* Solutions Section */}
                   <div>
-                    <h4 className="text-xl font-neue-haas font-thin text-white mb-6 pb-3 border-b border-gray-700 flex items-center gap-3">
+                    <h4
+                      data-aos="fade-left"
+                      data-aos-delay="100"
+                      className="text-xl font-neue-haas font-thin text-white mb-6 pb-3 border-b border-gray-700 flex items-center gap-3"
+                    >
                       <Lightbulb size={20} className="text-green-400" />
                       The Solution
                     </h4>
-                    <div className="space-y-6">
+                    <div
+                      data-aos="fade-zoom-in"
+                      data-aos-delay="100"
+                      className="space-y-6"
+                    >
                       {project.solutions && (
                         <p
                           className="text-gray-300 font-neue-haas text-justify leading-relaxed paragraph-wrapper"
@@ -344,14 +432,24 @@ const ContentSection = ({ project }: { project?: any }) => {
 
               {/* Story */}
               {project.story && (
-                <div className="mt-16 p-8 bg-gray-800 rounded-2xl">
-                  <h3 className="text-2xl font-neue-haas font-thin text-white mb-6">
+                <div
+                  data-aos="fade-zoom-in"
+                  data-aos-delay="50"
+                  className="mt-16 p-8 bg-gray-800 rounded-2xl"
+                >
+                  <h3
+                    data-aos="fade-left"
+                    data-aos-delay="50"
+                    className="text-2xl font-neue-haas font-thin text-white mb-6"
+                  >
                     Story
                   </h3>
-                  <p
-                    className="text-gray-300 font-neue-haas text-justify leading-relaxed paragraph-wrapper"
-                    dangerouslySetInnerHTML={{ __html: project.story }}
-                  />
+                  <div data-aos="fade-zoom-in" data-aos-delay="50">
+                    <p
+                      className="text-gray-300 font-neue-haas text-justify leading-relaxed paragraph-wrapper"
+                      dangerouslySetInnerHTML={{ __html: project.story }}
+                    />
+                  </div>
                 </div>
               )}
             </div>

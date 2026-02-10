@@ -22,16 +22,28 @@ const HeroSection = ({ project }: { project?: any }) => {
       </div>
       <div className="relative z-10 max-w-4xl mx-auto px-4 py-24 text-center">
         <div className="animate-fade-in">
-          <h1 className="text-6xl md:text-7xl lg:text-8xl font-inter font-semibold mb-8 tracking-normal leading-none">
+          <h1
+            data-aos="fade-up"
+            data-aos-delay="200"
+            className="text-6xl md:text-7xl lg:text-8xl font-inter font-semibold mb-8 tracking-normal leading-none"
+          >
             {project.title}
           </h1>
           {project.subtitle && (
-            <h1 className="text-2xl font-neue-haas font-light mb-8 tracking-tight leading-none text-gray-400">
+            <h1
+              data-aos="fade-up"
+              data-aos-delay="300"
+              className="text-2xl font-neue-haas font-light mb-8 tracking-tight leading-none text-gray-400"
+            >
               {project.subtitle}
             </h1>
           )}
 
-          <div className="flex justify-center items-center gap-4 mb-16">
+          <div
+            data-aos="fade-up"
+            data-aos-delay="350"
+            className="flex justify-center items-center gap-4 mb-16"
+          >
             {project.webLink ? (
               <a
                 href={project.webLink}

@@ -52,9 +52,9 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
       <StarsBackground className="pointer-events-none" />
       <ShootingStars className="pointer-events-none" />
       <div className="max-w-7xl mx-auto w-full mt-16">
-        <h2 className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-32 text-center">
+        {/* <h2 className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-32 text-center">
           Projects
-        </h2>
+        </h2> */}
 
         <div className="space-y-32">
           {projects.map((project, index) => (
@@ -65,6 +65,8 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
               }`}
             >
               <button
+                data-aos={index % 2 === 1 ? "fade-left" : "fade-right"}
+                data-aos-delay="100"
                 onClick={() =>
                   router.push(`/projects/${getProjectSlug(project)}`)
                 }
@@ -87,10 +89,16 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                     : "space-y-6"
                 }
               >
-                <h3 className="text-3xl lg:text-4xl font-neue-haas text-white font-light">
+                <h3
+                  data-aos={index % 2 === 1 ? "fade-left" : "fade-right"}
+                  data-aos-delay="100"
+                  className="text-3xl lg:text-4xl font-neue-haas text-white font-light"
+                >
                   {project.title}
                 </h3>
                 <p
+                  data-aos={index % 2 === 1 ? "fade-left" : "fade-right"}
+                  data-aos-delay="175"
                   className="text-lg text-gray-300 font-neue-haas leading-relaxed line-clamp-3 paragraph-wrapper"
                   dangerouslySetInnerHTML={{
                     __html: project.description || "No description available",
@@ -100,32 +108,40 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                 <div
                   className={`flex flex-wrap ${index % 2 === 1 ? "justify-end" : ""} gap-4`}
                 >
-                  {(project.skills || []).map((tech: string, index: number) => {
-                    const Icon = logoMap[tech.toLowerCase()];
+                  {(project.skills || []).map(
+                    (tech: string, techIndex: number) => {
+                      const Icon = logoMap[tech.toLowerCase()];
 
-                    return (
-                      <div
-                        key={index + 1}
-                        className="w-5 h-5 flex items-center justify-center transition-all duration-300 text-gray-200 hover:text-[var(--skill-color)]"
-                        style={{
-                          ["--skill-color" as any]:
-                            masterDataMap[tech]?.color || "#FFFFFF",
-                        }}
-                      >
-                        {Icon ? (
-                          <Icon className="w-full h-full" />
-                        ) : (
-                          <div className="w-full h-full bg-gray-600 rounded-full flex items-center justify-center text-xs text-white font-medium">
-                            {tech.charAt(0)}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                      return (
+                        <div
+                          key={techIndex + 1}
+                          data-aos={
+                            index % 2 === 1 ? "fade-left" : "fade-right"
+                          }
+                          data-aos-delay={`${(techIndex + 2) * 100}`}
+                          className="w-5 h-5 flex items-center justify-center transition-all duration-300 text-gray-200 hover:text-[var(--skill-color)]"
+                          style={{
+                            ["--skill-color" as any]:
+                              masterDataMap[tech]?.color || "#FFFFFF",
+                          }}
+                        >
+                          {Icon ? (
+                            <Icon className="w-full h-full" />
+                          ) : (
+                            <div className="w-full h-full bg-gray-600 rounded-full flex items-center justify-center text-xs text-white font-medium">
+                              {tech.charAt(0)}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    },
+                  )}
                 </div>
 
                 <div className="mb-4">
                   <button
+                    data-aos={index % 2 === 1 ? "fade-left" : "fade-right"}
+                    data-aos-delay="100"
                     onClick={() =>
                       router.push(`/projects/${getProjectSlug(project)}`)
                     }

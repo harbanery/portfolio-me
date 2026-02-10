@@ -47,17 +47,27 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
       className="bg-gray-950 flex items-center justify-center px-4 py-20"
     >
       <div className="max-w-7xl mx-auto w-full">
-        <h2 className="text-5xl lg:text-5xl font-neue-haas text-white font-light mb-4 text-right">
+        <h2
+          data-aos="fade-left"
+          data-aos-delay="200"
+          className="text-5xl lg:text-5xl font-neue-haas text-white font-light mb-4 text-right"
+        >
           Featured Projects
         </h2>
-        <p className="text-md sm:text-lg md:text-xl text-gray-400 font-neue-haas font-light mb-12 tracking-wider leading-relaxed text-right">
+        <p
+          data-aos="fade-left"
+          data-aos-delay="250"
+          className="text-md sm:text-lg md:text-xl text-gray-400 font-neue-haas font-light mb-12 tracking-wider leading-relaxed text-right"
+        >
           Some things I've built & worked on recently
         </p>
 
         <div className={`grid ${gridCols(projects.length)} gap-4 mb-8`}>
-          {projects.map((project) => (
+          {projects.map((project, index) => (
             <button
               key={project.id}
+              data-aos="fade-left"
+              data-aos-delay={`${(index + 2) * 100}`}
               onClick={() =>
                 router.push(`/projects/${getProjectSlug(project)}`)
               }
@@ -78,6 +88,8 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
         </div>
 
         <button
+          data-aos="fade-zoom-in"
+          data-aos-delay="100"
           onClick={() => router.push(`/projects`)}
           className={`inline-flex items-center gap-2 text-white font-neue-haas font-medium tracking-wider hover:translate-x-1 transition-transform duration-200`}
         >

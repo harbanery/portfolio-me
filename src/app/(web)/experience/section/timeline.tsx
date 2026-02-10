@@ -26,13 +26,23 @@ interface TimelineSectionProps {
 const ExperienceContent = ({ content }: { content: ExperienceContent }) => {
   return (
     <div className="text-left max-w-2xl md:max-w-3xl">
-      <h3 className="text-2xl lg:text-3xl font-neue-haas text-white font-medium mb-2">
+      <h3
+        data-aos="fade-zoom-in"
+        data-aos-delay="100"
+        className="text-2xl lg:text-3xl font-neue-haas text-white font-medium mb-2"
+      >
         {content.jobTitle}
       </h3>
-      <p className="text-lg text-[#8A8A8A] italic font-neue-haas mb-6">
+      <p
+        data-aos="fade-zoom-in"
+        data-aos-delay="100"
+        className="text-lg text-[#8A8A8A] italic font-neue-haas mb-6"
+      >
         {content.companyName}
       </p>
       <p
+        data-aos="fade-zoom-in"
+        data-aos-delay="100"
         className="text-base text-[#B5B5B5] font-neue-haas text-justify leading-relaxed mb-6 paragraph-wrapper"
         dangerouslySetInnerHTML={{ __html: content.description }}
       />
@@ -41,13 +51,15 @@ const ExperienceContent = ({ content }: { content: ExperienceContent }) => {
       <div
         className={`flex flex-wrap gap-3 ${content.images && content.images.length > 0 ? "mb-8" : ""}`}
       >
-        {content.techStack.map((tech) => {
+        {content.techStack.map((tech, index) => {
           const Icon = logoMap[tech.toLowerCase()];
           const techData = masterDataMap[tech.toLowerCase()];
 
           return (
             <div
               key={tech}
+              data-aos="fade-left"
+              data-aos-delay={(index + 2) * 100}
               className="group flex items-center gap-3 px-3 py-2 bg-gray-800 bg-opacity-50 backdrop-blur-sm border border-gray-700 border-opacity-50 rounded-full hover:bg-opacity-75 transition-all duration-300"
             >
               <div
@@ -78,6 +90,8 @@ const ExperienceContent = ({ content }: { content: ExperienceContent }) => {
           {content.images.map((imgUrl, imgIndex) => (
             <div
               key={`${content.companyName}-${imgIndex}`}
+              data-aos="fade-left"
+              data-aos-delay={(imgIndex + 2) * 100}
               className="relative aspect-video rounded-lg overflow-hidden border border-[#1F1F1F] grayscale hover:grayscale-0 transition-all duration-300"
             >
               <Image
@@ -104,10 +118,18 @@ const TimelineSection = ({ experiences }: TimelineSectionProps) => {
       <ShootingStars className="pointer-events-none" />
       <div className="w-full">
         <div className="max-w-6xl mx-auto px-4 md:px-8 lg:px-10 py-10">
-          <h2 className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-4 text-center">
+          <h2
+            data-aos="fade-up"
+            data-aos-delay="200"
+            className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-4 text-center"
+          >
             Work Experience
           </h2>
-          <p className="text-xl text-[#B5B5B5] font-neue-haas font-light max-w-3xl mx-auto mb-20 text-center leading-relaxed">
+          <p
+            data-aos="fade-up"
+            data-aos-delay="300"
+            className="text-xl text-[#B5B5B5] font-neue-haas font-light max-w-3xl mx-auto mb-20 text-center leading-relaxed"
+          >
             A timeline of my professional journey in web development
           </p>
         </div>
@@ -135,10 +157,18 @@ const TimelineSection = ({ experiences }: TimelineSectionProps) => {
               <div className="relative pl-0 pr-4 md:pl-4 w-full">
                 {/* Mobile-only Period Label */}
                 <div className="md:hidden mb-6">
-                  <p className="text-xs font-medium tracking-widest text-[#8A8A8A] mb-2">
+                  <p
+                    data-aos="fade-right"
+                    data-aos-delay="100"
+                    className="text-xs font-medium tracking-widest text-[#8A8A8A] mb-2"
+                  >
                     PERIOD
                   </p>
-                  <h3 className="text-sm font-neue-haas text-white font-light">
+                  <h3
+                    data-aos="fade-right"
+                    data-aos-delay="175"
+                    className="text-sm font-neue-haas text-white font-light"
+                  >
                     {item.title}
                   </h3>
                 </div>

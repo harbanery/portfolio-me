@@ -2,6 +2,7 @@ import "../assets/global/index.css";
 import type { Metadata } from "next";
 import { Bebas_Neue, Inter } from "next/font/google";
 import { neueHaasDisplay } from "@/utils/fonts/neue-haas";
+import { NODE_ENV } from "@/lib/config/variables";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -37,7 +38,14 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
 
-      <body className={`${neueHaasDisplay.variable} ${inter.variable} ${bebas.variable} antialiased`}>
+      <body
+        className={`${neueHaasDisplay.variable} ${inter.variable} ${bebas.variable} antialiased ${NODE_ENV === "development" ? "relative" : ""}`}
+      >
+        {NODE_ENV === "development" && (
+          <div className="font-inter fixed top-10 -right-10 z-[99999] text-white px-10 py-1 bg-red-600 rotate-45">
+            DEVELOPMENT
+          </div>
+        )}
         {children}
       </body>
     </html>
