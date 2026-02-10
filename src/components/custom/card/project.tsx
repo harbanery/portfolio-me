@@ -52,7 +52,7 @@ const CardProject = ({ data }: any) => {
         target="__blank"
         className="px-4 py-2 truncate rounded-xl text-sm font-semibold bg-black text-white dark:bg-white dark:text-white flex justify-start items-center gap-2"
       >
-        <FaGithub size={16} /> {getGithubRepoName(item?.link) ?? item?.name}
+        <FaGithub size={16} /> {getGithubRepoName(item?.link) || item?.name}
       </CardItem>
     ));
   };

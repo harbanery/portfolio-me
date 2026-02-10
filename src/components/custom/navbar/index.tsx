@@ -1,6 +1,7 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
@@ -9,6 +10,11 @@ const Navbar = () => {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPastHero, setIsPastHero] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleNavigation = (href: string) => {
     if (href.startsWith("#")) {
@@ -28,6 +34,8 @@ const Navbar = () => {
   };
 
   useEffect(() => {
+    if (!mounted) return;
+
     const handleScroll = () => {
       const heroSection = document.getElementById("hero");
       if (heroSection) {
@@ -43,7 +51,7 @@ const Navbar = () => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [mounted]);
 
   const navLinks = [
     { name: "HOME", href: pathname === "/" ? "#hero" : "/" },
@@ -61,7 +69,7 @@ const Navbar = () => {
   return (
     <nav
       className={`top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isPastHero
+        mounted && isPastHero
           ? "bg-black border-b border-gray-900 fixed"
           : "bg-transparent border-none absolute"
       }`}
@@ -69,13 +77,20 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
           <div className="flex-shrink-0">
-            <span className="text-2xl font-neue-haas font-light text-white tracking-wider">
+            {/* <span className="text-2xl font-neue-haas font-light text-white tracking-wider">
               RY
-            </span>
+            </span> */}
+            <Image
+              className="mix-blend-screen"
+              src="/logo.png"
+              width={42}
+              height={42}
+              alt=""
+            />
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-12">
+          <div className="hidden md:flex items-center lg:space-x-12 md:space-x-8">
             {navLinks.map((link) => (
               <button
                 key={link.name}

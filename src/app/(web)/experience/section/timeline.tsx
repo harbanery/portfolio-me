@@ -25,7 +25,7 @@ interface TimelineSectionProps {
 
 const ExperienceContent = ({ content }: { content: ExperienceContent }) => {
   return (
-    <div className="text-left max-w-2xl md:max-w-3xl">
+    <div className="text-left max-w-full md:max-w-2xl lg:max-w-3xl min-w-0">
       <h3
         data-aos="fade-zoom-in"
         data-aos-delay="100"
@@ -139,10 +139,10 @@ const TimelineSection = ({ experiences }: TimelineSectionProps) => {
           {experiences.map((item) => (
             <div
               key={item.title}
-              className="flex justify-start pt-10 md:pt-20 md:gap-10 max-w-6xl mx-auto px-4"
+              className="flex justify-start pt-10 md:pt-20 md:gap-6 lg:gap-10 max-w-6xl mx-auto px-4 md:px-6"
             >
               {/* Left Column - Period (Hidden on mobile, sticky on tablet+) */}
-              <div className="hidden md:flex sticky flex-col md:flex-row z-40 items-center top-20 self-start max-w-xs lg:max-w-sm md:w-full">
+              <div className="hidden md:flex sticky flex-col md:flex-row z-40 items-center top-20 self-start max-w-[200px] md:max-w-xs lg:max-w-sm md:w-full min-w-0">
                 <div className="h-10 absolute left-3 md:left-3 w-10 rounded-full bg-black flex items-center justify-center border-2 border-[#2A2A2A]">
                   <div className="h-3 w-3 rounded-full bg-white border border-black" />
                 </div>
@@ -154,7 +154,7 @@ const TimelineSection = ({ experiences }: TimelineSectionProps) => {
               </div>
 
               {/* Right Column - Job Details */}
-              <div className="relative pl-0 pr-4 md:pl-4 w-full">
+              <div className="relative pl-0 pr-4 md:pl-4 w-full min-w-0">
                 {/* Mobile-only Period Label */}
                 <div className="md:hidden mb-6">
                   <p

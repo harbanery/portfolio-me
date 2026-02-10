@@ -2,6 +2,7 @@
 
 import { masterDataMap } from "@/utils/helpers/category";
 import { logoMap } from "@/utils/helpers/icon";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 interface AboutSectionProps {
@@ -53,7 +54,7 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
       className="h-full bg-gray-950 flex items-center justify-center px-4 py-20"
     >
       <div className="max-w-6xl mx-auto w-full">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
           <div>
             <h2
               data-aos="fade-right"
@@ -85,9 +86,16 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
               ) : (
                 <div className="text-center">
                   <div className="w-32 h-32 mx-auto mb-8 rounded-full border-2 border-gray-600 flex items-center justify-center">
-                    <span className="text-4xl font-neue-haas font-light text-white">
+                    {/* <span className="text-4xl font-neue-haas font-light text-white">
                       RY
-                    </span>
+                    </span> */}
+                    <Image
+                      className="mix-blend-screen"
+                      src="/logo.png"
+                      width={72}
+                      height={72}
+                      alt=""
+                    />
                   </div>
                 </div>
               )}
@@ -119,7 +127,7 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
           <div className="bg-gradient-to-l from-gray-950 from-0% to-transparent to-100% absolute right-0 z-10 w-4/12 h-full pointer-events-none" />
           <div
             ref={trackRef}
-            className="flex w-max animate-scroll items-center gap-16"
+            className="flex w-max animate-scroll items-center gap-8 md:gap-12 lg:gap-16"
           >
             {skillList.map((item) => (
               <div

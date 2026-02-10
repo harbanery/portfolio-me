@@ -23,24 +23,6 @@ interface ShootingStarsProps {
   starHeight?: number;
   className?: string;
 }
-
-const getRandomStartPoint = () => {
-  const side = Math.floor(Math.random() * 4);
-  const offset = Math.random() * window.innerWidth;
-
-  switch (side) {
-    case 0:
-      return { x: offset, y: 0, angle: 45 };
-    case 1:
-      return { x: window.innerWidth, y: offset, angle: 135 };
-    case 2:
-      return { x: offset, y: window.innerHeight, angle: 225 };
-    case 3:
-      return { x: 0, y: offset, angle: 315 };
-    default:
-      return { x: 0, y: 0, angle: 45 };
-  }
-};
 export const ShootingStars: React.FC<ShootingStarsProps> = ({
   minSpeed = 10,
   maxSpeed = 30,
@@ -53,9 +35,34 @@ export const ShootingStars: React.FC<ShootingStarsProps> = ({
   className,
 }) => {
   const [star, setStar] = useState<ShootingStar | null>(null);
+  const [mounted, setMounted] = useState(false);
   const svgRef = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
+    const getRandomStartPoint = () => {
+      const side = Math.floor(Math.random() * 4);
+      const offset = Math.random() * window.innerWidth;
+
+      switch (side) {
+        case 0:
+          return { x: offset, y: 0, angle: 45 };
+        case 1:
+          return { x: window.innerWidth, y: offset, angle: 135 };
+        case 2:
+          return { x: offset, y: window.innerHeight, angle: 225 };
+        case 3:
+          return { x: 0, y: offset, angle: 315 };
+        default:
+          return { x: 0, y: 0, angle: 45 };
+      }
+    };
+
     const createStar = () => {
       const { x, y, angle } = getRandomStartPoint();
       const newStar: ShootingStar = {
@@ -76,7 +83,7 @@ export const ShootingStars: React.FC<ShootingStarsProps> = ({
     createStar();
 
     return () => {};
-  }, [minSpeed, maxSpeed, minDelay, maxDelay]);
+  }, [minSpeed, maxSpeed, minDelay, maxDelay, mounted]);
 
   useEffect(() => {
     const moveStar = () => {

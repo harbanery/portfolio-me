@@ -54,11 +54,11 @@ const ContentSection = ({ project }: { project?: any }) => {
       <StarsBackground className="pointer-events-none" />
       <ShootingStars className="pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 md:px-6">
         <div className="">
-          <div className="grid lg:grid-cols-2 gap-24 lg:gap-32 items-start">
+          <div className="grid lg:grid-cols-2 gap-12 md:gap-16 lg:gap-24 items-start">
             {/* Left Column - Project Image Gallery */}
-            <div className="space-y-8 self-start h-full">
+            <div className="space-y-8 self-start h-full min-w-0">
               {/* Main Image with Dynamic Carousel */}
               <div
                 data-aos="fade-up"
@@ -226,7 +226,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                         >
                           <Github size={16} className="text-white" />
                           <span className="paragraph-wrapper text-white">
-                            {getGithubRepoName(repo)}
+                            {getGithubRepoName(repo) || repo}
                           </span>
                         </a>
                       ))}
@@ -254,7 +254,7 @@ const ContentSection = ({ project }: { project?: any }) => {
             </div>
 
             {/* Right Column - Content */}
-            <div className="space-y-12 lg:max-w-xl">
+            <div className="space-y-12 lg:max-w-xl min-w-0">
               {/* Description */}
               <div>
                 <h3

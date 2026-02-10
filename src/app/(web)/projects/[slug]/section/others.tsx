@@ -7,6 +7,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 const OtherSection = ({ projects }: { projects?: any[] }) => {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
   const [screenSize, setScreenSize] = useState<"mobile" | "tablet" | "desktop">(
     "desktop",
   );
@@ -14,6 +15,12 @@ const OtherSection = ({ projects }: { projects?: any[] }) => {
   const displayProjects = projects || [];
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     const handleResize = () => {
       const width = window.innerWidth;
       if (width < 768) {
@@ -28,7 +35,7 @@ const OtherSection = ({ projects }: { projects?: any[] }) => {
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [mounted]);
 
   const useCarousel =
     screenSize === "mobile"

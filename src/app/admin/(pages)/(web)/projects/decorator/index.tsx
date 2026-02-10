@@ -560,7 +560,7 @@ const ProjectDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
                           rel="noopener noreferrer"
                           className="text-blue-500 text-sm flex items-center gap-1 hover:underline truncate"
                         >
-                          <GithubIcon /> {getGithubRepoName(link)}
+                          <GithubIcon /> {getGithubRepoName(link) || link}
                         </a>
                       ))}
                     </div>
