@@ -28,7 +28,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
     return (
       <section
         id="projects"
-        className="min-h-screen bg-black flex items-center justify-center px-4 py-20"
+        className="min-h-screen bg-black flex items-center justify-center px-4 py-20 relative"
       >
         <StarsBackground className="pointer-events-none" />
         <ShootingStars className="pointer-events-none" />
@@ -47,7 +47,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
   return (
     <section
       id="projects"
-      className="min-h-screen bg-black flex items-center justify-center px-4 py-20"
+      className="min-h-screen bg-black flex items-center justify-center px-4 py-20 relative"
     >
       <StarsBackground className="pointer-events-none" />
       <ShootingStars className="pointer-events-none" />

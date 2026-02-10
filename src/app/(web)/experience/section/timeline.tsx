@@ -112,7 +112,7 @@ const TimelineSection = ({ experiences }: TimelineSectionProps) => {
   return (
     <section
       id="experience"
-      className="min-h-screen bg-black flex items-center px-4 py-20 md:py-32"
+      className="min-h-screen bg-black flex items-center px-4 py-20 md:py-32 relative"
     >
       <StarsBackground className="pointer-events-none" />
       <ShootingStars className="pointer-events-none" />

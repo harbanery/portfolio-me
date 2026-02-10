@@ -28,7 +28,8 @@ const HeroSection = ({ name, title }: { name?: string; title?: string }) => {
             data-aos-delay="300"
             className="text-md sm:text-lg md:text-2xl text-gray-400 font-neue-haas font-light mb-12 max-w-4xl mx-auto tracking-wider leading-relaxed"
           >
-            {title ?? "Web development, fast-paced and ever-changing"}
+            {title ??
+              "Building for the web means working in a dynamic, growing space."}
           </p>
 
           <div

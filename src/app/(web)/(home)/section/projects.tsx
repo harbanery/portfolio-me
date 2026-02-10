@@ -63,7 +63,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
         </p>
 
         <div className={`grid ${gridCols(projects.length)} gap-4 mb-8`}>
-          {projects.map((project, index) => (
+          {projects.slice(0, 3).map((project, index) => (
             <button
               key={project.id}
               data-aos="fade-left"
@@ -78,10 +78,13 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                 alt={project.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-center justify-center">
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex flex-col items-center justify-center gap-1">
                 <span className="text-white font-neue-haas text-2xl lg:text-3xl font-light opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   {project.title}
                 </span>
+                {/* <div className="flex justify-center items-center gap-1">
+                  {project.skills?.map((skill) => renderSkillIcon(skill))}
+                </div> */}
               </div>
             </button>
           ))}
