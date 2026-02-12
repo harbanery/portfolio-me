@@ -121,7 +121,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                 />
 
                 {/* Project Type - Only show if not personal */}
-                {projectType == "personal" && (
+                {projectType !== "personal" && (
                   <div>
                     <h3
                       // data-aos="fade-up"
@@ -135,7 +135,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                       // data-aos-delay="300"
                       className="text-lg text-white font-light mb-8 font-neue-haas"
                     >
-                      {projectType === "client" ? clientName : "Oy"}
+                      {projectType === "client" ? clientName : companyName}
                     </p>
                   </div>
                 )}
