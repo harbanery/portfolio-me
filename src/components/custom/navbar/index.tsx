@@ -11,6 +11,12 @@ const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPastHero, setIsPastHero] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const [scrollDirection, setScrollDirection] = useState<"up" | "down" | null>(
+    null,
+  );
+  const [shouldShowNavbar, setShouldShowNavbar] = useState(true);
+  const [isFixed, setIsFixed] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -36,22 +42,62 @@ const Navbar = () => {
   useEffect(() => {
     if (!mounted) return;
 
+    let ticking = false;
+
     const handleScroll = () => {
-      const heroSection = document.getElementById("hero");
-      if (heroSection) {
-        const heroHeight = heroSection.offsetHeight;
-        const scrollPosition = window.scrollY;
-        setIsPastHero(scrollPosition > heroHeight);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollPosition = window.scrollY;
+          const currentDirection =
+            scrollPosition > lastScrollY
+              ? "down"
+              : scrollPosition < lastScrollY
+                ? "up"
+                : scrollDirection;
+
+          console.log(
+            `Scroll: position=${scrollPosition}, direction=${currentDirection}`,
+          );
+
+          setScrollDirection(currentDirection);
+          setLastScrollY(scrollPosition);
+
+          if (scrollPosition <= 50) {
+            // Di hero section - navbar tidak bergerak, absolute positioning
+            console.log("In hero - navbar visible, absolute");
+            setIsPastHero(false);
+            setIsFixed(false);
+            setShouldShowNavbar(true);
+          } else {
+            // Diluar hero section
+            console.log("Outside hero");
+            setIsPastHero(true);
+            setIsFixed(true);
+
+            if (currentDirection === "down") {
+              // Scroll ke bawah - hide navbar
+              console.log("Scrolling down - HIDING navbar");
+              setShouldShowNavbar(false);
+            } else if (currentDirection === "up") {
+              // Scroll ke atas - show navbar
+              console.log("Scrolling up - SHOWING navbar");
+              setShouldShowNavbar(true);
+            }
+          }
+
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
     window.addEventListener("scroll", handleScroll);
-    handleScroll(); // Check initial position
+    handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [mounted]);
+  }, [mounted, lastScrollY]);
 
   const navLinks = [
     { name: "HOME", href: pathname === "/" ? "#hero" : "/" },
@@ -66,36 +112,40 @@ const Navbar = () => {
     { name: "CONTACT", href: "#contact" },
   ];
 
+  const animShowNavbar = shouldShowNavbar
+    ? "transform translate-y-0 opacity-100"
+    : "transform -translate-y-40 opacity-0 pointer-events-none";
+
   return (
     <nav
-      className={`top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        mounted && isPastHero
-          ? "bg-black border-b border-gray-900 fixed"
-          : "bg-transparent border-none absolute"
-      }`}
+      className={`top-0 left-0 right-0 z-50 transition-all duration-700 ease-in-out bg-transparent border-none mx-auto fixed ${animShowNavbar}`}
     >
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          <div className="flex-shrink-0">
-            {/* <span className="text-2xl font-neue-haas font-light text-white tracking-wider">
+      <div className="max-w-[8rem] md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto px-8 lg:px-10 transition-all duration-300">
+        <div
+          className={`flex justify-center items-center h-16 my-4 rounded-full transition-colors duration-300 backdrop-blur-sm ${mounted && isFixed ? "bg-transparent/80" : "bg-transparent"}`}
+        >
+          {/* <div className="flex-shrink-0"> */}
+          {/* <span className="text-2xl font-neue-haas font-light text-white tracking-wider">
               RY
             </span> */}
-            <Image
+          {/* <Image
               className="mix-blend-screen"
               src="/logo.png"
               width={42}
               height={42}
               alt=""
-            />
-          </div>
+            /> */}
+          {/* </div> */}
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center lg:space-x-12 md:space-x-8">
-            {navLinks.map((link) => (
+          <div className="hidden md:flex items-center justify-center space-x-8 lg:space-x-12">
+            {navLinks.map((link, index) => (
               <button
                 key={link.name}
+                data-aos={mounted && isFixed ? "fade-down" : "fade-zoom-in"}
+                data-aos-delay={index * 100}
                 onClick={() => handleNavigation(link.href)}
-                className="text-sm font-neue-haas text-gray-300 hover:text-white transition-colors tracking-wider font-light bg-transparent border-none cursor-pointer"
+                className="text-sm font-neue-haas text-gray-300 hover:text-white transition-colors tracking-wider font-normal bg-transparent border-none cursor-pointer"
               >
                 {link.name}
               </button>
