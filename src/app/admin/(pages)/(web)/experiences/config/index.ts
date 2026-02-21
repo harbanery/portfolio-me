@@ -26,7 +26,7 @@ export const formLayout: FormLayout[] = [
         name: "skills",
         label: "Skills",
         type: "select_multiple",
-        required: true,
+        required: false,
       },
       {
         name: "images",

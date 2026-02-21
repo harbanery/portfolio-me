@@ -8,6 +8,7 @@ import { masterDataMap } from "@/utils/helpers/category";
 
 interface ExperienceContent {
   jobTitle: string;
+  previousJobTitles?: string[];
   companyName: string;
   description: string;
   techStack: string[];
@@ -33,6 +34,19 @@ const ExperienceContent = ({ content }: { content: ExperienceContent }) => {
       >
         {content.jobTitle}
       </h3>
+      {content.previousJobTitles && content.previousJobTitles.length > 0 && (
+        <div
+          data-aos="fade-zoom-in"
+          data-aos-delay="100"
+          className="text-lg lg:text-xl font-neue-haas text-[#8A8A8A] font-light mb-2"
+        >
+          {content.previousJobTitles.map((title, index) => (
+            <div key={index + 1} className="mb-1">
+              {title}
+            </div>
+          ))}
+        </div>
+      )}
       <p
         data-aos="fade-zoom-in"
         data-aos-delay="100"
@@ -43,7 +57,7 @@ const ExperienceContent = ({ content }: { content: ExperienceContent }) => {
       <p
         data-aos="fade-zoom-in"
         data-aos-delay="100"
-        className="text-base text-[#B5B5B5] font-neue-haas text-justify leading-relaxed mb-6 paragraph-wrapper"
+        className="text-base text-[#B5B5B5] font-neue-haas text-justify leading-relaxed space-y-4 mb-6 paragraph-wrapper"
         dangerouslySetInnerHTML={{ __html: content.description }}
       />
 

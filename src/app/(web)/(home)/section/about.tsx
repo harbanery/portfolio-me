@@ -66,7 +66,7 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
             <div
               data-aos="fade-right"
               data-aos-delay="250"
-              className="text-lg text-gray-300 font-neue-haas leading-relaxed space-y-6 paragraph-wrapper"
+              className="text-lg text-gray-300 font-neue-haas leading-relaxed space-y-3 paragraph-wrapper"
               dangerouslySetInnerHTML={{ __html: about }}
             />
           </div>
