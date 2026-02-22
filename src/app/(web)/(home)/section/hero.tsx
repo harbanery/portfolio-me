@@ -12,16 +12,16 @@ const HeroSection = ({ name, title }: { name?: string; title?: string }) => {
 
   useEffect(() => {
     if (showIntro) {
-      document.body.style.overflow = 'hidden';
-      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     }
 
     return () => {
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     };
   }, [showIntro]);
 
@@ -44,7 +44,7 @@ const HeroSection = ({ name, title }: { name?: string; title?: string }) => {
           <div className="text-center">
             <h1
               data-aos="fade-up"
-              data-aos-delay="200"
+              data-aos-delay="3200"
               className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-inter text-white font-bold mb-8 leading-tight uppercase"
             >
               {name ?? "RAIHAN YUSUF"}
@@ -52,7 +52,7 @@ const HeroSection = ({ name, title }: { name?: string; title?: string }) => {
 
             <p
               data-aos="fade-up"
-              data-aos-delay="300"
+              data-aos-delay="3300"
               className="text-md sm:text-lg md:text-2xl text-gray-400 font-neue-haas font-light mb-12 max-w-4xl mx-auto tracking-wider leading-relaxed"
             >
               {title ??
@@ -61,7 +61,7 @@ const HeroSection = ({ name, title }: { name?: string; title?: string }) => {
 
             <div
               data-aos="fade-up"
-              data-aos-delay="350"
+              data-aos-delay="3350"
               className="flex flex-col items-center gap-8"
             >
               <button
