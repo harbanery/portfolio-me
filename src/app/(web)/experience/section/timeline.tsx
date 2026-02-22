@@ -28,8 +28,8 @@ const ExperienceContent = ({ content }: { content: ExperienceContent }) => {
   return (
     <div className="text-left max-w-full md:max-w-2xl lg:max-w-3xl min-w-0">
       <h3
-        data-aos="fade-zoom-in"
-        data-aos-delay="100"
+        // data-aos="fade-zoom-in"
+        // data-aos-delay="100"
         className="text-2xl lg:text-3xl font-neue-haas text-white font-medium mb-2"
       >
         {content.jobTitle}
@@ -100,13 +100,15 @@ const ExperienceContent = ({ content }: { content: ExperienceContent }) => {
 
       {/* Images Grid */}
       {content.images && content.images.length > 0 && (
-        <div className={`grid gap-4 grid-cols-2 xl:grid-cols-3`}>
+        <div
+          className={`grid gap-4 grid-cols-2 xl:grid-cols-3 transition-all duration-300`}
+        >
           {content.images.map((imgUrl, imgIndex) => (
             <div
               key={`${content.companyName}-${imgIndex}`}
               data-aos="fade-left"
               data-aos-delay={(imgIndex + 2) * 100}
-              className="relative aspect-video rounded-lg overflow-hidden border border-[#1F1F1F] grayscale hover:grayscale-0 transition-all duration-300"
+              className="relative aspect-video rounded-lg overflow-hidden border border-[#1F1F1F] grayscale hover:grayscale-0"
             >
               <Image
                 src={imgUrl}
@@ -126,28 +128,11 @@ const TimelineSection = ({ experiences }: TimelineSectionProps) => {
   return (
     <section
       id="experience"
-      className="min-h-screen bg-black flex items-center px-4 py-20 md:py-32 relative"
+      className="min-h-screen bg-black flex items-center px-4 py-20 relative"
     >
       <StarsBackground className="pointer-events-none" />
       <ShootingStars className="pointer-events-none" />
       <div className="w-full">
-        <div className="max-w-6xl mx-auto px-4 md:px-8 lg:px-10 py-10">
-          <h2
-            data-aos="fade-up"
-            data-aos-delay="200"
-            className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-4 text-center"
-          >
-            Work Experience
-          </h2>
-          <p
-            data-aos="fade-up"
-            data-aos-delay="300"
-            className="text-xl text-[#B5B5B5] font-neue-haas font-light max-w-3xl mx-auto mb-20 text-center leading-relaxed"
-          >
-            A timeline of my professional journey in web development
-          </p>
-        </div>
-
         {/* Custom styled Timeline adapted from aceternity UI */}
         <div className="w-full bg-black">
           {experiences.map((item) => (
