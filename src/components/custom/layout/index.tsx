@@ -18,9 +18,19 @@ const BaseLayout = ({
 }) => {
   const pathname = usePathname();
 
+  const shouldScrollToTop =
+    pathname === "/" ||
+    pathname === "/experience" ||
+    pathname.includes("/projects/");
+
   useEffect(() => {
     AOS.init();
-  }, []);
+
+    // Scroll to top when on home page
+    if (shouldScrollToTop) {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname]);
 
   return (
     <main
