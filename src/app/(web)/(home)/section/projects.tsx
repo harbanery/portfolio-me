@@ -62,7 +62,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
           Some things I've built & worked on recently
         </p>
 
-        <div className={`grid ${gridCols(projects.length)} gap-4 mb-8`}>
+        <div className={`group grid ${gridCols(projects.length)} gap-4 mb-8`}>
           {projects.slice(0, 3).map((project, index) => (
             <button
               key={project.id}
@@ -71,15 +71,15 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
               onClick={() =>
                 router.push(`/projects/${getProjectSlug(project)}`)
               }
-              className="relative aspect-video bg-gray-800 rounded-none overflow-hidden group grayscale transition-all duration-300"
+              className="relative aspect-video bg-gray-800 rounded-none group/button overflow-hidden grayscale transition-all duration-300"
             >
               <img
                 src={project.image}
                 alt={project.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex flex-col items-center justify-center gap-1">
-                <span className="text-white font-neue-haas text-2xl lg:text-3xl font-light opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/button:bg-opacity-60 group-hover/button:backdrop-blur-none group-hover:backdrop-blur-sm transition-all duration-300 flex flex-col items-center justify-center gap-1">
+                <span className="text-white font-neue-haas text-2xl lg:text-3xl font-light opacity-0 group-hover/button:opacity-100 transition-opacity duration-300">
                   {project.title}
                 </span>
                 {/* <div className="flex justify-center items-center gap-1">
@@ -94,7 +94,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
           data-aos="fade-zoom-in"
           data-aos-delay="100"
           onClick={() => router.push(`/projects`)}
-          className={`inline-flex items-center gap-2 text-white font-neue-haas font-medium tracking-wider hover:translate-x-1 transition-transform duration-200`}
+          className={`inline-flex items-center gap-2 text-white font-neue-haas font-medium tracking-wider hover:!translate-x-1 transition-transform duration-200`}
         >
           VIEW MORE PROJECTS
           <ArrowRight size={16} />

@@ -9,7 +9,7 @@ const HeroSection = ({ project }: { project?: any }) => {
       id="hero"
       className="relative h-screen flex items-center justify-center overflow-hidden"
     >
-      <div className="absolute inset-0 z-0 blur-sm">
+      <div className="absolute inset-0 z-0 blur-sm transition-all duration-300">
         <Image
           src={project.image}
           alt={project.title}

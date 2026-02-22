@@ -145,7 +145,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                     onClick={() =>
                       router.push(`/projects/${getProjectSlug(project)}`)
                     }
-                    className={`inline-flex items-center gap-2 text-white font-neue-haas font-medium tracking-wider ${index % 2 === 1 ? "hover:-translate-x-1" : "hover:translate-x-1"} transition-transform duration-200`}
+                    className={`inline-flex items-center gap-2 text-white font-neue-haas font-medium tracking-wider ${index % 2 === 1 ? "hover:!-translate-x-1" : "hover:!translate-x-1"} transition-transform duration-200`}
                   >
                     VIEW PROJECT
                     <ExternalLink size={16} />

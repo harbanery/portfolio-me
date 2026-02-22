@@ -222,7 +222,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                           href={repo}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 font-neue-haas font-medium tracking-wider hover:translate-x-1 transition-transform duration-200"
+                          className="inline-flex items-center gap-2 font-neue-haas font-medium tracking-wider hover:!translate-x-1 transition-transform duration-200"
                         >
                           <Github size={16} className="text-white" />
                           <span className="paragraph-wrapper text-white">
@@ -325,7 +325,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                         key={index + 1}
                         data-aos="fade-zoom-in"
                         data-aos-delay={`${(index + 3) * 50}`}
-                        className="flex justify-start items-center gap-4 hover:translate-x-1 transition-transform duration-200"
+                        className="flex justify-start items-center gap-4 hover:!translate-x-1 transition-transform duration-200"
                       >
                         <div className="w-5 h-5 text-blue-400 flex items-center justify-center">
                           <CheckCircle className="w-5 h-5" />
@@ -355,7 +355,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                         key={index + 1}
                         data-aos="fade-left"
                         data-aos-delay={`${(index + 1) * 50}`}
-                        className="flex items-center justify-start gap-4 hover:translate-x-1 transition-transform duration-200"
+                        className="flex items-center justify-start gap-4 hover:!translate-x-1 transition-transform duration-200"
                       >
                         <div className="w-5 h-5 text-green-400 flex items-center justify-center">
                           <CheckCircle className="w-5 h-5" />

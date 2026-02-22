@@ -120,13 +120,13 @@ const OtherSection = ({ projects }: { projects?: any[] }) => {
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="group grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {displayProjects.map((project, index) => (
               <div
                 key={project.id}
                 data-aos="fade-zoom-in"
                 data-aos-delay={`${(index + 1) * 400}`}
-                className="relative aspect-video cursor-pointer overflow-hidden rounded-lg group grayscale transition-color duration-300"
+                className="relative aspect-video cursor-pointer overflow-hidden rounded-lg group/button grayscale transition-color duration-300"
                 onClick={() => handleProjectClick(project.id)}
               >
                 <img
@@ -134,8 +134,8 @@ const OtherSection = ({ projects }: { projects?: any[] }) => {
                   alt={project.title}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-center justify-center">
-                  <span className="text-white font-neue-haas text-2xl lg:text-3xl font-light opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/button:bg-opacity-60 group-hover/button:backdrop-blur-none group-hover:backdrop-blur-sm transition-all duration-300 flex items-center justify-center">
+                  <span className="text-white font-neue-haas text-2xl lg:text-3xl font-light opacity-0 group-hover/button:opacity-100 transition-opacity duration-300">
                     {project.title}
                   </span>
                 </div>
