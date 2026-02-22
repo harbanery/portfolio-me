@@ -65,14 +65,14 @@ const ContactSection = ({ contacts }: ContactSectionProps) => {
         </p>
 
         <div className="flex flex-col items-center gap-12">
-          <a
-            data-aos="fade-up"
-            data-aos-delay="200"
-            href={formatURLContact(mailContact?.value || "", "mail") || "#"}
-            className="bg-white text-black px-16 py-5 rounded-none font-neue-haas text-sm font-medium tracking-wider hover:bg-gray-200 transition-colors duration-300"
-          >
-            SAY HELLO
-          </a>
+          <div data-aos="fade-up" data-aos-delay="200">
+            <a
+              href={formatURLContact(mailContact?.value || "", "mail") || "#"}
+              className="bg-white text-black px-16 py-5 rounded-none font-neue-haas text-sm font-medium tracking-wider hover:bg-gray-200 transition-colors duration-300"
+            >
+              SAY HELLO
+            </a>
+          </div>
 
           <div
             data-aos="fade-up"

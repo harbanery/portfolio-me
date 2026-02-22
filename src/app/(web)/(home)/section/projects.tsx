@@ -44,7 +44,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
   return (
     <section
       id="projects"
-      className="bg-gray-950 flex items-center justify-center px-4 py-20"
+      className="bg-black flex items-center justify-center px-4 py-20"
     >
       <div className="max-w-7xl mx-auto w-full">
         <h2
@@ -78,7 +78,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                 alt={project.title}
                 className="w-full h-full object-cover"
               />
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/button:bg-opacity-60 group-hover/button:backdrop-blur-none group-hover:backdrop-blur-sm transition-all duration-300 flex flex-col items-center justify-center gap-1">
+              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/button:bg-opacity-60 group-hover/button:!backdrop-blur-none group-hover:backdrop-blur-sm transition-all duration-300 flex flex-col items-center justify-center gap-1">
                 <span className="text-white font-neue-haas text-2xl lg:text-3xl font-light opacity-0 group-hover/button:opacity-100 transition-opacity duration-300">
                   {project.title}
                 </span>

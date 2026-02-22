@@ -134,7 +134,7 @@ const OtherSection = ({ projects }: { projects?: any[] }) => {
                   alt={project.title}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/button:bg-opacity-60 group-hover/button:backdrop-blur-none group-hover:backdrop-blur-sm transition-all duration-300 flex items-center justify-center">
+                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/button:bg-opacity-60 group-hover/button:!backdrop-blur-none group-hover:backdrop-blur-sm transition-all duration-300 flex items-center justify-center">
                   <span className="text-white font-neue-haas text-2xl lg:text-3xl font-light opacity-0 group-hover/button:opacity-100 transition-opacity duration-300">
                     {project.title}
                   </span>

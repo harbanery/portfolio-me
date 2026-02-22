@@ -136,7 +136,7 @@ const Navbar = () => {
     >
       <div className="max-w-[8rem] md:max-w-lg lg:max-w-xl xl:max-w-2xl mx-auto px-8 lg:px-12 xl:px-24 transition-all duration-300">
         <div
-          className={`flex justify-center items-center h-16 my-4 rounded-full transition-colors duration-300 backdrop-blur-sm ${mounted && isFixed ? "bg-transparent/80" : "bg-transparent"}`}
+          className={`flex justify-center items-center h-16 my-4 rounded-full transition-colors duration-300 backdrop-blur-sm shadow-lg ${mounted && isFixed ? "bg-transparent/80 shadow-black/30 " : "bg-transparent shadow-transparent"}`}
         >
           {/* <div className="flex-shrink-0"> */}
           {/* <span className="text-2xl font-neue-haas font-light text-white tracking-wider">
@@ -154,20 +154,27 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center justify-center space-x-8 lg:space-x-12">
             {navLinks.map((link, index) => (
-              <button
+              <div
                 key={link.name}
                 data-aos={mounted && isFixed ? "fade-down" : "fade-zoom-in"}
                 data-aos-delay={index * 100}
-                onClick={() => handleNavigation(link.href)}
-                className={`text-sm font-neue-haas ${link.currentPath ? "text-white" : "text-gray-300"} hover:text-white transition-colors tracking-wider font-normal bg-transparent border-none cursor-pointer`}
               >
-                {link.name}
-              </button>
+                <button
+                  onClick={() => handleNavigation(link.href)}
+                  className={`text-sm font-neue-haas ${link.currentPath ? "text-white" : "text-gray-300"} hover:text-white transition-colors duration-300 tracking-wider font-normal bg-transparent border-none cursor-pointer`}
+                >
+                  {link.name}
+                </button>
+              </div>
             ))}
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div
+            data-aos={mounted && isFixed ? "fade-down" : "fade-zoom-in"}
+            data-aos-delay={100}
+            className="md:hidden"
+          >
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-white hover:text-gray-300 transition-colors"

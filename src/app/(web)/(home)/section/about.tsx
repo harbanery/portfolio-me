@@ -51,7 +51,7 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
   return (
     <section
       id="about"
-      className="h-full bg-gray-950 flex items-center justify-center px-4 py-20"
+      className="h-full bg-black flex items-center justify-center px-4 py-20"
     >
       <div className="max-w-6xl mx-auto w-full">
         <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
@@ -123,8 +123,8 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
           data-aos-delay="100"
           className="overflow-hidden w-full relative py-16"
         >
-          <div className="bg-gradient-to-r from-gray-950 from-0% to-transparent to-100% absolute left-0 z-10 w-4/12 h-full pointer-events-none" />
-          <div className="bg-gradient-to-l from-gray-950 from-0% to-transparent to-100% absolute right-0 z-10 w-4/12 h-full pointer-events-none" />
+          <div className="bg-gradient-to-r from-black from-0% to-transparent to-100% absolute left-0 z-10 w-4/12 h-full pointer-events-none" />
+          <div className="bg-gradient-to-l from-black from-0% to-transparent to-100% absolute right-0 z-10 w-4/12 h-full pointer-events-none" />
           <div
             ref={trackRef}
             className="flex w-max animate-scroll items-center gap-8 md:gap-12 lg:gap-16"
