@@ -6,7 +6,7 @@ import { ShootingStars } from "@/components/aceternity/ui/shooting-stars";
 import { NightOceanSimple } from "@/components/custom/animation/NightOceanSimple";
 import { useRouter } from "next/navigation";
 
-const NotFound = () => {
+const RootNotFound = () => {
   const router = useRouter();
 
   return (
@@ -193,4 +193,4 @@ const NotFound = () => {
   );
 };
 
-export default NotFound;
+export default RootNotFound;
