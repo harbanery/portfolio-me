@@ -1,10 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: [
-      "github.com",
-      "raw.githubusercontent.com",
-      "jfbwaakuillpudswyfkg.supabase.co",
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "github.com",
+      },
+      {
+        protocol: "https",
+        hostname: "raw.githubusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "jfbwaakuillpudswyfkg.supabase.co",
+      },
     ],
   },
 };
