@@ -57,7 +57,7 @@ const Navbar = () => {
 
     const handleScroll = () => {
       if (!ticking) {
-        window.requestAnimationFrame(() => {
+        globalThis.requestAnimationFrame(() => {
           const scrollPosition = window.scrollY;
           const currentDirection =
             scrollPosition > lastScrollY
@@ -66,30 +66,30 @@ const Navbar = () => {
                 ? "up"
                 : scrollDirection;
 
-          console.log(
-            `Scroll: position=${scrollPosition}, direction=${currentDirection}`,
-          );
+          // console.log(
+          //   `Scroll: position=${scrollPosition}, direction=${currentDirection}`,
+          // );
 
           setScrollDirection(currentDirection);
           setLastScrollY(scrollPosition);
 
           if (scrollPosition <= 50) {
             // Di hero section - navbar tidak bergerak, absolute positioning
-            console.log("In hero - navbar visible, absolute");
+            // console.log("In hero - navbar visible, absolute");
             setIsFixed(false);
             setShouldShowNavbar(true);
           } else {
             // Diluar hero section
-            console.log("Outside hero");
+            // console.log("Outside hero");
             setIsFixed(true);
 
             if (currentDirection === "down") {
               // Scroll ke bawah - hide navbar
-              console.log("Scrolling down - HIDING navbar");
+              // console.log("Scrolling down - HIDING navbar");
               setShouldShowNavbar(false);
             } else if (currentDirection === "up") {
               // Scroll ke atas - show navbar
-              console.log("Scrolling up - SHOWING navbar");
+              // console.log("Scrolling up - SHOWING navbar");
               setShouldShowNavbar(true);
             }
           }

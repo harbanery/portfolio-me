@@ -1,5 +1,7 @@
 "use client";
 
+import { StarsBackground } from "@/components/aceternity/ui/bg-stars";
+import { ShootingStars } from "@/components/aceternity/ui/shooting-stars";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 
@@ -11,11 +13,22 @@ const RootError = ({
   reset: () => void;
 }) => {
   useEffect(() => {
-    console.error(error);
+    error &&
+      console.error({
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+        cause: error.cause,
+      });
   }, [error]);
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-slate-950 via-blue-950 to-indigo-950">
+      <div className="absolute inset-0 z-10">
+        <StarsBackground className="pointer-events-none" />
+        <ShootingStars className="pointer-events-none" />
+      </div>
+
       {/* Error Message */}
       <motion.div
         className="absolute inset-0 flex flex-col items-center justify-center z-50 text-center px-4"
@@ -23,22 +36,13 @@ const RootError = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 2, delay: 1, ease: "easeOut" }}
       >
-        <motion.h1
-          className="text-6xl md:text-8xl font-bold font-neue-haas text-white mb-4"
+        <motion.h2
+          className="text-2xl md:text-4xl font-medium capitalize font-neue-haas text-white mb-6"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ duration: 1, delay: 1.5, type: "spring" }}
+          transition={{ duration: 1, delay: 2, type: "spring" }}
         >
-          Error
-        </motion.h1>
-
-        <motion.h2
-          className="text-2xl md:text-4xl font-light font-neue-haas text-white/80 mb-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 2 }}
-        >
-          Something Went Wrong
+          {error?.message ?? "something went wrong"}
         </motion.h2>
 
         <motion.p
