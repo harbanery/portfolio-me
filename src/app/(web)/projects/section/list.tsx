@@ -119,19 +119,22 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                             index % 2 === 1 ? "fade-left" : "fade-right"
                           }
                           data-aos-delay={`${(techIndex + 2) * 100}`}
-                          className="w-5 h-5 flex items-center justify-center transition-all duration-300 text-gray-200 hover:text-[var(--skill-color)]"
-                          style={{
-                            ["--skill-color" as any]:
-                              masterDataMap[tech]?.color || "#FFFFFF",
-                          }}
                         >
-                          {Icon ? (
-                            <Icon className="w-full h-full" />
-                          ) : (
-                            <div className="w-full h-full bg-gray-600 rounded-full flex items-center justify-center text-xs text-white font-medium">
-                              {tech.charAt(0)}
-                            </div>
-                          )}
+                          <div
+                            className="w-5 h-5 flex items-center justify-center transition-all duration-300 text-gray-200 hover:text-[var(--skill-color)]"
+                            style={{
+                              ["--skill-color" as any]:
+                                masterDataMap[tech]?.color || "#FFFFFF",
+                            }}
+                          >
+                            {Icon ? (
+                              <Icon className="w-full h-full" />
+                            ) : (
+                              <div className="w-full h-full bg-gray-600 rounded-full flex items-center justify-center text-xs text-white font-medium">
+                                {tech.charAt(0)}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       );
                     },

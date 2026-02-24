@@ -66,12 +66,12 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
             <div
               data-aos="fade-right"
               data-aos-delay="250"
-              className="text-lg text-gray-300 font-neue-haas leading-relaxed space-y-3 paragraph-wrapper"
+              className="text-base text-gray-300 font-neue-haas leading-relaxed space-y-3 paragraph-wrapper"
               dangerouslySetInnerHTML={{ __html: about }}
             />
           </div>
           <div data-aos="fade-left" data-aos-delay="200" className="relative">
-            <div className="aspect-square bg-gray-800 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 overflow-hidden">
+            <div className="aspect-square rounded-2xl bg-gray-800 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 overflow-hidden">
               {profileImages?.length > 0 ? (
                 profileImages.map((image, index) => (
                   <img
