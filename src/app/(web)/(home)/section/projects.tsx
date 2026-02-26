@@ -78,7 +78,6 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                 alt={project.title}
                 className="w-full h-full object-cover"
                 loading={index === 0 ? "eager" : "lazy"}
-                priority={index === 0}
                 fetchPriority={index === 0 ? "high" : "auto"}
               />
               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/button:bg-opacity-60 group-hover/button:!backdrop-blur-none group-hover:backdrop-blur-sm transition-all duration-300 flex flex-col items-center justify-center gap-1">

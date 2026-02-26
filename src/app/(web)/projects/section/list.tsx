@@ -96,17 +96,21 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                 >
                   {project.title}
                 </h3>
-                <p
+                <div
                   data-aos={index % 2 === 1 ? "fade-left" : "fade-right"}
+                  data-md-aos="fade-left"
                   data-aos-delay="175"
-                  className="text-lg text-gray-300 font-neue-haas leading-relaxed line-clamp-3 paragraph-wrapper"
-                  dangerouslySetInnerHTML={{
-                    __html: project.description || "No description available",
-                  }}
-                />
+                >
+                  <p
+                    className="text-lg text-gray-300 font-neue-haas leading-relaxed line-clamp-3 paragraph-wrapper"
+                    dangerouslySetInnerHTML={{
+                      __html: project.description || "No description available",
+                    }}
+                  />
+                </div>
 
                 <div
-                  className={`flex flex-wrap ${index % 2 === 1 ? "justify-end" : ""} gap-4`}
+                  className={`flex flex-wrap ${index % 2 === 1 ? "lg:justify-end" : ""} gap-4`}
                 >
                   {(project.skills || []).map(
                     (tech: string, techIndex: number) => {

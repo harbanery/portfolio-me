@@ -42,7 +42,7 @@ const RootError = ({
           animate={{ scale: 1 }}
           transition={{ duration: 1, delay: 2, type: "spring" }}
         >
-          {error?.message ?? "something went wrong"}
+          Something Went Wrong
         </motion.h2>
 
         <motion.p
@@ -51,7 +51,8 @@ const RootError = ({
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 2.5 }}
         >
-          An unexpected error occurred. Please try again later.
+          {error?.message ?? "An unexpected error occurred"}. Please try again
+          later.
         </motion.p>
 
         <motion.div

@@ -28,7 +28,7 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
 
   useEffect(() => {
     const track = trackRef.current;
-    if (!track || skillList.length === 0) return;
+    if (!track || !skillList.length) return;
 
     // Use requestAnimationFrame untuk smooth scrolling dan performance
     const animateSkills = () => {

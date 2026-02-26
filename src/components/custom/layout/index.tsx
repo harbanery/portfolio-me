@@ -1,8 +1,8 @@
 "use client";
 
+import Aos from "aos";
 import Footer from "../footer";
 import Navbar from "../navbar";
-import AOS from "aos";
 import "aos/dist/aos.css";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
@@ -24,7 +24,7 @@ const BaseLayout = ({
     pathname.includes("/projects/");
 
   useEffect(() => {
-    AOS.init();
+    Aos.init();
 
     // Scroll to top when on home page
     if (shouldScrollToTop) {
