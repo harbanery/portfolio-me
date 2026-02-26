@@ -28,7 +28,7 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
 
   useEffect(() => {
     const track = trackRef.current;
-    if (!track || profileImages.length === 0) return;
+    if (!track || skillList.length === 0) return;
 
     // Clone the skills for infinite scrolling
     const skills = Array.from(track.children);
@@ -36,7 +36,7 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
       const clone = skill.cloneNode(true);
       track.appendChild(clone);
     });
-  }, [profileImages.length]);
+  }, [skillList.length]);
 
   useEffect(() => {
     const interval = setInterval(() => {
