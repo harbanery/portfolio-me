@@ -30,12 +30,26 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
     const track = trackRef.current;
     if (!track || skillList.length === 0) return;
 
-    // Clone the skills for infinite scrolling
-    const skills = Array.from(track.children);
-    skills.forEach((skill) => {
-      const clone = skill.cloneNode(true);
-      track.appendChild(clone);
+    // Use requestAnimationFrame untuk smooth scrolling dan performance
+    const animateSkills = () => {
+      // Clone the skills for infinite scrolling
+      const skills = Array.from(track.children);
+      skills.forEach((skill) => {
+        const clone = skill.cloneNode(true);
+        track.appendChild(clone);
+      });
+    };
+
+    // Defer animation untuk tidak blocking main thread
+    const rafId = requestAnimationFrame(() => {
+      animateSkills();
     });
+
+    return () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+    };
   }, [skillList.length]);
 
   useEffect(() => {

@@ -85,6 +85,41 @@ export default function RootLayout({
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Critical CSS inlining for above-the-fold content */}
+        <style jsx>{`
+          :root {
+            --foreground: 222 184 135;
+            --background: 0 0 0;
+            --card: 0 0 0;
+            --card-foreground: 222 184 135;
+            --popover: 0 0 0;
+            --popover-foreground: 222 184 135;
+            --primary: 222 184 135;
+            --primary-foreground: 0 0 0;
+            --secondary: 240 240 240;
+            --secondary-foreground: 0 0 0;
+            --muted: 240 240 240;
+            --muted-foreground: 0 0 0;
+            --accent: 240 240 240;
+            --accent-foreground: 0 0 0;
+            --destructive: 0 84.2% 60.2%;
+            --destructive-foreground: 0 0 0;
+            --border: 240 240 240;
+            --input: 240 240 240;
+            --ring: 222 184 135;
+            --chart-1: 12 76 171;
+            --chart-2: 173 96 60;
+            --chart-3: 197 134 192;
+            --chart-4: 43 108 176;
+            --chart-5: 46 213 115;
+          }
+          * {
+            @apply border-border;
+          }
+          body {
+            @apply bg-background text-foreground;
+          }
+        `}</style>
         {META_DESCRIPTION && (
           <meta name="description" content={META_DESCRIPTION} />
         )}
