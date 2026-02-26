@@ -28,7 +28,7 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
 
   useEffect(() => {
     const track = trackRef.current;
-    if (!track) return;
+    if (!track || profileImages.length === 0) return;
 
     // Clone the skills for infinite scrolling
     const skills = Array.from(track.children);
@@ -36,7 +36,7 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
       const clone = skill.cloneNode(true);
       track.appendChild(clone);
     });
-  }, []);
+  }, [profileImages.length]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -81,6 +81,7 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
                     className={`absolute w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
                       index === currentImageIndex ? "opacity-100" : "opacity-0"
                     }`}
+                    loading={index === 0 ? "eager" : "lazy"}
                   />
                 ))
               ) : (
@@ -95,6 +96,8 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
                       width={72}
                       height={72}
                       alt=""
+                      priority={true}
+                      sizes="72px"
                     />
                   </div>
                 </div>

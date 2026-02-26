@@ -94,6 +94,9 @@ const CardProject = ({ data }: any) => {
             width="1000"
             className="h-60 w-full object-cover object-top rounded-xl group-hover/card:shadow-xl"
             alt="thumbnail"
+            priority={false}
+            loading="lazy"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </CardItem>
         <CardItem

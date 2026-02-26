@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { StarsBackground } from "@/components/aceternity/ui/bg-stars";
-import { ShootingStars } from "@/components/aceternity/ui/shooting-stars";
+import { lazy, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import IntroSection from "./intro";
+
+const StarsBackground = lazy(() => import("@/components/aceternity/ui/bg-stars").then(mod => ({ default: mod.StarsBackground })));
+const ShootingStars = lazy(() => import("@/components/aceternity/ui/shooting-stars").then(mod => ({ default: mod.ShootingStars })));
 
 const HeroSection = ({ name, title }: { name?: string; title?: string }) => {
   const router = useRouter();
@@ -38,8 +40,10 @@ const HeroSection = ({ name, title }: { name?: string; title?: string }) => {
           showIntro ? "opacity-0" : "opacity-100"
         }`}
       >
-        <StarsBackground className="pointer-events-none" />
-        <ShootingStars className="pointer-events-none" />
+        <Suspense fallback={<div className="absolute inset-0 bg-black" />}>
+          <StarsBackground className="pointer-events-none" />
+          <ShootingStars className="pointer-events-none" />
+        </Suspense>
         <div className="max-w-7xl mx-auto w-full">
           <div className="text-center">
             <h1

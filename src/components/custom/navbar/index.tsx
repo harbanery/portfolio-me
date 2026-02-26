@@ -66,30 +66,18 @@ const Navbar = () => {
                 ? "up"
                 : scrollDirection;
 
-          // console.log(
-          //   `Scroll: position=${scrollPosition}, direction=${currentDirection}`,
-          // );
-
           setScrollDirection(currentDirection);
           setLastScrollY(scrollPosition);
 
           if (scrollPosition <= 50) {
-            // Di hero section - navbar tidak bergerak, absolute positioning
-            // console.log("In hero - navbar visible, absolute");
             setIsFixed(false);
             setShouldShowNavbar(true);
           } else {
-            // Diluar hero section
-            // console.log("Outside hero");
             setIsFixed(true);
 
             if (currentDirection === "down") {
-              // Scroll ke bawah - hide navbar
-              // console.log("Scrolling down - HIDING navbar");
               setShouldShowNavbar(false);
             } else if (currentDirection === "up") {
-              // Scroll ke atas - show navbar
-              // console.log("Scrolling up - SHOWING navbar");
               setShouldShowNavbar(true);
             }
           }
@@ -100,12 +88,18 @@ const Navbar = () => {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    const throttledHandleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(handleScroll);
+      }
+    };
+
+    window.addEventListener("scroll", throttledHandleScroll, { passive: true });
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", throttledHandleScroll);
     };
-  }, [mounted, lastScrollY]);
+  }, [mounted, lastScrollY, scrollDirection]);
 
   const navLinks = [
     {
@@ -148,6 +142,8 @@ const Navbar = () => {
               width={42}
               height={42}
               alt=""
+              priority={true}
+              sizes="42px"
             /> */}
           {/* </div> */}
 
