@@ -11,6 +11,9 @@ const config: Config = {
     extend: {
       animation: {
         aurora: "aurora 60s linear infinite",
+        marquee: "marquee 20s linear infinite",
+        scroll: "scroll 25s linear infinite",
+        "infinite-scroll": "scroll-left 40s linear infinite",
       },
       keyframes: {
         aurora: {
@@ -21,10 +24,23 @@ const config: Config = {
             backgroundPosition: "350% 50%, 350% 50%",
           },
         },
+        marquee: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+        scroll: {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
+        "scroll-left": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-50%)" },
+        },
       },
       fontFamily: {
         inter: ["var(--font-inter)", "sans-serif"],
         bebas: ["var(--font-bebas)", "sans-serif"],
+        "neue-haas": ["var(--font-neue-haas-display)", "sans-serif"],
       },
       colors: {
         background: "hsl(var(--background))",

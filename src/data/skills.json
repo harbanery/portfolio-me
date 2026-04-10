@@ -1,0 +1,22 @@
+[
+  {
+    "name": "JavaScript",
+    "key": "javascript"
+  },
+  {
+    "name": "React",
+    "key": "react"
+  },
+  {
+    "name": "Golang",
+    "key": "go"
+  },
+  {
+    "name": "Next.js",
+    "key": "next"
+  },
+  {
+    "name": "TypeScript",
+    "key": "ts"
+  }
+]

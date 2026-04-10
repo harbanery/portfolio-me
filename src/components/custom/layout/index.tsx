@@ -1,5 +1,11 @@
+"use client";
+
+import Aos from "aos";
 import Footer from "../footer";
 import Navbar from "../navbar";
+import "aos/dist/aos.css";
+import { usePathname } from "next/navigation";
+import { useEffect } from "react";
 
 const BaseLayout = ({
   navbar = false,
@@ -10,8 +16,26 @@ const BaseLayout = ({
   children: React.ReactNode;
   footer?: boolean;
 }) => {
+  const pathname = usePathname();
+
+  const shouldScrollToTop =
+    pathname === "/" ||
+    pathname === "/experience" ||
+    pathname.includes("/projects/");
+
+  useEffect(() => {
+    Aos.init();
+
+    // Scroll to top when on home page
+    if (shouldScrollToTop) {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname]);
+
   return (
-    <main className="w-full bg-slate-950 overflow-hidden hide-scrollbar select-none">
+    <main
+      className={`w-full hide-scrollbar select-none ${pathname === "/" ? "overflow-x-hidden" : ""}`}
+    >
       {navbar && <Navbar />}
       {children}
       {footer && <Footer />}

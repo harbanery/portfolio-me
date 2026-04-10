@@ -1,0 +1,121 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum PortfolioStatus {
+  ACTIVE
+  NONACTIVE
+}
+
+enum ExperienceStatus {
+  ACTIVE
+  NONACTIVE
+}
+
+model Admin {
+  id        Int      @id @default(autoincrement())
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Session {
+  id        String   @id
+  userId    Int
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model LoginAttempt {
+  id        Int      @id @default(autoincrement())
+  ipAddress String   @unique
+  attemptCount Int    @default(0)
+  blockedUntil DateTime?
+  lastAttemptAt DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([ipAddress])
+}
+
+model Personal {
+  id        Int       @id @default(autoincrement())
+  name      String
+  about     String?
+  skills    String[]
+  contacts  Json?
+  images    PersonalImage[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model PersonalImage {
+  id         Int      @id @default(autoincrement())
+  personalId Int
+  url        String   // Supabase storage URL
+  storagePath String   // Supabase storage path @default("")
+  mimeType   String   // MIME type of the image
+  size       Int      // File size in bytes
+  width      Int?     // Image width
+  height     Int?     // Image height
+  caption    String?
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  personal Personal @relation(fields: [personalId], references: [id], onDelete: Cascade)
+
+  @@index([personalId])
+  @@index([order])
+}
+
+model Portfolio {
+  id              Int             @id @default(autoincrement())
+  title           String
+  subtitle        String?
+  projectType     String          @map("project_type") @default("personal") // "personal", "internal", "client"
+  clientName      String?         @map("client_name")
+  companyName     String?         @map("company_name")
+  role            String
+  image           String
+  images          String[]
+  description     String?
+  apiDocumentation String?         @map("api_documentation")
+  features        String[]
+  highlights      String[]
+  challenges      String?
+  solutions       String?
+  story           String?
+  outcomes        String[]
+  skills          String[]
+  repoLinks       String[]         @map("repo_links")
+  webLink         String?          @map("web_link")
+  status          PortfolioStatus  @default(ACTIVE)
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+}
+
+model Experience {
+  id              Int                @id @default(autoincrement())
+  jobTitle        String             @map("job_title")
+  companyName     String             @map("company_name")
+  description     String?
+  skills          String[]
+  images          String[]
+  startDate       DateTime           @map("start_date")
+  endDate         DateTime?          @map("end_date")
+  isPresent       Boolean            @default(false) @map("is_present")
+  status          ExperienceStatus    @default(ACTIVE)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
