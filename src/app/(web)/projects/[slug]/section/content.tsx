@@ -275,7 +275,7 @@ const ContentSection = ({ project }: { project?: any }) => {
               </div>
 
               {/* Highlights */}
-              {project.highlights && project.highlights.length > 0 && (
+              {/* {project.highlights && project.highlights.length > 0 && (
                 <div>
                   <h3
                     data-aos="fade-right"
@@ -302,7 +302,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                     ))}
                   </ul>
                 </div>
-              )}
+              )} */}
 
               {/* Outcome/Impact */}
               {project.outcomes && project.outcomes.length > 0 && (
