@@ -73,14 +73,14 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
             <h2
               data-aos="fade-right"
               data-aos-delay="200"
-              className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-12"
+              className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-0 lg:mb-12"
             >
               About
             </h2>
             <div
               data-aos="fade-right"
               data-aos-delay="250"
-              className="text-base text-gray-300 font-neue-haas leading-relaxed space-y-3 paragraph-wrapper"
+              className="hidden lg:block text-base text-gray-300 font-neue-haas leading-relaxed space-y-3 paragraph-wrapper"
               dangerouslySetInnerHTML={{ __html: about }}
             />
           </div>
@@ -135,6 +135,12 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
             )}
           </div>
         </div>
+        <div
+          data-aos="fade-right"
+          data-aos-delay="250"
+          className="lg:hidden text-base text-gray-300 font-neue-haas leading-relaxed space-y-3 paragraph-wrapper mt-12 lg:mt-0"
+          dangerouslySetInnerHTML={{ __html: about }}
+        />
         <div
           data-aos="fade-up"
           data-aos-delay="100"

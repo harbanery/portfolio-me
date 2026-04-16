@@ -52,7 +52,7 @@ const HeroSection = ({ name, title }: { name?: string; title?: string }) => {
           <ShootingStars className="pointer-events-none" />
         </Suspense>
         <div className="max-w-7xl mx-auto w-full">
-          <div className="text-center">
+          <div className="w-full text-center">
             <h1
               data-aos="fade-up"
               data-aos-delay="3200"
@@ -64,10 +64,13 @@ const HeroSection = ({ name, title }: { name?: string; title?: string }) => {
             <p
               data-aos="fade-up"
               data-aos-delay="3300"
-              className="text-md sm:text-lg md:text-2xl text-gray-400 font-neue-haas font-light mb-12 max-w-4xl mx-auto tracking-wider leading-relaxed"
+              className="text-md sm:text-lg md:text-xl xl:text-2xl text-gray-400 font-neue-haas font-light mb-12 mx-auto tracking-wider leading-tight lg:leading-relaxed"
             >
-              {title ??
-                "Building for the web means working in a dynamic, growing space."}
+              I build for the web,{" "}
+              <span className="fill-horizontal">shaping simple</span> and{" "}
+              <span className="fill-horizontal">thoughtful experiences</span> in{" "}
+              <span className="text-blink">a constantly evolving space</span>
+              {""}.
             </p>
 
             <div

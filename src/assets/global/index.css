@@ -49,6 +49,62 @@ body {
   pointer-events: none; /* Make sure it doesn't interfere with image interaction */
 }
 
+.fill-horizontal {
+  @apply relative inline-block text-gray-300 font-normal;
+  transition: color 0.3s ease;
+}
+
+.fill-horizontal::after {
+  content: "";
+  @apply absolute inset-0 bg-white;
+
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+  z-index: -1;
+}
+
+.fill-horizontal:hover::after {
+  transform: scaleX(1);
+}
+
+.fill-horizontal:hover {
+  color: black;
+}
+
+.underline-custom {
+  @apply relative inline-block text-gray-300 font-normal;
+}
+
+.underline-custom::after {
+  content: "";
+  @apply absolute left-0 w-full h-[2px] bg-current;
+  bottom: 2px;
+
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.underline-custom:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.text-blink {
+  animation: blinkColor 5s infinite;
+}
+
+@keyframes blinkColor {
+  0%,
+  100% {
+    color: inherit; /* warna awal */
+  }
+  50% {
+    color: white;
+  }
+}
+
 .paragraph-wrapper a {
   @apply font-medium text-blue-400 relative inline-block;
 }
