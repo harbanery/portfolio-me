@@ -10,6 +10,7 @@ import {
 } from "@/lib/config/variables";
 import { bebas, inter } from "@/utils/fonts/next-google";
 import { Suspense } from "react";
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: META_TITLE,
@@ -103,6 +104,7 @@ export default function RootLayout({
           )}
           {children}
         </Suspense>
+        <Analytics />
       </body>
     </html>
   );
