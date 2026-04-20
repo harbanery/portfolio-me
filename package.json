@@ -21,6 +21,7 @@
     "@supabase/supabase-js": "^2.94.0",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@types/bcryptjs": "^2.4.6",
+    "@vercel/analytics": "^2.0.1",
     "antd": "^5.28.0",
     "aos": "^2.3.4",
     "bcryptjs": "^3.0.3",
