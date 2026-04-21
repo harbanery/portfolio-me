@@ -1,6 +1,6 @@
 import "@/assets/global/index.css";
 import type { Metadata } from "next";
-import { neueHaasDisplay } from "@/utils/fonts/neue-haas";
+import { Suspense } from "react";
 import {
   BASE_URL,
   META_APP,
@@ -9,9 +9,8 @@ import {
   NODE_ENV,
 } from "@/lib/config/variables";
 import { bebas, inter } from "@/utils/fonts/next-google";
-import { Suspense } from "react";
-import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next";
+import { neueHaasDisplay } from "@/utils/fonts/neue-haas";
+import { VercelCompatibleComponents } from "@/components/vercel";
 
 export const metadata: Metadata = {
   title: META_TITLE,
@@ -105,22 +104,8 @@ export default function RootLayout({
           )}
           {children}
         </Suspense>
-        <Analytics
-          beforeSend={(event) => {
-            if (event.url.includes("/admin")) {
-              return null;
-            }
-            return event;
-          }}
-        />
-        <SpeedInsights
-          beforeSend={(event) => {
-            if (event.url.includes("/admin")) {
-              return null;
-            }
-            return event;
-          }}
-        />
+        <VercelCompatibleComponents.Analytics />
+        <VercelCompatibleComponents.SpeedInsights />
       </body>
     </html>
   );
