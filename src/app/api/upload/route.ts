@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+const { supabase } = require("@/lib/config/storage");
 
-function generateUploadSignature(params: any, apiSecret: string): string {
+export function generateUploadSignature(
+  params: any,
+  apiSecret: string,
+): string {
   const crypto = require("node:crypto");
   const sortedParams = Object.keys(params)
-    .sort()
+    .sort((a, b) => a.localeCompare(b))
     .map((key) => `${key}=${params[key]}`)
     .join("&");
   return crypto
@@ -99,56 +103,86 @@ export async function POST(request: NextRequest) {
 export async function DELETE(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const publicId = searchParams.get("path");
+    const assetUrl = searchParams.get("url");
 
-    if (!publicId) {
+    if (!assetUrl) {
       return NextResponse.json(
-        { success: false, error: "Missing public ID" },
+        { success: false, error: "Missing asset URL" },
         { status: 400 },
       );
     }
 
-    // Prepare signed delete parameters
-    const deleteTimestamp = Math.floor(Date.now() / 1000);
-    const params = {
-      timestamp: deleteTimestamp,
-      public_id: publicId,
-    };
+    let storageProvider = "unknown";
+    if (assetUrl.includes("cloudinary.com")) {
+      storageProvider = "cloudinary";
+      const publicId = searchParams.get("path");
 
-    // Generate signature for delete
-    const signature = generateUploadSignature(
-      params,
-      process.env.CLOUDINARY_API_SECRET || "",
-    );
+      if (!publicId) {
+        return NextResponse.json(
+          { success: false, error: "Missing public ID" },
+          { status: 400 },
+        );
+      }
 
-    // Delete from Cloudinary
-    const cloudinaryResponse = await fetch(
-      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/destroy`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const deleteTimestamp = Math.floor(Date.now() / 1000);
+      const params = {
+        timestamp: deleteTimestamp,
+        public_id: publicId,
+      };
+
+      const signature = generateUploadSignature(
+        params,
+        process.env.CLOUDINARY_API_SECRET || "",
+      );
+
+      const cloudinaryResponse = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/destroy`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            public_id: publicId,
+            api_key: process.env.CLOUDINARY_API_KEY,
+            timestamp: deleteTimestamp,
+            signature: signature,
+          }),
         },
-        body: JSON.stringify({
-          public_id: publicId,
-          api_key: process.env.CLOUDINARY_API_KEY,
-          timestamp: deleteTimestamp,
-          signature: signature,
-        }),
-      },
-    );
+      );
 
-    if (!cloudinaryResponse.ok) {
-      const errorData = await cloudinaryResponse.json();
-      throw new Error(errorData.error?.message || "Cloudinary delete failed");
+      if (!cloudinaryResponse.ok) {
+        const errorData = await cloudinaryResponse.json();
+        throw new Error(errorData.error?.message || "Cloudinary delete failed");
+      }
+    } else if (assetUrl.includes("supabase.co")) {
+      storageProvider = "supabase";
+      const storagePath = (searchParams.get("path") ?? "").split("/").pop();
+
+      if (!storagePath) {
+        return NextResponse.json(
+          { success: false, error: "Missing storage path" },
+          { status: 400 },
+        );
+      }
+
+      const { error } = await supabase.storage
+        .from("portfolio-images")
+        .remove([storagePath]);
+
+      if (error) {
+        throw new Error(error.message || "Supabase delete failed");
+      }
+    } else {
+      return NextResponse.json(
+        { success: false, error: "Unsupported storage provider" },
+        { status: 400 },
+      );
     }
-
-    const result = await cloudinaryResponse.json();
 
     return NextResponse.json({
       success: true,
-      message: `Successfully deleted ${publicId}`,
-      result: result,
+      message: `Successfully deleted asset from ${storageProvider}`,
     });
   } catch (error: any) {
     console.error("Delete error:", error);

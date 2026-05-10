@@ -45,6 +45,9 @@ const PersonalDecorator = ({ formLayout }: { formLayout: FormLayout[] }) => {
               status: "done",
               url: img.url,
               thumbUrl: img.url,
+              storagePath: img.storagePath,
+              mimeType: img.mimeType,
+              size: img.size,
             })) || [],
         });
       }
