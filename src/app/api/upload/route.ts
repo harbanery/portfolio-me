@@ -28,8 +28,9 @@ export async function POST(request: NextRequest) {
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Generate unique filename
+    // Generate unique filename and folder structure
     const timestamp = Date.now();
+    const folder = "portfolio";
     const filename = `${timestamp}-${file.name}`;
 
     // Prepare signed upload parameters
@@ -37,6 +38,7 @@ export async function POST(request: NextRequest) {
     const params = {
       timestamp: uploadTimestamp,
       public_id: filename,
+      folder: folder,
     };
 
     // Generate signature
@@ -51,6 +53,7 @@ export async function POST(request: NextRequest) {
     formData.append("api_key", process.env.CLOUDINARY_API_KEY || "");
     formData.append("timestamp", uploadTimestamp.toString());
     formData.append("public_id", filename);
+    formData.append("folder", folder);
     formData.append("signature", signature);
 
     const cloudinaryResponse = await fetch(
