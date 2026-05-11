@@ -78,14 +78,20 @@ export async function savePersonal(data: PersonalData) {
 
       // Delete old images from Supabase storage
       if (existingImages.length > 0) {
-        const { supabase } = await import("@/lib/config/storage");
         for (const existingImage of existingImages) {
-          if (existingImage.storagePath) {
+          const assetUrl = existingImage.url;
+          const path = existingImage.storagePath;
+          if (assetUrl && path) {
             try {
-              const filename = existingImage.storagePath.split("/").pop() || "";
-              await supabase.storage
-                .from("portfolio-images")
-                .remove([filename]);
+              await fetch(
+                "/api/upload?path=" +
+                  encodeURIComponent(path) +
+                  "&url=" +
+                  encodeURIComponent(assetUrl),
+                {
+                  method: "DELETE",
+                },
+              );
             } catch (error) {
               console.error(
                 `Failed to delete old image ${existingImage.storagePath}:`,
