@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 const { supabase } = require("@/lib/config/storage");
 
-export function generateUploadSignature(
+function generateUploadSignature(
   params: any,
   apiSecret: string,
 ): string {
