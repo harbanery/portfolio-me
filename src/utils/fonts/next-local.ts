@@ -1,5 +1,7 @@
 import localFont from "next/font/local";
 
+// ** NEUE HAAS DISPLAY FONT FAMILY **
+
 export const neueHaasDisplay = localFont({
   src: [
     {
@@ -72,6 +74,21 @@ export const neueHaasDisplayXThin = localFont({
   weight: "200",
   style: "normal",
   variable: "--font-neue-haas-xthin",
+  display: "swap",
+  fallback: ["system-ui", "sans-serif"],
+});
+
+// ** TEMPTING FONT FAMILY **
+
+export const tempting = localFont({
+  src: [
+    {
+      path: "../../assets/fonts/Tempting.ttf",
+      weight: "400",
+      style: "normal",
+    },
+  ],
+  variable: "--font-tempting",
   display: "swap",
   fallback: ["system-ui", "sans-serif"],
 });

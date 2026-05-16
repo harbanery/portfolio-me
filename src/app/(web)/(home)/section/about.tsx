@@ -12,8 +12,6 @@ interface AboutSectionProps {
 }
 
 const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
-  if (!about) return null;
-
   const trackRef = useRef<HTMLDivElement>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const profileImages = Array.isArray(images) ? images : [];
@@ -62,6 +60,8 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
     return () => clearInterval(interval);
   }, [profileImages.length]);
 
+  if (!about) return null;
+
   return (
     <section
       id="about"
@@ -73,7 +73,7 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
             <h2
               data-aos="fade-right"
               data-aos-delay="200"
-              className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-0 lg:mb-12"
+              className="text-5xl lg:text-7xl font-neue-haas-tempting text-white font-light mb-0 lg:mb-12"
             >
               About
             </h2>

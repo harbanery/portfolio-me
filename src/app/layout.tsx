@@ -9,8 +9,8 @@ import {
   NODE_ENV,
 } from "@/lib/config/variables";
 import { bebas, inter } from "@/utils/fonts/next-google";
-import { neueHaasDisplay } from "@/utils/fonts/neue-haas";
 import { VercelCompatibleComponents } from "@/components/vercel";
+import { neueHaasDisplay, tempting } from "@/utils/fonts/next-local";
 
 export const metadata: Metadata = {
   title: META_TITLE,
@@ -88,7 +88,7 @@ export default function RootLayout({
       </head>
 
       <body
-        className={`${neueHaasDisplay.variable} ${inter.variable} ${bebas.variable} antialiased ${NODE_ENV === "development" ? "relative" : ""}`}
+        className={`${neueHaasDisplay.variable} ${inter.variable} ${bebas.variable} ${tempting.variable} antialiased ${NODE_ENV === "development" ? "relative" : ""}`}
       >
         <Suspense fallback={<></>}>
           {NODE_ENV === "development" && (

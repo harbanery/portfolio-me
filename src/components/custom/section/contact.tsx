@@ -38,7 +38,7 @@ const ContactSection = ({ contacts }: ContactSectionProps) => {
         <h2
           data-aos="fade-zoom-in"
           data-aos-delay="50"
-          className="text-5xl lg:text-7xl font-neue-haas text-white font-light"
+          className="text-5xl lg:text-7xl font-neue-haas-tempting text-white font-light"
         >
           Get In Touch
         </h2>

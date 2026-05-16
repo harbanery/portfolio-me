@@ -41,6 +41,12 @@ const config: Config = {
         inter: ["var(--font-inter)", "sans-serif"],
         bebas: ["var(--font-bebas)", "sans-serif"],
         "neue-haas": ["var(--font-neue-haas-display)", "sans-serif"],
+        tempting: ["var(--font-tempting)", "cursive"],
+        "neue-haas-tempting": [
+          "var(--font-tempting)",
+          "var(--font-neue-haas-display)",
+          "sans-serif",
+        ],
       },
       colors: {
         background: "hsl(var(--background))",
