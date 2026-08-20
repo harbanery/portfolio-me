@@ -1,27 +1,25 @@
 "use client";
 
-import { StarsBackground } from "@/components/aceternity/ui/bg-stars";
-import { ShootingStars } from "@/components/aceternity/ui/shooting-stars";
+import { StarsBackground } from "@/components/effects/bg-stars";
+import { ShootingStars } from "@/components/effects/shooting-stars";
 import {
   CheckCircle,
   Github,
-  Star,
-  Target,
   TrendingUp,
-  Briefcase,
-  ChevronRight,
   AlertTriangle,
   Lightbulb,
 } from "lucide-react";
 import Image from "next/image";
-import { logoMap } from "@/utils/helpers/icon";
-import { masterDataMap } from "@/utils/helpers/category";
+import { logoMap } from "@/models/icons";
+import { masterDataMap } from "@/models/master-data";
 import { useState, useEffect } from "react";
-import { menuRole } from "@/utils/helpers/menu";
-import { getGithubRepoName } from "@/utils/helpers";
+import { menuRole } from "@/models/menu";
+import { getGithubRepoName } from "@/helpers";
+import type { CSSProperties } from "react";
+import type { Project } from "@/models/project";
 import { FaCaretRight } from "react-icons/fa6";
 
-const ContentSection = ({ project }: { project?: any }) => {
+const ContentSection = ({ project }: { project: Project }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   // Use images array if available, otherwise fallback to single image
@@ -54,7 +52,7 @@ const ContentSection = ({ project }: { project?: any }) => {
       <StarsBackground className="pointer-events-none" />
       <ShootingStars className="pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 md:px-6">
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
         <div className="">
           <div className="grid lg:grid-cols-2 gap-12 md:gap-16 lg:gap-24 items-start">
             {/* Left Column - Project Image Gallery */}
@@ -66,7 +64,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                 className="aspect-video bg-gray-800 overflow-hidden group relative"
               >
                 <div className="relative w-full h-full group">
-                  {projectImages.map((image: any, index: number) => (
+                  {projectImages.map((image: string, index: number) => (
                     <Image
                       key={index + 1}
                       src={image}
@@ -86,7 +84,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                 {/* Image Navigation Dots */}
                 {projectImages.length > 1 && (
                   <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
-                    {projectImages.map((_: any, index: number) => (
+                    {projectImages.map((_: string, index: number) => (
                       <button
                         key={index + 1}
                         onClick={() => setCurrentImageIndex(index)}
@@ -103,7 +101,7 @@ const ContentSection = ({ project }: { project?: any }) => {
 
                 {/* Hover Effect Overlay */}
                 {projectImages.length > 1 ? (
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+                  <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
                 ) : null}
               </div>
 
@@ -177,14 +175,16 @@ const ContentSection = ({ project }: { project?: any }) => {
                             key={index + 1}
                             // data-aos="fade-up"
                             // data-aos-delay={`${(index + 6) * 50}`}
-                            className="group flex items-center gap-3 px-3 py-2 bg-gray-800 bg-opacity-50 backdrop-blur-sm border border-gray-700 border-opacity-50 rounded-full hover:bg-opacity-75 transition-all duration-300"
+                            className="group flex items-center gap-3 px-3 py-2 bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 rounded-full hover:bg-gray-800/75 transition-all duration-300"
                           >
                             <div
                               className="w-5 h-5 flex items-center justify-center transition-all duration-300 text-gray-500 group-hover:text-[var(--skill-color)]"
-                              style={{
-                                ["--skill-color" as any]:
-                                  masterDataMap[tech]?.color || "#FFFFFF",
-                              }}
+                              style={
+                                {
+                                  "--skill-color":
+                                    masterDataMap[tech]?.color || "#FFFFFF",
+                                } as CSSProperties
+                              }
                             >
                               {Icon ? (
                                 <Icon className="w-full h-full" />
@@ -214,7 +214,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                       Repository Link
                     </h3>
                     <div className="flex flex-col gap-4">
-                      {project.repoLinks?.map((repo: any, index: number) => (
+                      {project.repoLinks?.map((repo: string, index: number) => (
                         <a
                           key={index + 1}
                           // data-aos="fade-up"
@@ -222,7 +222,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                           href={repo}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 font-neue-haas font-medium tracking-wider hover:!translate-x-1 transition-transform duration-200"
+                          className="inline-flex items-center gap-2 font-neue-haas font-medium tracking-wider hover:translate-x-1! transition-transform duration-200"
                         >
                           <Github size={16} className="text-white" />
                           <span className="paragraph-wrapper text-white">
@@ -265,7 +265,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                   About
                 </h3>
                 <div data-aos="fade-zoom-in" data-aos-delay="150">
-                  <p
+                  <div
                     className="text-lg text-gray-300 font-neue-haas text-justify leading-relaxed mb-12 paragraph-wrapper"
                     dangerouslySetInnerHTML={{
                       __html: project.description || "No description available",
@@ -320,12 +320,12 @@ const ContentSection = ({ project }: { project?: any }) => {
                     Outcome & Impact
                   </h3>
                   <ul className="space-y-4">
-                    {project.outcomes.map((outcome: any, index: number) => (
+                    {project.outcomes.map((outcome: string, index: number) => (
                       <li
                         key={index + 1}
                         data-aos="fade-zoom-in"
                         data-aos-delay={`${(index + 3) * 50}`}
-                        className="flex justify-start items-center gap-4 hover:!translate-x-1 transition-transform duration-200"
+                        className="flex justify-start items-center gap-4 hover:translate-x-1! transition-transform duration-200"
                       >
                         <div className="w-5 h-5 text-blue-400 flex items-center justify-center">
                           <CheckCircle className="w-5 h-5" />
@@ -350,12 +350,12 @@ const ContentSection = ({ project }: { project?: any }) => {
                     Features
                   </h3>
                   <ul className="space-y-4">
-                    {project.features.map((feature: any, index: number) => (
+                    {project.features.map((feature: string, index: number) => (
                       <li
                         key={index + 1}
                         data-aos="fade-left"
                         data-aos-delay={`${(index + 1) * 50}`}
-                        className="flex items-center justify-start gap-4 hover:!translate-x-1 transition-transform duration-200"
+                        className="flex items-center justify-start gap-4 hover:translate-x-1! transition-transform duration-200"
                       >
                         <div className="w-5 h-5 text-green-400 flex items-center justify-center">
                           <CheckCircle className="w-5 h-5" />
@@ -392,7 +392,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                       className="space-y-6"
                     >
                       {project.challenges && (
-                        <p
+                        <div
                           className="text-gray-300 font-neue-haas text-justify leading-relaxed paragraph-wrapper"
                           dangerouslySetInnerHTML={{
                             __html: project.challenges,
@@ -418,7 +418,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                       className="space-y-6"
                     >
                       {project.solutions && (
-                        <p
+                        <div
                           className="text-gray-300 font-neue-haas text-justify leading-relaxed paragraph-wrapper"
                           dangerouslySetInnerHTML={{
                             __html: project.solutions,
@@ -445,7 +445,7 @@ const ContentSection = ({ project }: { project?: any }) => {
                     Story
                   </h3>
                   <div data-aos="fade-zoom-in" data-aos-delay="50">
-                    <p
+                    <div
                       className="text-gray-300 font-neue-haas text-justify leading-relaxed paragraph-wrapper"
                       dangerouslySetInnerHTML={{ __html: project.story }}
                     />

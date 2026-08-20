@@ -1,7 +1,7 @@
 "use client";
 
-import { StarsBackground } from "@/components/aceternity/ui/bg-stars";
-import { ShootingStars } from "@/components/aceternity/ui/shooting-stars";
+import { StarsBackground } from "@/components/effects/bg-stars";
+import { ShootingStars } from "@/components/effects/shooting-stars";
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 
@@ -13,17 +13,18 @@ const RootError = ({
   reset: () => void;
 }) => {
   useEffect(() => {
-    error &&
+    if (error) {
       console.error({
         name: error.name,
         message: error.message,
         stack: error.stack,
         cause: error.cause,
       });
+    }
   }, [error]);
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-slate-950 via-blue-950 to-indigo-950">
+    <div className="relative min-h-screen w-full overflow-hidden bg-linear-to-b from-slate-950 via-blue-950 to-indigo-950">
       <div className="absolute inset-0 z-10">
         <StarsBackground className="pointer-events-none" />
         <ShootingStars className="pointer-events-none" />
@@ -78,20 +79,6 @@ const RootError = ({
         animate={{ opacity: 0 }}
         transition={{ duration: 2, ease: "easeOut" }}
       />
-
-      <style jsx>{`
-        @keyframes mistDrift {
-          0%,
-          100% {
-            opacity: 0.1;
-            transform: translateX(0);
-          }
-          50% {
-            opacity: 0.2;
-            transform: translateX(20px);
-          }
-        }
-      `}</style>
 
       {/* Atmospheric effects */}
       <div className="absolute inset-0 z-50 pointer-events-none">

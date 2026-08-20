@@ -1,7 +1,7 @@
 "use client";
 
-import { StarsBackground } from "@/components/aceternity/ui/bg-stars";
-import { ShootingStars } from "@/components/aceternity/ui/shooting-stars";
+import { StarsBackground } from "@/components/effects/bg-stars";
+import { ShootingStars } from "@/components/effects/shooting-stars";
 
 const RootLoading = () => {
   return (
@@ -90,37 +90,7 @@ const RootLoading = () => {
         </div>
       </div>
 
-      <style jsx>{`
-        @keyframes logoPulse {
-          0%,
-          100% {
-            transform: scale(1);
-            opacity: 1;
-          }
-          50% {
-            transform: scale(0.9);
-            opacity: 0.7;
-          }
-        }
-
-        @keyframes rotate {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        @keyframes orbitRotate {
-          from {
-            transform: rotate(0deg);
-          }
-          to {
-            transform: rotate(360deg);
-          }
-        }
-      `}</style>
+      {/* Keyframes (logoPulse) live in the global stylesheet. */}
     </div>
   );
 };

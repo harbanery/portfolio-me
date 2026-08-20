@@ -1,15 +1,20 @@
 import { notFound } from "next/navigation";
-import BaseLayout from "@/components/custom/layout";
+import BaseLayout from "@/components/layout";
 import HeroSection from "./section/hero";
 import ContentSection from "./section/content";
 import OtherSection from "./section/others";
-import ssrAction from "./actions";
+import { getProjectDetailData } from "@/server/actions";
 
-const ProjectDetailPage = async ({ params }: { params: { slug: string } }) => {
-  const { slug } = params;
-  const { data } = await ssrAction(slug);
+const ProjectDetailPage = async ({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) => {
+  const { slug } = await params;
+  const { data } = await getProjectDetailData(slug);
 
-  if (!data?.project) {
+  const project = data?.project;
+  if (!project) {
     notFound();
   }
 
@@ -17,13 +22,13 @@ const ProjectDetailPage = async ({ params }: { params: { slug: string } }) => {
     <BaseLayout navbar={true} footer={true}>
       <div className="min-h-screen bg-gray-950 text-white relative">
         {/* Hero Section with Parallax */}
-        <HeroSection project={data.project} />
+        <HeroSection project={project} />
 
         {/* Content Section with Editorial Layout */}
-        <ContentSection project={data.project} />
+        <ContentSection project={project} />
 
         {/* More Projects Section */}
-        <OtherSection projects={data.otherProjects} />
+        <OtherSection projects={data?.otherProjects} />
       </div>
     </BaseLayout>
   );

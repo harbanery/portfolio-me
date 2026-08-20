@@ -1,97 +1,100 @@
 "use client";
 
-import { masterDataMap } from "@/utils/helpers/category";
-import { logoMap } from "@/utils/helpers/icon";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import SectionHeading from "@/components/section-heading";
 
 interface AboutSectionProps {
   about?: string | null;
   skills?: string[];
-  images?: string | string[];
+  images?: string[];
 }
 
-const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
-  const trackRef = useRef<HTMLDivElement>(null);
+const PRINCIPLES = [
+  {
+    number: "01",
+    title: "Structure before styling",
+    description:
+      "A layout is a system, not a decoration. Semantics, spacing, and hierarchy come first; the rest follows naturally.",
+  },
+  {
+    number: "02",
+    title: "Details carry the experience",
+    description:
+      "Transitions, timing, and states are not polish. They are the difference between a page and a product.",
+  },
+  {
+    number: "03",
+    title: "Measured, then shipped",
+    description:
+      "Every change is verified against real builds and real browsers before it goes anywhere near production.",
+  },
+];
+
+const AboutSection = ({ about, images }: AboutSectionProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const profileImages = Array.isArray(images) ? images : [];
 
-  const skillList = skills
-    .filter((skill) => logoMap[skill])
-    .map((skill) => ({
-      key: skill,
-      icon: logoMap[skill],
-      name: masterDataMap[skill].name,
-    }));
-
   useEffect(() => {
-    const track = trackRef.current;
-    if (!track || !skillList.length) return;
+    if (profileImages.length < 2) return;
 
-    // Use requestAnimationFrame untuk smooth scrolling dan performance
-    const animateSkills = () => {
-      // Clone the skills for infinite scrolling
-      const skills = Array.from(track.children);
-      skills.forEach((skill) => {
-        const clone = skill.cloneNode(true);
-        track.appendChild(clone);
-      });
-    };
-
-    // Defer animation untuk tidak blocking main thread
-    const rafId = requestAnimationFrame(() => {
-      animateSkills();
-    });
-
-    return () => {
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
-    };
-  }, [skillList.length]);
-
-  useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex(
         (prevIndex) => (prevIndex + 1) % profileImages.length,
       );
-    }, 3000); // Change image every 3 seconds
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [profileImages.length]);
 
-  if (!about) return null;
-
   return (
-    <section
-      id="about"
-      className="h-full bg-black flex items-center justify-center px-4 py-20"
-    >
-      <div className="max-w-6xl mx-auto w-full">
-        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
+    <section id="about" className="relative bg-black py-24 md:py-32">
+      <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
+        <SectionHeading
+          number="01"
+          label="About"
+          meta="Profile"
+          lineOne="Signal out of"
+          lineTwo="operational noise."
+        />
+
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+          {/* Text column */}
           <div>
-            <h2
-              data-aos="fade-right"
-              data-aos-delay="200"
-              className="text-5xl lg:text-7xl font-neue-haas-tempting text-white font-light mb-0 lg:mb-12"
-            >
-              About
-            </h2>
-            <div
-              data-aos="fade-right"
-              data-aos-delay="250"
-              className="hidden lg:block text-base text-gray-300 font-neue-haas leading-relaxed space-y-3 paragraph-wrapper"
-              dangerouslySetInnerHTML={{ __html: about }}
-            />
+            {/* Principles */}
+            <div className="mt-14 space-y-10">
+              {PRINCIPLES.map((principle, index) => (
+                <div
+                  key={principle.number}
+                  data-aos="fade-up"
+                  data-aos-delay={`${(index + 1) * 100}`}
+                  className="grid grid-cols-[3rem_1fr] gap-4 border-t border-white/10 pt-6"
+                >
+                  <span className="text-xs text-[#DEB887] tabular-nums pt-1">
+                    {principle.number}
+                  </span>
+                  <div>
+                    <h3 className="text-lg font-inter font-semibold text-white mb-2">
+                      {principle.title}
+                    </h3>
+                    <p className="text-base text-gray-400 font-neue-haas font-light leading-relaxed">
+                      {principle.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
+
+          {/* Image column */}
           <div data-aos="fade-left" data-aos-delay="200" className="relative">
-            <div className="aspect-square rounded-2xl bg-gray-800 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 overflow-hidden">
-              {profileImages?.length > 0 ? (
+            <div className="aspect-square rounded-2xl bg-gray-900 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 overflow-hidden">
+              {profileImages.length > 0 ? (
                 profileImages.map((image, index) => (
                   <img
                     key={index + 1}
                     src={image}
-                    alt={`RY ${index + 1}`}
+                    alt={`Portrait ${index + 1}`}
                     className={`absolute w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
                       index === currentImageIndex ? "opacity-100" : "opacity-0"
                     }`}
@@ -100,10 +103,7 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
                 ))
               ) : (
                 <div className="text-center">
-                  <div className="w-32 h-32 mx-auto mb-8 rounded-full border-2 border-gray-600 flex items-center justify-center">
-                    {/* <span className="text-4xl font-neue-haas font-light text-white">
-                      RY
-                    </span> */}
+                  <div className="w-32 h-32 mx-auto rounded-full border-2 border-gray-700 flex items-center justify-center">
                     <Image
                       className="mix-blend-screen"
                       src="/logo.png"
@@ -117,52 +117,22 @@ const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
                 </div>
               )}
             </div>
-            {profileImages?.length > 1 && (
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            {profileImages.length > 1 && (
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
                 {profileImages.map((_, index) => (
                   <button
                     key={index + 1}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    className={`h-2 rounded-full transition-all duration-300 ${
                       index === currentImageIndex
                         ? "bg-white w-8"
-                        : "bg-white/50 hover:bg-white/75"
+                        : "bg-white/50 hover:bg-white/75 w-2"
                     }`}
                     aria-label={`Go to image ${index + 1}`}
                   />
                 ))}
               </div>
             )}
-          </div>
-        </div>
-        <div
-          data-aos="fade-right"
-          data-aos-delay="250"
-          className="lg:hidden text-base text-gray-300 font-neue-haas leading-relaxed space-y-3 paragraph-wrapper mt-12 lg:mt-0"
-          dangerouslySetInnerHTML={{ __html: about }}
-        />
-        <div
-          data-aos="fade-up"
-          data-aos-delay="100"
-          className="overflow-hidden w-full relative py-16"
-        >
-          <div className="bg-gradient-to-r from-black from-0% to-transparent to-100% absolute left-0 z-10 w-4/12 h-full pointer-events-none" />
-          <div className="bg-gradient-to-l from-black from-0% to-transparent to-100% absolute right-0 z-10 w-4/12 h-full pointer-events-none" />
-          <div
-            ref={trackRef}
-            className="flex w-max animate-scroll items-center gap-8 md:gap-12 lg:gap-16"
-          >
-            {skillList.map((item) => (
-              <div
-                key={item.key}
-                className="group relative flex flex-col items-center cursor-pointer transition-transform duration-300 hover:scale-110"
-                title={item.name}
-              >
-                <div className="w-10 h-16 flex items-center justify-center">
-                  <item.icon size={40} className="text-white" />
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>

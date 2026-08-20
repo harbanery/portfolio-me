@@ -1,40 +1,71 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Dark mode berbasis class (.dark pada <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --foreground: 222 184 135;
-  --background: 0 0 0;
-  --card: 0 0 0;
-  --card-foreground: 222 184 135;
-  --popover: 0 0 0;
-  --popover-foreground: 222 184 135;
-  --primary: 222 184 135;
-  --primary-foreground: 0 0 0;
-  --secondary: 240 240 240;
-  --secondary-foreground: 0 0 0;
-  --muted: 240 240 240;
-  --muted-foreground: 0 0 0;
-  --accent: 240 240 240;
-  --accent-foreground: 0 0 0;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0 0;
-  --border: 240 240 240;
-  --input: 240 240 240;
-  --ring: 222 184 135;
-  --chart-1: 12 76 171;
-  --chart-2: 173 96 60;
-  --chart-3: 197 134 192;
-  --chart-4: 43 108 176;
-  --chart-5: 46 213 115;
+  --background: #000000;
+  --foreground: #deb887;
 }
 
-* {
-  @apply p-0 m-0 hide-scrollbar;
+/*
+ * Font families dimapping dari CSS variable next/font.
+ * `@theme inline` agar nilai di-inline ke utility, bukan di-emit ulang
+ * sebagai CSS variable (next/font sudah mendefinisikannya di <body>).
+ */
+@theme inline {
+  --font-inter: var(--font-inter), sans-serif;
+  --font-bebas: var(--font-bebas), sans-serif;
+  --font-neue-haas: var(--font-neue-haas-display), sans-serif;
+  --font-tempting: var(--font-tempting), cursive;
+  --font-neue-haas-tempting: var(--font-tempting), var(--font-neue-haas-display),
+    sans-serif;
+}
+
+@theme {
+  --animate-scroll: scroll 25s linear infinite;
+  --animate-fade-in: fade-in 1.2s ease-out both;
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+}
+
+/*
+ * NOTE: do not add an unlayered `* { margin: 0; padding: 0 }` reset here.
+ * In Tailwind v4, unlayered CSS overrides ALL layered utilities, which
+ * silently breaks `mx-auto`, `px-*`, `py-*`, etc. Preflight already
+ * normalizes margins/padding inside `@layer base`.
+ */
+
+/*
+ * Safety net against horizontal overflow (marquees, reveal animations,
+ * oversized headlines). `clip` does not create a scroll container, so
+ * `position: sticky` keeps working.
+ */
+html,
+body {
+  @apply hide-scrollbar;
+  overflow-x: clip;
 }
 
 body {
-  @apply bg-background text-foreground;
+  background: var(--background);
+  color: var(--foreground);
 }
 
 .image-wrapper::after {
@@ -98,10 +129,46 @@ body {
 @keyframes blinkColor {
   0%,
   100% {
-    color: inherit; /* warna awal */
+    color: inherit; /* initial color */
   }
   50% {
     color: white;
+  }
+}
+
+/* Intro logo reveal */
+@keyframes zoomIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes zoomOut {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.1);
+    opacity: 0;
+  }
+}
+
+/* Loading logo pulse */
+@keyframes logoPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.9);
+    opacity: 0.7;
   }
 }
 
@@ -149,14 +216,17 @@ body {
   transform-origin: bottom left;
 }
 
-@layer utilities {
-  .hide-scrollbar::-webkit-scrollbar {
+/*
+ * Utility `hide-scrollbar` (Tailwind v4).
+ * Didefinisikan dengan `@utility` agar dapat dipakai via `@apply`
+ * maupun sebagai class biasa.
+ */
+@utility hide-scrollbar {
+  &::-webkit-scrollbar {
     display: none;
   }
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 @font-face {

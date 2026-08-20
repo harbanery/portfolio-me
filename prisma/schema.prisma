@@ -1,6 +1,5 @@
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["driverAdapters"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -17,35 +16,6 @@ enum PortfolioStatus {
 enum ExperienceStatus {
   ACTIVE
   NONACTIVE
-}
-
-model Admin {
-  id        Int      @id @default(autoincrement())
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Session {
-  id        String   @id
-  userId    Int
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
-}
-
-model LoginAttempt {
-  id        Int      @id @default(autoincrement())
-  ipAddress String   @unique
-  attemptCount Int    @default(0)
-  blockedUntil DateTime?
-  lastAttemptAt DateTime @default(now())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([ipAddress])
 }
 
 model Personal {

@@ -2,11 +2,12 @@
 
 import { ExternalLink } from "lucide-react";
 import { getProjectSlug } from "@/utils/slug";
-import { StarsBackground } from "@/components/aceternity/ui/bg-stars";
-import { ShootingStars } from "@/components/aceternity/ui/shooting-stars";
+import { StarsBackground } from "@/components/effects/bg-stars";
+import { ShootingStars } from "@/components/effects/shooting-stars";
 import { useRouter } from "next/navigation";
-import { logoMap } from "@/utils/helpers/icon";
-import { masterDataMap } from "@/utils/helpers/category";
+import type { CSSProperties } from "react";
+import { logoMap } from "@/models/icons";
+import { masterDataMap } from "@/models/master-data";
 
 interface ProjectSectionProps {
   projects: Array<{
@@ -32,7 +33,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
       >
         <StarsBackground className="pointer-events-none" />
         <ShootingStars className="pointer-events-none" />
-        <div className="max-w-7xl mx-auto w-full text-center">
+        <div className="max-w-6xl mx-auto w-full text-center">
           {/* <h2 className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-20 text-center">
             Projects
           </h2> */}
@@ -51,7 +52,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
     >
       <StarsBackground className="pointer-events-none" />
       <ShootingStars className="pointer-events-none" />
-      <div className="max-w-7xl mx-auto w-full mt-16">
+      <div className="max-w-6xl mx-auto w-full mt-16">
         {/* <h2 className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-32 text-center">
           Projects
         </h2> */}
@@ -102,7 +103,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                     data-md-aos="fade-left"
                     data-aos-delay="175"
                   >
-                    <p
+                    <div
                       className="text-lg text-gray-300 font-neue-haas leading-relaxed line-clamp-3 paragraph-wrapper"
                       dangerouslySetInnerHTML={{
                         __html:
@@ -129,10 +130,12 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                         >
                           <div
                             className="w-5 h-5 flex items-center justify-center transition-all duration-300 text-gray-200 hover:text-[var(--skill-color)]"
-                            style={{
-                              ["--skill-color" as any]:
-                                masterDataMap[tech]?.color || "#FFFFFF",
-                            }}
+                            style={
+                              {
+                                "--skill-color":
+                                  masterDataMap[tech]?.color || "#FFFFFF",
+                              } as CSSProperties
+                            }
                           >
                             {Icon ? (
                               <Icon className="w-full h-full" />
@@ -155,7 +158,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                     onClick={() =>
                       router.push(`/projects/${getProjectSlug(project)}`)
                     }
-                    className={`inline-flex items-center gap-2 text-white font-neue-haas font-medium tracking-wider ${index % 2 === 1 ? "hover:!-translate-x-1" : "hover:!translate-x-1"} transition-transform duration-200`}
+                    className={`inline-flex items-center gap-2 text-white font-neue-haas font-medium tracking-wider ${index % 2 === 1 ? "hover:-translate-x-1!" : "hover:translate-x-1!"} transition-transform duration-200`}
                   >
                     VIEW PROJECT
                     <ExternalLink size={16} />

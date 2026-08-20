@@ -2,8 +2,9 @@
 
 import { ExternalLink } from "lucide-react";
 import Image from "next/image";
+import type { Project } from "@/models/project";
 
-const HeroSection = ({ project }: { project?: any }) => {
+const HeroSection = ({ project }: { project: Project }) => {
   return (
     <div
       id="hero"

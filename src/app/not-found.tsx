@@ -1,9 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { StarsBackground } from "@/components/aceternity/ui/bg-stars";
-import { ShootingStars } from "@/components/aceternity/ui/shooting-stars";
-import { NightOceanSimple } from "@/components/custom/animation/NightOceanSimple";
+import { StarsBackground } from "@/components/effects/bg-stars";
+import { ShootingStars } from "@/components/effects/shooting-stars";
+import { NightOceanSimple } from "@/components/effects/night-ocean";
 import { useRouter } from "next/navigation";
 
 const RootNotFound = () => {
@@ -52,7 +52,7 @@ const RootNotFound = () => {
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 2.5 }}
         >
-          The page you're looking for seems to have drifted away in the night.
+          The page you&apos;re looking for seems to have drifted away in the night.
         </motion.p>
 
         <motion.div
@@ -84,20 +84,6 @@ const RootNotFound = () => {
         animate={{ opacity: 0 }}
         transition={{ duration: 2, ease: "easeOut" }}
       />
-
-      <style jsx>{`
-        @keyframes mistDrift {
-          0%,
-          100% {
-            opacity: 0.1;
-            transform: translateX(0);
-          }
-          50% {
-            opacity: 0.2;
-            transform: translateX(20px);
-          }
-        }
-      `}</style>
 
       {/* Layer 5: Atmospheric effects */}
       <div className="absolute inset-0 z-50 pointer-events-none">

@@ -3,11 +3,11 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import type { ProjectSummary } from "@/models/project";
 
-const OtherSection = ({ projects }: { projects?: any[] }) => {
+const OtherSection = ({ projects }: { projects?: ProjectSummary[] }) => {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [mounted, setMounted] = useState(false);
   const [screenSize, setScreenSize] = useState<"mobile" | "tablet" | "desktop">(
     "desktop",
   );
@@ -15,12 +15,6 @@ const OtherSection = ({ projects }: { projects?: any[] }) => {
   const displayProjects = projects || [];
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
-
     const handleResize = () => {
       const width = window.innerWidth;
       if (width < 768) {
@@ -35,7 +29,7 @@ const OtherSection = ({ projects }: { projects?: any[] }) => {
     handleResize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [mounted]);
+  }, []);
 
   const useCarousel =
     screenSize === "mobile"
@@ -44,8 +38,8 @@ const OtherSection = ({ projects }: { projects?: any[] }) => {
         ? displayProjects.length > 2
         : displayProjects.length > 3;
 
-  const handleProjectClick = (slug: string) => {
-    router.push(`/projects/${slug}`);
+  const handleProjectClick = (id: number) => {
+    router.push(`/projects/${id}`);
   };
 
   const nextSlide = () => {
@@ -62,7 +56,7 @@ const OtherSection = ({ projects }: { projects?: any[] }) => {
 
   return (
     <section id="others" className="py-12 px-4 bg-black">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-6xl mx-auto">
         <h2
           data-aos="fade-right"
           data-aos-delay="50"
@@ -81,7 +75,7 @@ const OtherSection = ({ projects }: { projects?: any[] }) => {
                 {displayProjects.map((project) => (
                   <div key={project.id} className="w-full flex-shrink-0 px-2">
                     <div
-                      className="relative aspect-video cursor-pointer overflow-hidden rounded-lg group grayscale transition-color duration-300"
+                      className="relative aspect-video cursor-pointer overflow-hidden rounded-lg group grayscale transition-colors duration-300"
                       onClick={() => handleProjectClick(project.id)}
                     >
                       <img
@@ -89,7 +83,7 @@ const OtherSection = ({ projects }: { projects?: any[] }) => {
                         alt={project.title}
                         className="w-full h-full object-cover"
                       />
-                      <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-60 transition-all duration-300 flex items-center justify-center">
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition-all duration-300 flex items-center justify-center">
                         <span className="text-white font-neue-haas text-2xl md:text-3xl lg:text-5xl font-light opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                           {project.title}
                         </span>
@@ -126,7 +120,7 @@ const OtherSection = ({ projects }: { projects?: any[] }) => {
                 key={project.id}
                 data-aos="fade-zoom-in"
                 data-aos-delay={`${(index + 1) * 400}`}
-                className="relative aspect-video cursor-pointer overflow-hidden rounded-lg group/button grayscale transition-color duration-300"
+                className="relative aspect-video cursor-pointer overflow-hidden rounded-lg group/button grayscale transition-colors duration-300"
                 onClick={() => handleProjectClick(project.id)}
               >
                 <img
@@ -134,7 +128,7 @@ const OtherSection = ({ projects }: { projects?: any[] }) => {
                   alt={project.title}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/button:bg-opacity-60 group-hover/button:!backdrop-blur-none group-hover:backdrop-blur-sm transition-all duration-300 flex items-center justify-center">
+                <div className="absolute inset-0 bg-black/0 group-hover/button:bg-black/60 group-hover/button:backdrop-blur-none! group-hover:backdrop-blur-sm transition-all duration-300 flex items-center justify-center">
                   <span className="text-white font-neue-haas text-2xl lg:text-3xl font-light opacity-0 group-hover/button:opacity-100 transition-opacity duration-300">
                     {project.title}
                   </span>

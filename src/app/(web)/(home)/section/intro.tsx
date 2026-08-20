@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { StarsBackground } from "@/components/aceternity/ui/bg-stars";
-import { ShootingStars } from "@/components/aceternity/ui/shooting-stars";
+import { StarsBackground } from "@/components/effects/bg-stars";
+import { ShootingStars } from "@/components/effects/shooting-stars";
 import Lottie from "react-lottie";
 
 const IntroSection = ({ onComplete }: { onComplete: () => void }) => {
@@ -107,28 +107,7 @@ const IntroSection = ({ onComplete }: { onComplete: () => void }) => {
           </div>
         </div>
       </div>
-      <style jsx>{`
-        @keyframes zoomIn {
-          from {
-            transform: scale(0);
-            opacity: 0;
-          }
-          to {
-            transform: scale(1);
-            opacity: 1;
-          }
-        }
-        @keyframes zoomOut {
-          from {
-            transform: scale(1);
-            opacity: 1;
-          }
-          to {
-            transform: scale(1.1);
-            opacity: 0;
-          }
-        }
-      `}</style>
+      {/* Keyframes (zoomIn/zoomOut) live in the global stylesheet. */}
     </div>
   );
 };

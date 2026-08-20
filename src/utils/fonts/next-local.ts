@@ -60,24 +60,6 @@ export const neueHaasDisplay = localFont({
   fallback: ["system-ui", "sans-serif"],
 });
 
-export const neueHaasDisplayThin = localFont({
-  src: "../../assets/fonts/NeueHaasDisplayThin.ttf",
-  weight: "100",
-  style: "normal",
-  variable: "--font-neue-haas-thin",
-  display: "swap",
-  fallback: ["system-ui", "sans-serif"],
-});
-
-export const neueHaasDisplayXThin = localFont({
-  src: "../../assets/fonts/NeueHaasDisplayXThin.ttf",
-  weight: "200",
-  style: "normal",
-  variable: "--font-neue-haas-xthin",
-  display: "swap",
-  fallback: ["system-ui", "sans-serif"],
-});
-
 // ** TEMPTING FONT FAMILY **
 
 export const tempting = localFont({

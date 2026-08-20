@@ -1,11 +1,11 @@
-import BaseLayout from "@/components/custom/layout";
-import ContactSection from "@/components/custom/section/contact";
+import BaseLayout from "@/components/layout";
+import ContactSection from "@/components/contact";
 import ListProjectSection from "./section/list";
-import ssrAction from "./actions";
+import { getProjectsData } from "@/server/actions";
 
 const ProjectsPage = async () => {
   // Fetch projects from database
-  const { data } = await ssrAction();
+  const { data } = await getProjectsData();
 
   return (
     <BaseLayout navbar={true} footer={true}>

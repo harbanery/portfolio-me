@@ -1,13 +1,12 @@
 import "@/assets/global/index.css";
-import type { Metadata } from "next";
-import { Suspense } from "react";
+import type { Metadata, Viewport } from "next";
 import {
   BASE_URL,
   META_APP,
   META_DESCRIPTION,
   META_TITLE,
   NODE_ENV,
-} from "@/lib/config/variables";
+} from "@/config/variables";
 import { bebas, inter } from "@/utils/fonts/next-google";
 import { VercelCompatibleComponents } from "@/components/vercel";
 import { neueHaasDisplay, tempting } from "@/utils/fonts/next-local";
@@ -76,6 +75,11 @@ export const metadata: Metadata = {
   ],
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -83,21 +87,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </head>
-
       <body
         className={`${neueHaasDisplay.variable} ${inter.variable} ${bebas.variable} ${tempting.variable} antialiased ${NODE_ENV === "development" ? "relative" : ""}`}
       >
-        <Suspense fallback={<></>}>
-          {NODE_ENV === "development" && (
-            <div className="font-inter fixed top-10 -right-10 z-[99999] text-white px-10 py-1 bg-red-600 rotate-45">
-              DEVELOPMENT
-            </div>
-          )}
-          {children}
-        </Suspense>
+        {NODE_ENV === "development" && (
+          <div className="font-inter fixed top-10 -left-12 z-99999 text-white px-10! py-1 bg-red-600 -rotate-45">
+            DEVELOPMENT
+          </div>
+        )}
+        {children}
         <VercelCompatibleComponents.Analytics />
         <VercelCompatibleComponents.SpeedInsights />
       </body>
