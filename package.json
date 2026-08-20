@@ -6,10 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "analyze": "tsx scripts/analyze-bundle.ts",
-    "analyze:build": "ANALYZE=true npm run build",
-    "init-admin": "tsx scripts/init-admin.ts"
+    "lint": "next lint"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -27,7 +24,9 @@
     "@vercel/speed-insights": "^2.0.0",
     "antd": "^5.28.0",
     "aos": "^2.3.4",
+    "baseline-browser-mapping": "^2.10.33",
     "bcryptjs": "^3.0.3",
+    "caniuse-lite": "^1.0.30001793",
     "class-variance-authority": "^0.7.1",
     "cloudinary": "^2.10.0",
     "clsx": "^2.1.1",
