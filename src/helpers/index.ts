@@ -1,3 +1,15 @@
+/**
+ * Normalize rich-text HTML bodies before rendering.
+ * Stored content often uses `&nbsp;` entities instead of plain spaces, which
+ * produces long unbreakable runs and makes the text overflow its container.
+ */
+export function normalizeHtmlBody(html: string): string {
+  return html
+    .replace(/&nbsp;/gi, " ")
+    .replace(/\u00A0/g, " ")
+    .replace(/[ \t]{2,}/g, " ");
+}
+
 export function getGithubRepoName(url: string): string | null {
   const pathname = new URL(url).pathname;
   const parts = pathname.split("/").filter(Boolean);

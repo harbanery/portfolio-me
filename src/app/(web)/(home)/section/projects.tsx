@@ -6,6 +6,7 @@ import SectionHeading from "@/components/section-heading";
 import { getProjectSlug } from "@/utils/slug";
 import { logoMap } from "@/models/icons";
 import { masterDataMap } from "@/models/master-data";
+import { normalizeHtmlBody } from "@/helpers";
 import type { Project } from "@/models/project";
 
 interface ProjectSectionProps {
@@ -18,10 +19,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
   if (projects.length === 0) return null;
 
   return (
-    <section
-      id="projects"
-      className="relative bg-black py-24 md:py-32"
-    >
+    <section id="projects" className="relative bg-black py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
         <SectionHeading
           number="03"
@@ -44,7 +42,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
             <button
               key={project.id}
               data-aos="fade-up"
-              data-aos-delay={`${(index % 2 + 1) * 100}`}
+              data-aos-delay={`${((index % 2) + 1) * 100}`}
               onClick={() =>
                 router.push(`/projects/${getProjectSlug(project)}`)
               }
@@ -82,8 +80,10 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
 
                 {project.description && (
                   <div
-                    className="text-base text-gray-400 font-neue-haas font-light leading-relaxed line-clamp-2 paragraph-wrapper mb-5"
-                    dangerouslySetInnerHTML={{ __html: project.description }}
+                    className="text-base text-gray-400 text-justify font-neue-haas font-light leading-relaxed line-clamp-2 paragraph-wrapper wrap-anywhere mb-5"
+                    dangerouslySetInnerHTML={{
+                      __html: normalizeHtmlBody(project.description),
+                    }}
                   />
                 )}
 

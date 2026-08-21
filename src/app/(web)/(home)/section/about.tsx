@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import SectionHeading from "@/components/section-heading";
+import { normalizeHtmlBody } from "@/helpers";
 
 interface AboutSectionProps {
   about?: string | null;
@@ -39,11 +39,11 @@ const AboutSection = ({ about, images }: AboutSectionProps) => {
         />
 
         <div className="mt-14 grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
-          {/* Image column */}
-          <div data-aos="fade-right" className="relative">
-            <div className="aspect-square rounded-2xl bg-gray-900 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 overflow-hidden">
-              {profileImages.length > 0 ? (
-                profileImages.map((image, index) => (
+          {/* Image column stays hidden until a profile photo exists. */}
+          {profileImages.length > 0 && (
+            <div data-aos="fade-right" className="relative">
+              <div className="aspect-square rounded-2xl bg-gray-900 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 overflow-hidden">
+                {profileImages.map((image, index) => (
                   <img
                     key={index + 1}
                     src={image}
@@ -53,50 +53,42 @@ const AboutSection = ({ about, images }: AboutSectionProps) => {
                     }`}
                     loading={index === 0 ? "eager" : "lazy"}
                   />
-                ))
-              ) : (
-                <div className="text-center">
-                  <div className="w-32 h-32 mx-auto rounded-full border-2 border-gray-700 flex items-center justify-center">
-                    <Image
-                      className="mix-blend-screen"
-                      src="/logo.png"
-                      width={72}
-                      height={72}
-                      alt=""
-                      priority={true}
-                      sizes="72px"
+                ))}
+              </div>
+              {profileImages.length > 1 && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+                  {profileImages.map((_, index) => (
+                    <button
+                      key={index + 1}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        index === currentImageIndex
+                          ? "bg-white w-8"
+                          : "bg-white/50 hover:bg-white/75 w-2"
+                      }`}
+                      aria-label={`Go to image ${index + 1}`}
                     />
-                  </div>
+                  ))}
                 </div>
               )}
             </div>
-            {profileImages.length > 1 && (
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-                {profileImages.map((_, index) => (
-                  <button
-                    key={index + 1}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      index === currentImageIndex
-                        ? "bg-white w-8"
-                        : "bg-white/50 hover:bg-white/75 w-2"
-                    }`}
-                    aria-label={`Go to image ${index + 1}`}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
+          )}
 
           {/* Body column */}
-          <div data-aos="fade-left" data-aos-delay="150" className="min-w-0">
+          <div
+            data-aos="fade-left"
+            data-aos-delay="150"
+            className={`min-w-0 wrap-break-word ${
+              profileImages.length > 0 ? "lg:col-start-2" : "lg:col-span-2"
+            }`}
+          >
             {about ? (
               <div
-                className="text-lg text-gray-300 font-neue-haas font-light text-justify leading-relaxed paragraph-wrapper"
-                dangerouslySetInnerHTML={{ __html: about }}
+                className="text-lg text-gray-300 text-justify font-neue-haas font-light leading-relaxed paragraph-wrapper wrap-anywhere"
+                dangerouslySetInnerHTML={{ __html: normalizeHtmlBody(about) }}
               />
             ) : (
-              <p className="text-lg text-gray-400 font-neue-haas font-light leading-relaxed">
+              <p className="max-w-[60ch] text-lg text-gray-400 font-neue-haas font-light leading-relaxed">
                 A longer profile is on its way. In the meantime: I take systems
                 nobody had modelled and make them answerable.
               </p>

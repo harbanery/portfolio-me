@@ -1,13 +1,14 @@
 "use client";
 
 import { ExternalLink } from "lucide-react";
-import { useRouter } from "next/navigation";
-import type { CSSProperties } from "react";
 import { getProjectSlug } from "@/utils/slug";
 import { StarsBackground } from "@/components/effects/bg-stars";
 import { ShootingStars } from "@/components/effects/shooting-stars";
+import { useRouter } from "next/navigation";
+import type { CSSProperties } from "react";
 import { logoMap } from "@/models/icons";
 import { masterDataMap } from "@/models/master-data";
+import { normalizeHtmlBody } from "@/helpers";
 import type { Project } from "@/models/project";
 
 interface ProjectSectionProps {
@@ -96,10 +97,11 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                     data-aos-delay="175"
                   >
                     <div
-                      className="text-lg text-gray-300 font-neue-haas leading-relaxed line-clamp-3 paragraph-wrapper"
+                      className="text-lg text-gray-300 font-neue-haas leading-relaxed line-clamp-3 paragraph-wrapper [overflow-wrap:anywhere]"
                       dangerouslySetInnerHTML={{
                         __html:
-                          project.description || "No description available",
+                          normalizeHtmlBody(project.description || "") ||
+                          "No description available",
                       }}
                     />
                   </div>

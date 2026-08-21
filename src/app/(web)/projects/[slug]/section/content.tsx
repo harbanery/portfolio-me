@@ -14,7 +14,7 @@ import { logoMap } from "@/models/icons";
 import { masterDataMap } from "@/models/master-data";
 import { useState, useEffect } from "react";
 import { menuRole } from "@/models/menu";
-import { getGithubRepoName } from "@/helpers";
+import { getGithubRepoName, normalizeHtmlBody } from "@/helpers";
 import type { CSSProperties } from "react";
 import type { Project } from "@/models/project";
 import { FaCaretRight } from "react-icons/fa6";
@@ -266,9 +266,11 @@ const ContentSection = ({ project }: { project: Project }) => {
                 </h3>
                 <div data-aos="fade-zoom-in" data-aos-delay="150">
                   <div
-                    className="text-lg text-gray-300 font-neue-haas text-justify leading-relaxed mb-12 paragraph-wrapper"
+                    className="text-lg text-gray-300 font-neue-haas leading-relaxed mb-12 paragraph-wrapper [overflow-wrap:anywhere]"
                     dangerouslySetInnerHTML={{
-                      __html: project.description || "No description available",
+                      __html:
+                        normalizeHtmlBody(project.description || "") ||
+                        "No description available",
                     }}
                   />
                 </div>
@@ -393,9 +395,9 @@ const ContentSection = ({ project }: { project: Project }) => {
                     >
                       {project.challenges && (
                         <div
-                          className="text-gray-300 font-neue-haas text-justify leading-relaxed paragraph-wrapper"
+                          className="text-gray-300 font-neue-haas leading-relaxed paragraph-wrapper [overflow-wrap:anywhere]"
                           dangerouslySetInnerHTML={{
-                            __html: project.challenges,
+                            __html: normalizeHtmlBody(project.challenges),
                           }}
                         />
                       )}
@@ -419,9 +421,9 @@ const ContentSection = ({ project }: { project: Project }) => {
                     >
                       {project.solutions && (
                         <div
-                          className="text-gray-300 font-neue-haas text-justify leading-relaxed paragraph-wrapper"
+                          className="text-gray-300 font-neue-haas leading-relaxed paragraph-wrapper [overflow-wrap:anywhere]"
                           dangerouslySetInnerHTML={{
-                            __html: project.solutions,
+                            __html: normalizeHtmlBody(project.solutions),
                           }}
                         />
                       )}
@@ -446,8 +448,10 @@ const ContentSection = ({ project }: { project: Project }) => {
                   </h3>
                   <div data-aos="fade-zoom-in" data-aos-delay="50">
                     <div
-                      className="text-gray-300 font-neue-haas text-justify leading-relaxed paragraph-wrapper"
-                      dangerouslySetInnerHTML={{ __html: project.story }}
+                      className="text-gray-300 font-neue-haas leading-relaxed paragraph-wrapper [overflow-wrap:anywhere]"
+                      dangerouslySetInnerHTML={{
+                        __html: normalizeHtmlBody(project.story),
+                      }}
                     />
                   </div>
                 </div>
