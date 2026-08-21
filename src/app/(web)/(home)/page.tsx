@@ -1,6 +1,7 @@
 ﻿import BaseLayout from "@/components/layout";
 import { getHomeData } from "@/server/actions";
 import { getHeroContent } from "@/services/meProfileService";
+import { getCredentials, getPublications } from "@/services/credentialService";
 import HeroSection from "./section/hero";
 import AboutSection from "./section/about";
 import ExperienceSection from "./section/experience";
@@ -13,7 +14,12 @@ import HomeContactSection from "./section/contact";
 import SkillsMarqueeSection from "./section/skills-marquee";
 
 const HomePage = async () => {
-  const [{ data }, hero] = await Promise.all([getHomeData(), getHeroContent()]);
+  const [{ data }, hero, credentials, publications] = await Promise.all([
+    getHomeData(),
+    getHeroContent(),
+    getCredentials(),
+    getPublications(),
+  ]);
 
   // Hero stats from database data: projects, distinct companies, and total
   // professional experience. Labels stay formal and count-aware.
@@ -50,11 +56,11 @@ const HomePage = async () => {
           images={data?.personal?.images?.map((img) => img.url) || []}
         />
         <ExperienceSection experiences={data?.experiences || []} />
-        <SkillsSection />
+        <SkillsSection skills={data?.skills || []} />
         <ProjectSection projects={data?.projects || []} />
         <OpenSourceSection />
-        <CredentialsSection />
-        <WritingSection />
+        <CredentialsSection items={credentials} />
+        <WritingSection items={publications} />
         <HomeContactSection contacts={data?.personal?.contacts || []} />
       </div>
     </BaseLayout>

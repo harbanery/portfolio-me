@@ -36,7 +36,7 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => (
             >
               {/* Company + date range */}
               <div className="md:pt-1.5">
-                <span className="block text-[10px] uppercase tracking-[0.2em] text-gray-500 leading-relaxed">
+                <span className="block text-sm uppercase tracking-[0.15em] text-gray-300 font-neue-haas leading-relaxed">
                   {item.content.companyName}
                 </span>
                 <span className="mt-1.5 block text-xs uppercase tracking-[0.2em] text-[#DEB887] tabular-nums">

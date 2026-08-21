@@ -25,10 +25,12 @@ const SkillsMarqueeSection = ({ skills = [] }: SkillsMarqueeSectionProps) => {
       aria-label="Technologies I work with"
       className="relative bg-black border-y border-white/10 py-10"
     >
-      <div className="relative overflow-hidden">
+      <div className="group relative overflow-hidden">
         <div className="bg-linear-to-r from-black from-0% to-transparent to-100% absolute left-0 z-10 w-4/12 h-full pointer-events-none" />
         <div className="bg-linear-to-l from-black from-0% to-transparent to-100% absolute right-0 z-10 w-4/12 h-full pointer-events-none" />
-        <div className="flex w-max animate-scroll items-center gap-16 md:gap-24 pr-16 md:pr-24">
+        {/* Track pauses while any skill is hovered (group-hover) so a logo
+            can be inspected without scrolling away. */}
+        <div className="flex w-max animate-scroll items-center gap-16 md:gap-24 pr-16 md:pr-24 group-hover:[animation-play-state:paused]">
           {[...skillList, ...skillList].map((item, index) => (
             <span
               key={`${item.key}-${index + 1}`}

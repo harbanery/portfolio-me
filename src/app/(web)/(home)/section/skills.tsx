@@ -1,40 +1,92 @@
 import SectionHeading from "@/components/section-heading";
 import { masterDataMap } from "@/models/master-data";
 
+interface SkillsSectionProps {
+  /** Skill keys from the Personal row in the database. */
+  skills: string[];
+}
+
 /**
- * Capability groups for the skills section.
- * Group subtitles are placeholders; chips map to real master data entries.
+ * Grouping rules: a DB skill lands in the first group whose filter matches
+ * its master-data categories; anything unrecognized falls into "Other".
  */
-const GROUPS: Array<{
+const GROUP_RULES: Array<{
   title: string;
   subtitle: string;
-  keys: string[];
+  match: (categories: string[]) => boolean;
 }> = [
   {
     title: "Frontend",
     subtitle: "Interfaces, state, and motion",
-    keys: ["react", "next", "typescript", "javascript", "redux", "css", "tailwind"],
+    match: (c) => c.includes("frontend") || c.includes("ui"),
   },
   {
     title: "Backend",
     subtitle: "APIs, services, and systems",
-    keys: ["golang", "laravel", "node"],
+    match: (c) => c.includes("backend"),
   },
   {
     title: "Data & Cloud",
     subtitle: "Storage, delivery, and infrastructure",
-    keys: ["postgre", "mysql", "redis", "prisma", "cloudinary"],
+    match: (c) =>
+      c.includes("database") ||
+      c.includes("cloud") ||
+      c.includes("deployment") ||
+      c.includes("orm"),
   },
   {
     title: "Workflow",
     subtitle: "Shipping and collaboration",
-    keys: ["git", "gitlab", "github", "docker", "postman"],
+    match: (c) => c.includes("tool") || c.includes("version-control"),
   },
 ];
 
-/** Grouped capability columns, following the reference design. */
-const SkillsSection = () => {
-  const tracked = GROUPS.reduce((sum, group) => sum + group.keys.length, 0);
+/** Fallback when the profile has no skills yet. */
+const FALLBACK_KEYS = [
+  "react",
+  "next",
+  "typescript",
+  "javascript",
+  "redux",
+  "css",
+  "tailwind",
+  "golang",
+  "laravel",
+  "postgre",
+  "prisma",
+  "cloudinary",
+  "git",
+  "github",
+  "docker",
+  "postman",
+];
+
+/** Grouped capability columns built from the DB skill list. */
+const SkillsSection = ({ skills }: SkillsSectionProps) => {
+  const keys = skills.filter((key) => masterDataMap[key]);
+  const source = keys.length > 0 ? keys : FALLBACK_KEYS;
+
+  const groups = GROUP_RULES.map((rule) => ({
+    title: rule.title,
+    subtitle: rule.subtitle,
+    keys: source.filter((key) => {
+      const categories = masterDataMap[key]?.category ?? [];
+      return rule.match(categories);
+    }),
+  })).filter((group) => group.keys.length > 0);
+
+  const others = source.filter(
+    (key) => !groups.some((group) => group.keys.includes(key)),
+  );
+  if (others.length > 0) {
+    groups.push({
+      title: "Practices",
+      subtitle: "Methods and everything in between",
+      keys: others,
+    });
+  }
+
+  const tracked = source.length;
 
   return (
     <section
@@ -58,7 +110,7 @@ const SkillsSection = () => {
         </p>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
-          {GROUPS.map((group, index) => (
+          {groups.map((group, index) => (
             <div
               key={group.title}
               data-aos="fade-up"

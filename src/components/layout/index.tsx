@@ -4,6 +4,7 @@ import Aos from "aos";
 import Footer from "../footer";
 import Navbar from "../navbar";
 import SideMenu from "../side-menu";
+import ScrollToTop from "../scroll-to-top";
 import "aos/dist/aos.css";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
@@ -41,6 +42,8 @@ const BaseLayout = ({
       {/* Vertical section menu on the right edge — renders itself only on
           the home route. */}
       {navbar && <SideMenu />}
+      {/* Scroll-to-top on the left edge — appears from the About section. */}
+      {navbar && <ScrollToTop />}
       {children}
       {footer && <Footer />}
     </main>
