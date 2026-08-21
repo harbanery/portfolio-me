@@ -21,6 +21,87 @@ export interface PersonalProfile {
   images: Array<{ url: string }>;
 }
 
+/** Aggregate experience figures for the hero stats. */
+export interface ExperienceStats {
+  /** Distinct companies across active experiences. */
+  companies: number;
+  /** Total professional experience in whole years (current role counts). */
+  years: number;
+}
+
+const MONTH_LABELS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+/** Whole months between two dates (day granularity ignored). */
+function monthsBetween(from: Date, to: Date): number {
+  return (
+    (to.getFullYear() - from.getFullYear()) * 12 +
+    (to.getMonth() - from.getMonth())
+  );
+}
+
+/** Parse the "MMM YYYY" start label of a dummy timeline title. */
+function parseStartFromTitle(title: string): Date | null {
+  const match = /^([A-Za-z]{3}) (\d{4})$/.exec(title.split(" – ")[0].trim());
+  if (!match) return null;
+  const monthIndex = MONTH_LABELS.indexOf(match[1]);
+  if (monthIndex === -1) return null;
+  return new Date(Number(match[2]), monthIndex, 1);
+}
+
+/**
+ * Company count and total experience span, computed from the database.
+ * Falls back to the dummy timeline while no rows exist.
+ */
+export async function getExperienceStats(): Promise<ExperienceStats> {
+  let companies = 0;
+  let earliest: Date | null = null;
+
+  try {
+    const rows = await prisma.experience.findMany({
+      where: { status: "ACTIVE" },
+      select: { companyName: true, startDate: true },
+    });
+
+    if (rows.length > 0) {
+      companies = new Set(rows.map((row) => row.companyName)).size;
+      earliest = rows
+        .map((row) => new Date(row.startDate))
+        .reduce((min, current) => (current < min ? current : min));
+    }
+  } catch (error) {
+    console.error("Error fetching experience stats:", error);
+  }
+
+  // Database empty or unreachable: derive the same figures from the dummy
+  // timeline ("MMM YYYY – ..." titles).
+  if (companies === 0) {
+    companies = dummyExperiences.length;
+    earliest = dummyExperiences
+      .map((entry) => parseStartFromTitle(entry.title))
+      .filter((date): date is Date => date !== null)
+      .reduce<Date | null>(
+        (min, current) => (min === null || current < min ? current : min),
+        null,
+      );
+  }
+
+  const months = earliest ? Math.max(0, monthsBetween(earliest, new Date())) : 0;
+  return { companies, years: Math.max(1, Math.round(months / 12)) };
+}
+
 const SKILL_ORDER = [
   "react",
   "next",

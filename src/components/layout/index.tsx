@@ -3,6 +3,7 @@
 import Aos from "aos";
 import Footer from "../footer";
 import Navbar from "../navbar";
+import SideMenu from "../side-menu";
 import "aos/dist/aos.css";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
@@ -37,6 +38,9 @@ const BaseLayout = ({
   return (
     <main className="w-full hide-scrollbar select-none overflow-x-clip">
       {navbar && <Navbar locationLabel={locationLabel} />}
+      {/* Vertical section menu on the right edge — renders itself only on
+          the home route. */}
+      {navbar && <SideMenu />}
       {children}
       {footer && <Footer />}
     </main>

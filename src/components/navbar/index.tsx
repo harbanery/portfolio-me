@@ -3,6 +3,7 @@
 import { Download, MapPin, Menu, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
+import { menuSections } from "@/models/menu";
 
 const emptySubscribe = () => () => {};
 
@@ -20,21 +21,6 @@ const NAV_SECTIONS = [
   { name: "Experience", id: "experience" },
   { name: "Skills", id: "skills" },
   { name: "Projects", id: "projects" },
-  { name: "Contact", id: "contact" },
-];
-
-/**
- * Full section menu in home page order — used by the right-side vertical
- * menu and the mobile hamburger menu.
- */
-const MENU_SECTIONS = [
-  { name: "About", id: "about" },
-  { name: "Experience", id: "experience" },
-  { name: "Capabilities", id: "skills" },
-  { name: "Projects", id: "projects" },
-  { name: "Source Code", id: "open-source" },
-  { name: "Credentials", id: "credentials" },
-  { name: "Writing", id: "writing" },
   { name: "Contact", id: "contact" },
 ];
 
@@ -167,15 +153,28 @@ const Navbar = ({ locationLabel }: { locationLabel?: string }) => {
           >
             {/* Desktop: section links on other routes; on the home route the
                 links live in the right-side vertical menu instead, and the
-                hero status items (location + local time) move in here. */}
+                full hero status row (availability, location, local time)
+                moves in here. */}
             <div className="hidden lg:flex items-center gap-6 xl:gap-8">
               {isHome ? (
                 <>
-                  {locationLabel && (
-                    <span className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] font-inter font-medium text-gray-400">
-                      <MapPin size={12} className="text-[#DEB887]" />
-                      {locationLabel}
+                  <span className="flex items-center gap-2.5">
+                    <span className="relative flex h-2 w-2">
+                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#DEB887] opacity-60" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-[#DEB887]" />
                     </span>
+                    <span className="text-[11px] uppercase tracking-[0.2em] font-inter font-medium text-[#DEB887]">
+                      Available for work
+                    </span>
+                  </span>
+                  {locationLabel && (
+                    <>
+                      <span className="h-3 w-px bg-white/15" />
+                      <span className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] font-inter font-medium text-gray-400">
+                        <MapPin size={12} className="text-[#DEB887]" />
+                        {locationLabel}
+                      </span>
+                    </>
                   )}
                   <span className="h-3 w-px bg-white/15" />
                   <span
@@ -246,7 +245,7 @@ const Navbar = ({ locationLabel }: { locationLabel?: string }) => {
         {isMenuOpen && (
           <div className="lg:hidden mx-4 md:mx-6 mb-4 rounded-2xl border border-white/10 bg-black/90 backdrop-blur-md p-6">
             <div className="flex flex-col gap-1">
-              {MENU_SECTIONS.map((section) => (
+              {menuSections.map((section) => (
                 <button
                   key={section.id}
                   onClick={() => goToSection(section.id)}
@@ -268,28 +267,6 @@ const Navbar = ({ locationLabel }: { locationLabel?: string }) => {
           </div>
         )}
       </nav>
-
-      {/* Right-side vertical section menu — home route only. */}
-      {isHome && (
-        <div
-          data-aos="fade-left"
-          data-aos-delay="800"
-          className={`fixed right-5 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col items-end gap-4 transition-opacity duration-700 ${
-            mounted && !shouldShowNavbar ? "opacity-40" : "opacity-100"
-          }`}
-        >
-          {MENU_SECTIONS.map((section) => (
-            <button
-              key={section.id}
-              onClick={() => goToSection(section.id)}
-              className="group flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] font-inter font-medium text-gray-600 hover:text-white transition-colors duration-300"
-            >
-              <span className="h-px w-0 bg-[#DEB887] transition-all duration-300 group-hover:w-4" />
-              {section.name}
-            </button>
-          ))}
-        </div>
-      )}
     </>
   );
 };

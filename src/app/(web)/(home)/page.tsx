@@ -17,13 +17,34 @@ const HomePage = async () => {
     getHeroContent(),
   ]);
 
+  // Hero stats from database data: projects, distinct companies, and total
+  // professional experience. Labels stay formal and count-aware.
+  const projectCount = data?.projects.length ?? 0;
+  const companyCount = data?.experienceStats.companies ?? 0;
+  const years = data?.experienceStats.years ?? 0;
+
+  const stats = [
+    {
+      value: `${projectCount}`,
+      label: `${projectCount === 1 ? "Project" : "Projects"} delivered`,
+    },
+    {
+      value: `${companyCount}`,
+      label: `${companyCount === 1 ? "Company" : "Companies"} worked with`,
+    },
+    {
+      value: `${years}`,
+      label: `${years === 1 ? "Year" : "Years"} of professional experience`,
+    },
+  ];
+
   return (
     <BaseLayout navbar={true} footer={true} locationLabel={hero?.locationLabel}>
       <div className="w-full bg-black">
         <HeroSection
           name={data?.personal?.name ?? hero?.name}
           lead={hero?.lead}
-          stats={hero?.stats}
+          stats={stats}
         />
         <AboutSection
           about={data?.personal?.about}

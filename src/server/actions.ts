@@ -2,6 +2,7 @@ import {
   getPersonalProfile,
   getExperiences,
   getMarqueeSkills,
+  getExperienceStats,
 } from "@/services/personalService";
 import {
   getProjects,
@@ -18,11 +19,13 @@ import {
 
 export async function getHomeData() {
   try {
-    const [personal, projects, experiences] = await Promise.all([
-      getPersonalProfile(),
-      getProjects(),
-      getExperiences(),
-    ]);
+    const [personal, projects, experiences, experienceStats] =
+      await Promise.all([
+        getPersonalProfile(),
+        getProjects(),
+        getExperiences(),
+        getExperienceStats(),
+      ]);
 
     return {
       success: true,
@@ -31,6 +34,7 @@ export async function getHomeData() {
         skills: getMarqueeSkills(personal?.skills),
         projects,
         experiences,
+        experienceStats,
       },
     };
   } catch (error) {

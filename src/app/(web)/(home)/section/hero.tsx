@@ -82,24 +82,9 @@ const HeroSection = ({
 
         <div className="mx-auto w-full max-w-6xl px-6 lg:px-10 pt-28 pb-32">
           <div className="grid items-center gap-16 lg:grid-cols-[1.6fr_1fr]">
-            {/* Left: identity */}
+            {/* Left: identity — the full status row (availability, location,
+                local time) lives in the navbar on the home route. */}
             <div className="min-w-0">
-              {/* Status row */}
-              <div
-                data-aos="fade-up"
-                className="mb-8 flex flex-wrap items-center gap-x-5 gap-y-2"
-              >
-                <span className="flex items-center gap-2.5">
-                  <span className="relative flex h-2 w-2">
-                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#DEB887] opacity-60" />
-                    <span className="relative inline-flex h-2 w-2 rounded-full bg-[#DEB887]" />
-                  </span>
-                  <span className="text-xs uppercase tracking-[0.2em] text-[#DEB887]">
-                    Available for work
-                  </span>
-                </span>
-              </div>
-
               {/* Name */}
               <h1 className="font-inter font-extrabold text-white leading-[0.95] tracking-tight">
                 <span
