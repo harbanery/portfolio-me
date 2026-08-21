@@ -211,7 +211,7 @@ const Navbar = ({ locationLabel }: { locationLabel?: string }) => {
               <a
                 href="/cv.pdf"
                 download
-                className="inline-flex items-center gap-1.5 rounded-full bg-[#DEB887]/15 border border-[#DEB887]/30 px-4 py-2 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-[#DEB887] hover:bg-[#DEB887]/25 hover:border-[#DEB887]/50 transition-colors duration-300"
+                className="inline-flex items-center gap-1.5 rounded-full bg-[#DEB887]/15 border border-transparent px-4 py-2 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-300"
               >
                 CV
                 <Download size={13} />
@@ -262,7 +262,7 @@ const Navbar = ({ locationLabel }: { locationLabel?: string }) => {
             <a
               href="/cv.pdf"
               download
-              className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[#DEB887]/15 border border-[#DEB887]/30 px-6 py-3 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-[#DEB887] hover:bg-[#DEB887]/25 hover:border-[#DEB887]/50 transition-colors duration-300"
+              className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[#DEB887]/15 border border-transparent px-6 py-3 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-300"
             >
               Download CV
               <Download size={14} />

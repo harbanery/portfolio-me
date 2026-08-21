@@ -36,6 +36,14 @@ const projectColumns = {
   webLink: true,
 } as const;
 
+/**
+ * A project is only showcased when it is presentable: has a cover image and
+ * a live web link. Ongoing/active status is enforced by isOngoing when the
+ * column exists (older rows without it default true in the schema).
+ */
+const isShowcaseable = (project: Project): boolean =>
+  !!project.image && !!project.webLink;
+
 /** Projects are "real" once the database holds at least one ACTIVE row. */
 export async function getProjects(): Promise<Project[]> {
   try {
@@ -46,7 +54,7 @@ export async function getProjects(): Promise<Project[]> {
     });
 
     if (projects.length === 0) return dummyProjects;
-    return projects as Project[];
+    return (projects as Project[]).filter(isShowcaseable);
   } catch (error) {
     console.error("Error fetching projects, falling back to dummy data:", error);
     return dummyProjects;
@@ -71,7 +79,7 @@ export async function getProjectById(
   return dummyProjects.find((project) => project.id === projectId) ?? null;
 }
 
-/** Every ACTIVE project except the given one, newest first. */
+/** Every ACTIVE showcaseable project except the given one, newest first. */
 export async function getOtherProjects(
   projectId: number,
 ): Promise<Project[]> {
@@ -81,7 +89,9 @@ export async function getOtherProjects(
       orderBy: { createdAt: "desc" },
       select: { id: true, title: true, image: true },
     });
-    if (projects.length > 0) return projects as Project[];
+    if (projects.length > 0) {
+      return (projects as Project[]).filter(isShowcaseable);
+    }
   } catch (error) {
     console.error("Error fetching other projects:", error);
   }

@@ -7,8 +7,9 @@ interface SkillsSectionProps {
 }
 
 /**
- * Grouping rules: a DB skill lands in the first group whose filter matches
- * its master-data categories; anything unrecognized falls into "Other".
+ * Fixed six-group layout, mapped straight from the admin master-data
+ * categories: languages, frameworks, libraries, databases + cloud, tools,
+ * and methodologies.
  */
 const GROUP_RULES: Array<{
   title: string;
@@ -16,52 +17,75 @@ const GROUP_RULES: Array<{
   match: (categories: string[]) => boolean;
 }> = [
   {
-    title: "Frontend",
-    subtitle: "Interfaces, state, and motion",
-    match: (c) => c.includes("frontend") || c.includes("ui"),
+    title: "Languages",
+    subtitle: "Core languages of the stack",
+    match: (c) => c.includes("language"),
   },
   {
-    title: "Backend",
-    subtitle: "APIs, services, and systems",
-    match: (c) => c.includes("backend"),
+    title: "Frameworks",
+    subtitle: "Frontend and backend frameworks",
+    match: (c) => c.includes("framework"),
   },
   {
-    title: "Data & Cloud",
-    subtitle: "Storage, delivery, and infrastructure",
+    title: "Libraries",
+    subtitle: "UI, state, and utility libraries",
+    match: (c) => c.includes("library"),
+  },
+  {
+    title: "Database & Cloud",
+    subtitle: "Storage, ORM, and infrastructure",
     match: (c) =>
       c.includes("database") ||
+      c.includes("orm") ||
       c.includes("cloud") ||
       c.includes("deployment") ||
-      c.includes("orm"),
+      c.includes("platform"),
   },
   {
-    title: "Workflow",
-    subtitle: "Shipping and collaboration",
-    match: (c) => c.includes("tool") || c.includes("version-control"),
+    title: "Tools",
+    subtitle: "Daily workflow tooling",
+    match: (c) => c.includes("tool"),
+  },
+  {
+    title: "Methodologies",
+    subtitle: "Practices and concepts",
+    match: (c) => c.includes("methodology") || c.includes("design"),
   },
 ];
 
 /** Fallback when the profile has no skills yet. */
 const FALLBACK_KEYS = [
+  "javascript",
+  "typescript",
+  "golang",
+  "css",
   "react",
   "next",
-  "typescript",
-  "javascript",
-  "redux",
-  "css",
-  "tailwind",
-  "golang",
   "laravel",
+  "node",
+  "antd",
+  "tailwind",
+  "redux",
+  "axios",
   "postgre",
+  "mysql",
+  "redis",
   "prisma",
   "cloudinary",
+  "vercel",
   "git",
+  "gitlab",
   "github",
   "docker",
   "postman",
+  "figma",
+  "jwt",
+  "i18n",
+  "testing",
+  "microservices",
 ];
 
-/** Grouped capability columns built from the DB skill list. */
+/** Grouped capability grid built from the DB skill list. */
 const SkillsSection = ({ skills }: SkillsSectionProps) => {
   const keys = skills.filter((key) => masterDataMap[key]);
   const source = keys.length > 0 ? keys : FALLBACK_KEYS;
@@ -74,17 +98,6 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
       return rule.match(categories);
     }),
   })).filter((group) => group.keys.length > 0);
-
-  const others = source.filter(
-    (key) => !groups.some((group) => group.keys.includes(key)),
-  );
-  if (others.length > 0) {
-    groups.push({
-      title: "Practices",
-      subtitle: "Methods and everything in between",
-      keys: others,
-    });
-  }
 
   const tracked = source.length;
 
@@ -109,7 +122,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
           to production or to a client deliverable.
         </p>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
           {groups.map((group, index) => (
             <div
               key={group.title}

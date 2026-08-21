@@ -23,7 +23,7 @@ const WritingSection = ({ items }: WritingSectionProps) => (
         lineTwo="the build."
       />
 
-      <div className="grid md:grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-2 gap-6">
         {items.map((post, index) => {
           const card = (
             <>
@@ -39,7 +39,7 @@ const WritingSection = ({ items }: WritingSectionProps) => (
                 {post.title}
               </h3>
               {post.excerpt && (
-                <p className="text-sm text-gray-400 font-neue-haas font-light leading-relaxed flex-1">
+                <p className="text-sm text-gray-400 font-neue-haas font-light leading-relaxed flex-1 line-clamp-3">
                   {post.excerpt}
                 </p>
               )}

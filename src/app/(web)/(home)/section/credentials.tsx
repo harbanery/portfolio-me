@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowRight, Plus } from "lucide-react";
 import SectionHeading from "@/components/section-heading";
 import type { CredentialItem } from "@/services/credentialService";
 
@@ -12,12 +12,17 @@ interface CredentialsSectionProps {
 /** Human-readable filter labels per Certification category. */
 const FILTERS = ["All", "Training", "Competency", "Other"];
 
+/** Rows revealed per click of "show more". */
+const PAGE_SIZE = 5;
+
 const capitalize = (value: string) =>
   value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
 
-/** Filterable credential list backed by the Certification table. */
+/** Filterable, paginated credential list backed by the Certification table. */
 const CredentialsSection = ({ items }: CredentialsSectionProps) => {
   const [active, setActive] = useState("All");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const sectionRef = useRef<HTMLElement | null>(null);
 
   const filtered =
     active === "All"
@@ -25,10 +30,37 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
       : items.filter((item) => capitalize(item.category) === active);
 
   const list = filtered.length > 0 ? filtered : items;
+  const visibleList = list.slice(0, visibleCount);
+  const hasMore = visibleCount < list.length;
+
+  /** Changing filters always restarts pagination from the first page. */
+  const selectFilter = (filter: string) => {
+    if (filter === active) return;
+    setActive(filter);
+    setVisibleCount(PAGE_SIZE);
+  };
+
+  /** Leaving the section (it scrolls out of view) collapses the list back
+      to the first page so re-entering always starts fresh. */
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) setVisibleCount(PAGE_SIZE);
+      },
+      { rootMargin: "0px 0px -10% 0px" },
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section
       id="credentials"
+      ref={sectionRef}
       className="relative bg-black py-24 md:py-32"
     >
       <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
@@ -54,7 +86,7 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
           {FILTERS.map((filter) => (
             <button
               key={filter}
-              onClick={() => setActive(filter)}
+              onClick={() => selectFilter(filter)}
               className={`rounded-full border px-4 py-1.5 text-xs uppercase tracking-[0.15em] font-inter font-semibold transition-colors duration-300 ${
                 active === filter
                   ? "border-white/60 text-white bg-white/10"
@@ -68,7 +100,7 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
 
         {/* List */}
         <div>
-          {list.map((credential, index) => {
+          {visibleList.map((credential, index) => {
             const content = (
               <>
                 <div className="flex items-center gap-3">
@@ -104,30 +136,39 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
               </>
             );
 
+            const shared = {
+              key: `${credential.title}-${credential.year}`,
+              "data-aos": "fade-up",
+              "data-aos-delay": `${(index % 3 + 1) * 75}`,
+              className:
+                "group grid md:grid-cols-[10rem_1fr_auto] gap-3 md:gap-8 items-baseline border-t border-white/10 py-6 first:border-t-0 first:pt-0",
+            } as const;
+
             return credential.url ? (
               <a
-                key={`${credential.title}-${credential.year}`}
+                {...shared}
                 href={credential.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                data-aos="fade-up"
-                data-aos-delay={`${(index % 3 + 1) * 75}`}
-                className="group grid md:grid-cols-[10rem_1fr_auto] gap-3 md:gap-8 items-baseline border-t border-white/10 py-6 first:border-t-0 first:pt-0"
               >
                 {content}
               </a>
             ) : (
-              <article
-                key={`${credential.title}-${credential.year}`}
-                data-aos="fade-up"
-                data-aos-delay={`${(index % 3 + 1) * 75}`}
-                className="group grid md:grid-cols-[10rem_1fr_auto] gap-3 md:gap-8 items-baseline border-t border-white/10 py-6 first:border-t-0 first:pt-0"
-              >
-                {content}
-              </article>
+              <article {...shared}>{content}</article>
             );
           })}
         </div>
+
+        {/* Show more */}
+        {hasMore && (
+          <button
+            onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
+            className="mt-10 inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2 text-xs uppercase tracking-[0.15em] font-inter font-semibold text-gray-400 transition-colors duration-300 hover:border-white/40 hover:text-white"
+          >
+            <Plus size={12} />
+            Show {Math.min(PAGE_SIZE, list.length - visibleCount)} more
+          </button>
+        )}
       </div>
     </section>
   );

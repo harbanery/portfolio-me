@@ -32,13 +32,14 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => (
             <article
               key={item.title}
               data-aos="fade-up"
-              className="grid md:grid-cols-[10rem_1fr] gap-4 md:gap-10 border-t border-white/10 py-10 first:border-t-0 first:pt-0"
+              className="grid md:grid-cols-[16rem_1fr] gap-4 md:gap-10 border-t border-white/10 py-10 first:border-t-0 first:pt-0"
             >
-              {/* Company + date range */}
-              <div className="md:pt-1.5">
-                <span className="block text-sm uppercase tracking-[0.15em] text-gray-300 font-neue-haas leading-relaxed">
+              {/* Company + date range — company keeps to one line via
+                  truncation within the wider column. */}
+              <div className="min-w-0 md:pt-1.5">
+                <h3 className="truncate text-xl md:text-2xl font-inter font-bold text-white tracking-tight leading-snug">
                   {item.content.companyName}
-                </span>
+                </h3>
                 <span className="mt-1.5 block text-xs uppercase tracking-[0.2em] text-[#DEB887] tabular-nums">
                   {item.title}
                 </span>
@@ -46,9 +47,9 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => (
 
               {/* Body — job title is the heading */}
               <div className="min-w-0 wrap-break-word">
-                <h3 className="text-xl md:text-2xl font-inter font-bold text-white tracking-tight mb-2">
+                <p className="text-md md:text-lg uppercase font-neue-haas font-medium text-gray-300 tracking-[0.15em]">
                   {item.content.jobTitle}
-                </h3>
+                </p>
 
                 {item.content.previousJobTitles?.map((title) => (
                   <p
