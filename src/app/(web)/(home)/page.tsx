@@ -43,7 +43,12 @@ const HomePage = async () => {
   ];
 
   return (
-    <BaseLayout navbar={true} footer={true} locationLabel={hero?.locationLabel}>
+    <BaseLayout
+      navbar={true}
+      footer={true}
+      locationLabel={hero?.locationLabel}
+      availability={data?.personal?.availability}
+    >
       <div className="w-full bg-black">
         <HeroSection
           name={data?.personal?.name ?? hero?.name}

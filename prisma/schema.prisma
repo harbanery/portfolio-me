@@ -36,9 +36,10 @@ enum CertificationStatus {
 }
 
 enum CertificationCategory {
-  TRAINING
+  CERTIFICATION
   COMPETENCY
-  OTHER
+  ACADEMIC
+  TRAINING
 }
 
 enum EducationStatus {
@@ -157,7 +158,7 @@ model Certification {
   id            Int                   @id @default(autoincrement())
   title         String
   issuer        String
-  category      CertificationCategory @default(TRAINING)
+  category      CertificationCategory @default(CERTIFICATION)
   issueDate     DateTime              @map("issue_date")
   expiryDate    DateTime?             @map("expiry_date")
   credentialId  String?               @map("credential_id")

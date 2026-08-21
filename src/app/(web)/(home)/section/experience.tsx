@@ -35,8 +35,9 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => (
               className="grid md:grid-cols-[16rem_1fr] gap-4 md:gap-10 border-t border-white/10 py-10 first:border-t-0 first:pt-0"
             >
               {/* Company + date range — company keeps to one line via
-                  truncation within the wider column. */}
-              <div className="min-w-0 md:pt-1.5">
+                  truncation within the wider column. Sticks to the viewport
+                  (below the floating navbar) while the role body scrolls. */}
+              <div className="min-w-0 md:sticky md:top-28 md:self-start md:pt-1.5 md:pb-1.5">
                 <h3 className="truncate text-xl md:text-2xl font-inter font-bold text-white tracking-tight leading-snug">
                   {item.content.companyName}
                 </h3>

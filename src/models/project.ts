@@ -20,6 +20,8 @@ export interface Project {
   skills: string[];
   repoLinks: string[];
   webLink?: string | null;
+  /** Manual showcase position — smallest `order` renders first. */
+  order?: number;
 }
 
 /** Minimal project shape used by cards & carousels. */

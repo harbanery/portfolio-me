@@ -34,7 +34,14 @@ const projectColumns = {
   skills: true,
   repoLinks: true,
   webLink: true,
+  order: true,
 } as const;
+
+/**
+ * Showcase order: smallest `order` first (top of the page), newest created
+ * breaking ties.
+ */
+const projectOrdering = [{ order: "asc" as const }, { createdAt: "desc" as const }];
 
 /**
  * A project is only showcased when it is presentable: has a cover image and
@@ -49,7 +56,7 @@ export async function getProjects(): Promise<Project[]> {
   try {
     const projects = await prisma.portfolio.findMany({
       where: { status: "ACTIVE" },
-      orderBy: { createdAt: "desc" },
+      orderBy: projectOrdering,
       select: projectColumns,
     });
 
@@ -79,15 +86,15 @@ export async function getProjectById(
   return dummyProjects.find((project) => project.id === projectId) ?? null;
 }
 
-/** Every ACTIVE showcaseable project except the given one, newest first. */
+/** Every ACTIVE showcaseable project except the given one, smallest order first. */
 export async function getOtherProjects(
   projectId: number,
 ): Promise<Project[]> {
   try {
     const projects = await prisma.portfolio.findMany({
       where: { id: { not: projectId }, status: "ACTIVE" },
-      orderBy: { createdAt: "desc" },
-      select: { id: true, title: true, image: true },
+      orderBy: projectOrdering,
+      select: { id: true, title: true, image: true, order: true },
     });
     if (projects.length > 0) {
       return (projects as Project[]).filter(isShowcaseable);

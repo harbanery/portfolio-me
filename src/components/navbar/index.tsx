@@ -30,7 +30,35 @@ const formatClock = () =>
     timeZone: "Asia/Jakarta",
   })} GMT+7`;
 
-const Navbar = ({ locationLabel }: { locationLabel?: string }) => {
+/** Mirrors the Prisma `PersonalAvailability` enum (admin-portfolio CMS). */
+export type AvailabilityStatus =
+  | "AVAILABLE"
+  | "ONLY_FREELANCE"
+  | "NOT_AVAILABLE";
+
+/** Badge text + color per availability value from the database. */
+const AVAILABILITY_BADGE: Record<
+  AvailabilityStatus,
+  { label: string; color: string }
+> = {
+  AVAILABLE: { label: "Available for work", color: "#4ADE80" },
+  ONLY_FREELANCE: { label: "Available for freelance", color: "#DEB887" },
+  NOT_AVAILABLE: { label: "Busy", color: "#F87171" },
+};
+
+/** City shown alternating with the primary one in the navbar location. */
+const ALTERNATE_CITY = "Jakarta";
+
+/** How long each city stays before swapping (ms). */
+const CITY_SWAP_INTERVAL = 3200;
+
+const Navbar = ({
+  locationLabel,
+  availability,
+}: {
+  locationLabel?: string;
+  availability?: AvailabilityStatus | null;
+}) => {
   const pathname = usePathname();
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -117,6 +145,30 @@ const Navbar = ({ locationLabel }: { locationLabel?: string }) => {
     };
   }, []);
 
+  // Location city loop: "Bogor" -> "Jakarta" -> "Bogor" ... The index flips
+  // between 0 and 1, so the primary city always comes back (ping-pong loop).
+  const [cityIndex, setCityIndex] = useState(0);
+  useEffect(() => {
+    const id = setInterval(
+      () => setCityIndex((index) => (index + 1) % 2),
+      CITY_SWAP_INTERVAL,
+    );
+    return () => clearInterval(id);
+  }, []);
+
+  const badge = AVAILABILITY_BADGE[availability ?? "AVAILABLE"];
+  const isHireable = (availability ?? "AVAILABLE") !== "NOT_AVAILABLE";
+
+  // locationLabel looks like "Bogor, Indonesia" — the city swaps, the
+  // country stays put.
+  const [primaryCity = "", ...countryParts] = locationLabel?.split(",") ?? [];
+  const countryLabel = countryParts.join(",").trim();
+  const cities =
+    primaryCity.trim().toLowerCase() === ALTERNATE_CITY.toLowerCase()
+      ? [primaryCity.trim()]
+      : [primaryCity.trim(), ALTERNATE_CITY];
+  const activeCity = cities[cityIndex % cities.length] || ALTERNATE_CITY;
+
   /** Scroll to a home section; on other pages, navigate home first. */
   const goToSection = (id: string) => {
     setIsMenuOpen(false);
@@ -163,11 +215,20 @@ const Navbar = ({ locationLabel }: { locationLabel?: string }) => {
                 <>
                   <span className="flex items-center gap-2.5">
                     <span className="relative flex h-2 w-2">
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#DEB887] opacity-60" />
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-[#DEB887]" />
+                      <span
+                        className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
+                        style={{ backgroundColor: badge.color }}
+                      />
+                      <span
+                        className="relative inline-flex h-2 w-2 rounded-full"
+                        style={{ backgroundColor: badge.color }}
+                      />
                     </span>
-                    <span className="text-[11px] uppercase tracking-[0.2em] font-inter font-medium text-[#DEB887]">
-                      Available for work
+                    <span
+                      className="text-[11px] uppercase tracking-[0.2em] font-inter font-medium"
+                      style={{ color: badge.color }}
+                    >
+                      {badge.label}
                     </span>
                   </span>
                   {locationLabel && (
@@ -175,7 +236,15 @@ const Navbar = ({ locationLabel }: { locationLabel?: string }) => {
                       <span className="h-3 w-px bg-white/15" />
                       <span className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] font-inter font-medium text-gray-400">
                         <MapPin size={12} className="text-[#DEB887]" />
-                        {locationLabel}
+                        <span className="relative inline-block overflow-hidden">
+                          <span
+                            key={activeCity}
+                            className="animate-city-swap inline-block"
+                          >
+                            {activeCity}
+                          </span>
+                        </span>
+                        {countryLabel && `, ${countryLabel}`}
                       </span>
                     </>
                   )}
@@ -216,22 +285,26 @@ const Navbar = ({ locationLabel }: { locationLabel?: string }) => {
                 CV
                 <Download size={13} />
               </a>
-              <button
-                onClick={() => goToSection("contact")}
-                className="rounded-full bg-white px-5 py-2 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-black hover:bg-gray-200 transition-colors duration-300"
-              >
-                Hire Me
-              </button>
+              {isHireable && (
+                <button
+                  onClick={() => goToSection("contact")}
+                  className="rounded-full bg-white px-5 py-2 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-black hover:bg-gray-200 transition-colors duration-300"
+                >
+                  Hire Me
+                </button>
+              )}
             </div>
 
             {/* Mobile actions */}
             <div className="lg:hidden flex items-center gap-2 shrink-0">
-              <button
-                onClick={() => goToSection("contact")}
-                className="rounded-full bg-white px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] font-inter font-semibold text-black"
-              >
-                Hire Me
-              </button>
+              {isHireable && (
+                <button
+                  onClick={() => goToSection("contact")}
+                  className="rounded-full bg-white px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] font-inter font-semibold text-black"
+                >
+                  Hire Me
+                </button>
+              )}
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
                 aria-label="Toggle navigation menu"

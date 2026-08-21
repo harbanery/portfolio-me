@@ -23,8 +23,12 @@
 }
 
 @theme {
-  --animate-scroll: scroll 25s linear infinite;
+  /* Slow default marquee; the skills marquee speeds it up while the page
+     scrolls (inline `animation-duration` override). */
+  --animate-scroll: scroll 60s linear infinite;
   --animate-fade-in: fade-in 1.2s ease-out both;
+  /* City swap in the navbar location (Bogor <-> Jakarta). */
+  --animate-city-swap: city-swap 0.7s ease both;
 
   @keyframes scroll {
     0% {
@@ -41,6 +45,17 @@
     }
     100% {
       opacity: 1;
+    }
+  }
+
+  @keyframes city-swap {
+    0% {
+      opacity: 0;
+      transform: translateY(65%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
     }
   }
 }

@@ -8,17 +8,20 @@ import ScrollToTop from "../scroll-to-top";
 import "aos/dist/aos.css";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
+import type { AvailabilityStatus } from "../navbar";
 
 const BaseLayout = ({
   navbar = false,
   children,
   footer = true,
   locationLabel,
+  availability,
 }: {
   navbar?: boolean;
   children: React.ReactNode;
   footer?: boolean;
   locationLabel?: string;
+  availability?: AvailabilityStatus | null;
 }) => {
   const pathname = usePathname();
 
@@ -38,7 +41,7 @@ const BaseLayout = ({
 
   return (
     <main className="w-full hide-scrollbar select-none overflow-x-clip">
-      {navbar && <Navbar locationLabel={locationLabel} />}
+      {navbar && <Navbar locationLabel={locationLabel} availability={availability} />}
       {/* Vertical section menu on the right edge — renders itself only on
           the home route. */}
       {navbar && <SideMenu />}

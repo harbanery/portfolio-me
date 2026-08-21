@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { logoMap } from "@/models/icons";
 import { masterDataMap } from "@/models/master-data";
 
@@ -5,11 +8,52 @@ interface SkillsMarqueeSectionProps {
   skills?: string[];
 }
 
+/** Marquee duration while the page is idle (matches --animate-scroll). */
+const SLOW_DURATION_SECONDS = 60;
+
+/** Marquee duration while the user is scrolling. */
+const FAST_DURATION_SECONDS = 10;
+
+/** Idle time after the last scroll event before slowing down again (ms). */
+const SCROLL_IDLE_RESET_MS = 250;
+
 /**
  * "Technologies I work with" marquee — same band pattern as the
  * OrganisationsSection, but with tool logos instead of text.
+ *
+ * Crawls slowly by default and speeds up while the page is being scrolled
+ * (inline `animation-duration` overrides the theme value).
  */
 const SkillsMarqueeSection = ({ skills = [] }: SkillsMarqueeSectionProps) => {
+  const [isScrolling, setIsScrolling] = useState(false);
+
+  useEffect(() => {
+    let resetTimer: ReturnType<typeof setTimeout> | null = null;
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        setIsScrolling(true);
+
+        if (resetTimer) clearTimeout(resetTimer);
+        resetTimer = setTimeout(
+          () => setIsScrolling(false),
+          SCROLL_IDLE_RESET_MS,
+        );
+
+        ticking = false;
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (resetTimer) clearTimeout(resetTimer);
+    };
+  }, []);
+
   const skillList = skills
     .filter((skill) => logoMap[skill])
     .map((skill) => ({
@@ -30,7 +74,12 @@ const SkillsMarqueeSection = ({ skills = [] }: SkillsMarqueeSectionProps) => {
         <div className="bg-linear-to-l from-black from-0% to-transparent to-100% absolute right-0 z-10 w-4/12 h-full pointer-events-none" />
         {/* Track pauses while any skill is hovered (group-hover) so a logo
             can be inspected without scrolling away. */}
-        <div className="flex w-max animate-scroll items-center gap-16 md:gap-24 pr-16 md:pr-24 group-hover:[animation-play-state:paused]">
+        <div
+          className="flex w-max animate-scroll items-center gap-16 md:gap-24 pr-16 md:pr-24 group-hover:[animation-play-state:paused]"
+          style={{
+            animationDuration: `${isScrolling ? FAST_DURATION_SECONDS : SLOW_DURATION_SECONDS}s`,
+          }}
+        >
           {[...skillList, ...skillList].map((item, index) => (
             <span
               key={`${item.key}-${index + 1}`}

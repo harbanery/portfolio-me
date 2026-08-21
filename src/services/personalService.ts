@@ -1,7 +1,7 @@
 import prisma from "@/server/db";
 import { dummyExperiences } from "@/models/dummy-experiences";
 import { masterDataMap } from "@/models/master-data";
-import type { Experience } from "@prisma/client";
+import type { Experience, PersonalAvailability } from "@prisma/client";
 import type {
   ExperienceContent,
   ExperienceTimelineEntry,
@@ -16,6 +16,7 @@ import type {
 export interface PersonalProfile {
   name: string;
   about: string | null;
+  availability: PersonalAvailability | null;
   skills: string[];
   contacts: unknown;
   images: Array<{ url: string }>;
@@ -122,12 +123,13 @@ const dummySkills = SKILL_ORDER.filter((key) => !!masterDataMap[key]);
 
 export async function getPersonalProfile(): Promise<PersonalProfile | null> {
   try {
-    // Explicit select: keeps working before the availability column is
-    // migrated into an older database.
+    // Explicit select: only the columns the UI renders (availability drives
+    // the navbar status badge and the Hire Me button).
     const personal = await prisma.personal.findFirst({
       select: {
         name: true,
         about: true,
+        availability: true,
         skills: true,
         contacts: true,
         images: { select: { url: true }, orderBy: { order: "asc" } },
@@ -139,6 +141,7 @@ export async function getPersonalProfile(): Promise<PersonalProfile | null> {
     return {
       name: personal.name,
       about: personal.about,
+      availability: personal.availability,
       skills: personal.skills,
       contacts: personal.contacts,
       images: personal.images.map((image) => ({ url: image.url })),

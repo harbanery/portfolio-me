@@ -10,7 +10,7 @@ interface CredentialsSectionProps {
 }
 
 /** Human-readable filter labels per Certification category. */
-const FILTERS = ["All", "Training", "Competency", "Other"];
+const FILTERS = ["All", "Certification", "Training", "Competency", "Academic"];
 
 /** Rows revealed per click of "show more". */
 const PAGE_SIZE = 5;
