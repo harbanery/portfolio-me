@@ -84,7 +84,7 @@ const AboutSection = ({ about, images }: AboutSectionProps) => {
           >
             {about ? (
               <div
-                className="text-lg text-gray-300 text-justify font-neue-haas font-light leading-relaxed paragraph-wrapper wrap-anywhere"
+                className="html-body text-lg text-gray-300 text-justify font-neue-haas font-light leading-relaxed paragraph-wrapper wrap-anywhere"
                 dangerouslySetInnerHTML={{ __html: normalizeHtmlBody(about) }}
               />
             ) : (

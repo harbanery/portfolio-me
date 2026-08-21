@@ -18,8 +18,8 @@
   --font-bebas: var(--font-bebas), sans-serif;
   --font-neue-haas: var(--font-neue-haas-display), sans-serif;
   --font-tempting: var(--font-tempting), cursive;
-  --font-neue-haas-tempting: var(--font-tempting), var(--font-neue-haas-display),
-    sans-serif;
+  --font-neue-haas-tempting:
+    var(--font-tempting), var(--font-neue-haas-display), sans-serif;
 }
 
 @theme {
@@ -170,6 +170,24 @@ body {
     transform: scale(0.9);
     opacity: 0.7;
   }
+}
+
+/*
+ * Rich-text body styling for About & Experience HTML columns.
+ * - each paragraph gets vertical spacing
+ * - strong/em emphasis renders truly bold against the light body weight
+ * - the opening paragraph gets a leading indent
+ */
+.html-body p {
+  margin-bottom: 1rem;
+}
+
+.html-body p:last-child {
+  margin-bottom: 0;
+}
+
+.html-body strong {
+  font-weight: 500;
 }
 
 .paragraph-wrapper a {
