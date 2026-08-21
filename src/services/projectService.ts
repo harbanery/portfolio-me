@@ -8,12 +8,41 @@ import type { Project } from "@/models/project";
  * data access + fallback logic to `src/services`.
  */
 
+/**
+ * Column set used by the UI. Explicit select keeps queries working before
+ * the newer admin-portfolio columns (is_ongoing, end_date, order) are
+ * migrated into an older database.
+ */
+const projectColumns = {
+  id: true,
+  title: true,
+  subtitle: true,
+  projectType: true,
+  clientName: true,
+  companyName: true,
+  role: true,
+  image: true,
+  images: true,
+  description: true,
+  apiDocumentation: true,
+  features: true,
+  highlights: true,
+  challenges: true,
+  solutions: true,
+  story: true,
+  outcomes: true,
+  skills: true,
+  repoLinks: true,
+  webLink: true,
+} as const;
+
 /** Projects are "real" once the database holds at least one ACTIVE row. */
 export async function getProjects(): Promise<Project[]> {
   try {
     const projects = await prisma.portfolio.findMany({
       where: { status: "ACTIVE" },
       orderBy: { createdAt: "desc" },
+      select: projectColumns,
     });
 
     if (projects.length === 0) return dummyProjects;
@@ -31,6 +60,7 @@ export async function getProjectById(
   try {
     const project = await prisma.portfolio.findUnique({
       where: { id: projectId, status: "ACTIVE" },
+      select: projectColumns,
     });
     if (project) return project as Project;
   } catch (error) {
@@ -49,6 +79,7 @@ export async function getOtherProjects(
     const projects = await prisma.portfolio.findMany({
       where: { id: { not: projectId }, status: "ACTIVE" },
       orderBy: { createdAt: "desc" },
+      select: { id: true, title: true, image: true },
     });
     if (projects.length > 0) return projects as Project[];
   } catch (error) {

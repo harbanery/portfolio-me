@@ -8,6 +8,12 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+/*
+ * Schema aligned with admin-portfolio (the CMS that manages this data).
+ * Same database tables/columns; field names keep the camelCase + @map
+ * convention so the portfolio client API stays stable.
+ */
+
 enum PortfolioStatus {
   ACTIVE
   NONACTIVE
@@ -18,30 +24,82 @@ enum ExperienceStatus {
   NONACTIVE
 }
 
+enum PersonalAvailability {
+  AVAILABLE
+  ONLY_FREELANCE
+  NOT_AVAILABLE
+}
+
+enum CertificationStatus {
+  ACTIVE
+  NONACTIVE
+}
+
+enum CertificationCategory {
+  TRAINING
+  COMPETENCY
+  OTHER
+}
+
+enum EducationStatus {
+  ACTIVE
+  NONACTIVE
+}
+
+enum EducationType {
+  FORMAL
+  NONFORMAL
+}
+
+enum PublicationStatus {
+  ACTIVE
+  NONACTIVE
+}
+
+enum PublicationType {
+  JOURNAL
+  CONFERENCE
+  BOOK
+  PREPRINT
+  OTHER
+}
+
+enum CvStatus {
+  ACTIVE
+  NONACTIVE
+}
+
+enum FileOrigin {
+  NONE
+  URL
+  UPLOAD
+}
+
 model Personal {
-  id        Int       @id @default(autoincrement())
-  name      String
-  about     String?
-  skills    String[]
-  contacts  Json?
-  images    PersonalImage[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id           Int                 @id @default(autoincrement())
+  name         String
+  about        String?
+  availability PersonalAvailability @default(AVAILABLE)
+  skills       String[]
+  contacts     Json?
+  images       PersonalImage[]
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
 }
 
 model PersonalImage {
-  id         Int      @id @default(autoincrement())
-  personalId Int
-  url        String   // Supabase storage URL
-  storagePath String   // Supabase storage path @default("")
-  mimeType   String   // MIME type of the image
-  size       Int      // File size in bytes
-  width      Int?     // Image width
-  height     Int?     // Image height
-  caption    String?
-  order      Int      @default(0)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          Int      @id @default(autoincrement())
+  personalId  Int
+  url         String // Supabase storage URL
+  storagePath String // Supabase storage path
+  mimeType    String // MIME type of the image
+  size        Int // File size in bytes
+  width       Int? // Image width
+  height      Int? // Image height
+  caption     String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   personal Personal @relation(fields: [personalId], references: [id], onDelete: Cascade)
 
@@ -50,42 +108,114 @@ model PersonalImage {
 }
 
 model Portfolio {
-  id              Int             @id @default(autoincrement())
-  title           String
-  subtitle        String?
-  projectType     String          @map("project_type") @default("personal") // "personal", "internal", "client"
-  clientName      String?         @map("client_name")
-  companyName     String?         @map("company_name")
-  role            String
-  image           String
-  images          String[]
-  description     String?
+  id               Int             @id @default(autoincrement())
+  title            String
+  subtitle         String?
+  projectType      String          @map("project_type") @default("personal") // "personal", "internal", "client"
+  clientName       String?         @map("client_name")
+  companyName      String?         @map("company_name")
+  role             String
+  image            String
+  images           String[]
+  description      String?
   apiDocumentation String?         @map("api_documentation")
-  features        String[]
-  highlights      String[]
-  challenges      String?
-  solutions       String?
-  story           String?
-  outcomes        String[]
-  skills          String[]
-  repoLinks       String[]         @map("repo_links")
-  webLink         String?          @map("web_link")
-  status          PortfolioStatus  @default(ACTIVE)
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+  features         String[]
+  highlights       String[]
+  challenges       String?
+  solutions        String?
+  story            String?
+  outcomes         String[]
+  skills           String[]
+  repoLinks        String[]        @map("repo_links")
+  webLink          String?         @map("web_link")
+  isOngoing        Boolean         @default(true) @map("is_ongoing")
+  endDate          DateTime?       @map("end_date")
+  status           PortfolioStatus @default(ACTIVE)
+  order            Int             @default(0)
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([order])
 }
 
 model Experience {
-  id              Int                @id @default(autoincrement())
-  jobTitle        String             @map("job_title")
-  companyName     String             @map("company_name")
+  id          Int              @id @default(autoincrement())
+  jobTitle    String           @map("job_title")
+  companyName String           @map("company_name")
+  description String?
+  skills      String[]
+  images      String[]
+  startDate   DateTime         @map("start_date")
+  endDate     DateTime?        @map("end_date")
+  isPresent   Boolean          @default(false) @map("is_present")
+  status      ExperienceStatus @default(ACTIVE)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+}
+
+model Certification {
+  id            Int                   @id @default(autoincrement())
+  title         String
+  issuer        String
+  category      CertificationCategory @default(TRAINING)
+  issueDate     DateTime              @map("issue_date")
+  expiryDate    DateTime?             @map("expiry_date")
+  credentialId  String?               @map("credential_id")
+  credentialUrl String?               @map("credential_url")
+  skills        String[]
+  status        CertificationStatus   @default(ACTIVE)
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+}
+
+model Education {
+  id            Int             @id @default(autoincrement())
+  educationType EducationType   @default(FORMAL) @map("education_type")
+  school        String
+  degree        String?
+  field         String
+  startDate     DateTime        @map("start_date")
+  endDate       DateTime?       @map("end_date")
+  grade         String?
+  description   String?
+  courses       String[]        @default([])
+  status        EducationStatus @default(ACTIVE)
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+}
+
+model Cv {
+  id              Int        @id @default(autoincrement())
+  name            String
+  fileType        FileOrigin @default(URL) @map("file_type")
+  fileUrl         String     @map("file_url")
+  fileStoragePath String?    @map("file_storage_path")
   description     String?
-  skills          String[]
-  images          String[]
-  startDate       DateTime           @map("start_date")
-  endDate         DateTime?          @map("end_date")
-  isPresent       Boolean            @default(false) @map("is_present")
-  status          ExperienceStatus    @default(ACTIVE)
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  isPrimary       Boolean    @default(false) @map("is_primary")
+  status          CvStatus   @default(ACTIVE)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+}
+
+model Publication {
+  id               Int               @id @default(autoincrement())
+  title            String
+  authors          String[]          @default([])
+  publicationType  PublicationType   @default(JOURNAL) @map("publication_type")
+  publisher        String?
+  journalName      String?           @map("journal_name")
+  volume           String?
+  issue            String?
+  pages            String?
+  doi              String?
+  url              String?
+  pdfUrl           String?           @map("pdf_url")
+  scholarUrl       String?           @map("scholar_url")
+  abstract         String?
+  publishDate      DateTime          @map("publish_date")
+  citations        Int               @default(0)
+  skills           String[]          @default([])
+  status           PublicationStatus @default(ACTIVE)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
 }

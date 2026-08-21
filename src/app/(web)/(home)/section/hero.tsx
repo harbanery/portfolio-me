@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { ArrowRight, ChevronDown, MessageSquare } from "lucide-react";
 import IntroSection from "./intro";
 import { StarsBackground } from "@/components/effects/bg-stars";
@@ -37,7 +36,6 @@ const HeroSection = ({
   lead,
   stats = DEFAULT_STATS,
 }: HeroSectionProps) => {
-  const router = useRouter();
   const [showIntro, setShowIntro] = useState(true);
 
   useEffect(() => {
@@ -109,7 +107,7 @@ const HeroSection = ({
               {/* Lead — rich text: <strong> emphasis, <span> underlined */}
               <div data-aos="fade-up" data-aos-delay="300" className="mt-8">
                 <p
-                  className="text-lg md:text-xl text-gray-400 font-neue-haas text-balance leading-relaxed paragraph-wrapper [&_strong]:font-medium [&_strong]:text-white"
+                  className="text-lg md:text-xl text-gray-400 font-neue-haas text-balance leading-relaxed paragraph-wrapper [&_span]:font-semibold [&_span]:text-blue-400 [&_strong]:font-medium [&_strong]:text-white"
                   dangerouslySetInnerHTML={{ __html: lead ?? DEFAULT_LEAD }}
                 />
               </div>
@@ -138,7 +136,7 @@ const HeroSection = ({
                   START A CONVERSATION
                 </button>
                 <button
-                  onClick={() => router.push("/projects")}
+                  onClick={() => scrollTo("projects")}
                   className="inline-flex items-center gap-2.5 rounded-full border border-white/20 px-8 py-4 text-sm font-inter font-semibold tracking-wider text-white hover:border-white/50 transition-colors duration-300"
                 >
                   VIEW PROJECTS

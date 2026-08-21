@@ -27,16 +27,13 @@ const ContactSection = ({ contacts }: ContactSectionProps) => {
       )
     : [];
 
-  const socialContacts = contactList.filter((contact) =>
-    masterDataMap[contact.type]?.category?.includes("social"),
-  );
+  // All icon-supported contacts; master data categories are skill-oriented
+  // since the admin-portfolio alignment, so presence in logoMap is the
+  // contact filter.
+  const socialContacts = contactList;
 
   const mailContact: Contact | undefined =
-    contactList.find(
-      (contact) =>
-        contact.type === "mail" &&
-        masterDataMap[contact.type]?.category?.includes("messaging"),
-    ) || undefined;
+    contactList.find((contact) => contact.type === "mail") || undefined;
 
   return (
     <section

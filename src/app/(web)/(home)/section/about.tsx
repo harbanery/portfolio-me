@@ -30,11 +30,13 @@ const AboutSection = ({ about, images }: AboutSectionProps) => {
   return (
     <section id="about" className="relative bg-black py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
+        {/* Heading summarizes the body: a curiosity-driven journey into
+            building digital products (see the about data). */}
         <SectionHeading
           label="About"
           meta="Profile"
-          lineOne="Signal out of"
-          lineTwo="operational noise."
+          lineOne="Curiosity, crafted"
+          lineTwo="into code."
         />
 
         <div className="mt-14 grid items-start gap-12 lg:grid-cols-2 lg:gap-20">

@@ -129,9 +129,12 @@ const Navbar = ({ locationLabel }: { locationLabel?: string }) => {
     }
   };
 
+  // Transform-only show/hide: animating opacity on the ancestor breaks
+  // backdrop-filter (blur flickers off) during the transition, so the bar
+  // slides out instead of fading out.
   const animShowNavbar = shouldShowNavbar
-    ? "translate-y-0 opacity-100"
-    : "-translate-y-40 opacity-0 pointer-events-none";
+    ? "translate-y-0"
+    : "-translate-y-[130%]";
 
   const barStyle =
     mounted && isFixed

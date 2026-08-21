@@ -95,11 +95,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                         key={tech}
                         className="inline-flex items-center gap-2 rounded-full border border-white/13 px-3 py-1 text-xs text-gray-300 font-neue-haas"
                       >
-                        {Icon ? (
-                          <Icon className="h-3.5 w-3.5" />
-                        ) : (
-                          <span className="h-1.5 w-1.5 rounded-full bg-gray-500" />
-                        )}
+                        {Icon && <Icon className="h-3.5 w-3.5" />}
                         {techData?.name || tech}
                       </span>
                     );

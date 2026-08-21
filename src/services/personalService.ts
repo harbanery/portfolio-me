@@ -105,12 +105,12 @@ export async function getExperienceStats(): Promise<ExperienceStats> {
 const SKILL_ORDER = [
   "react",
   "next",
-  "ts",
+  "typescript",
   "javascript",
   "redux",
   "css",
   "tailwind",
-  "go",
+  "golang",
   "laravel",
   "postgre",
   "cloudinary",
@@ -122,8 +122,16 @@ const dummySkills = SKILL_ORDER.filter((key) => !!masterDataMap[key]);
 
 export async function getPersonalProfile(): Promise<PersonalProfile | null> {
   try {
+    // Explicit select: keeps working before the availability column is
+    // migrated into an older database.
     const personal = await prisma.personal.findFirst({
-      include: { images: { orderBy: { order: "asc" } } },
+      select: {
+        name: true,
+        about: true,
+        skills: true,
+        contacts: true,
+        images: { select: { url: true }, orderBy: { order: "asc" } },
+      },
     });
 
     if (!personal) return null;
@@ -133,7 +141,7 @@ export async function getPersonalProfile(): Promise<PersonalProfile | null> {
       about: personal.about,
       skills: personal.skills,
       contacts: personal.contacts,
-      images: (personal.images ?? []).map((image) => ({ url: image.url })),
+      images: personal.images.map((image) => ({ url: image.url })),
     };
   } catch (error) {
     console.error("Error fetching personal profile:", error);

@@ -34,22 +34,22 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => (
               data-aos="fade-up"
               className="grid md:grid-cols-[10rem_1fr] gap-4 md:gap-10 border-t border-white/10 py-10 first:border-t-0 first:pt-0"
             >
-              {/* Date range */}
+              {/* Company + date range */}
               <div className="md:pt-1.5">
-                <span className="text-xs uppercase tracking-[0.2em] text-[#DEB887] tabular-nums">
+                <span className="block text-[10px] uppercase tracking-[0.2em] text-gray-500 leading-relaxed">
+                  {item.content.companyName}
+                </span>
+                <span className="mt-1.5 block text-xs uppercase tracking-[0.2em] text-[#DEB887] tabular-nums">
                   {item.title}
                 </span>
               </div>
 
-              {/* Body */}
+              {/* Body — job title is the heading */}
               <div className="min-w-0 wrap-break-word">
                 <h3 className="text-xl md:text-2xl font-inter font-bold text-white tracking-tight mb-2">
-                  {item.content.companyName}
+                  {item.content.jobTitle}
                 </h3>
 
-                <p className="text-base text-gray-300 font-neue-haas mb-1">
-                  {item.content.jobTitle}
-                </p>
                 {item.content.previousJobTitles?.map((title) => (
                   <p
                     key={title}

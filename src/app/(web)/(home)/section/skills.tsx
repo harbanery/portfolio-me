@@ -13,22 +13,22 @@ const GROUPS: Array<{
   {
     title: "Frontend",
     subtitle: "Interfaces, state, and motion",
-    keys: ["react", "next", "ts", "javascript", "redux", "css", "tailwind"],
+    keys: ["react", "next", "typescript", "javascript", "redux", "css", "tailwind"],
   },
   {
     title: "Backend",
     subtitle: "APIs, services, and systems",
-    keys: ["go", "laravel"],
+    keys: ["golang", "laravel", "node"],
   },
   {
     title: "Data & Cloud",
     subtitle: "Storage, delivery, and infrastructure",
-    keys: ["postgre", "cloudinary"],
+    keys: ["postgre", "mysql", "redis", "prisma", "cloudinary"],
   },
   {
     title: "Workflow",
     subtitle: "Shipping and collaboration",
-    keys: ["github"],
+    keys: ["git", "gitlab", "github", "docker", "postman"],
   },
 ];
 
