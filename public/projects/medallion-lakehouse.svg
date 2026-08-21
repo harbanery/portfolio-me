@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" role="img" aria-label="Medallion Lakehouse cover">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#050505"/>
+      <stop offset="1" stop-color="#101010"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)"/>
+  <g stroke="#1c1c1c" stroke-width="1">
+    <path d="M0 180 H1280 M0 360 H1280 M0 540 H1280"/>
+    <path d="M160 0 V720 M320 0 V720 M480 0 V720 M640 0 V720 M800 0 V720 M960 0 V720 M1120 0 V720"/>
+  </g>
+  <g>
+    <circle cx="640" cy="330" r="90" fill="none" stroke="#DEB887" stroke-opacity="0.25" stroke-width="2"/>
+    <circle cx="640" cy="330" r="150" fill="none" stroke="#DEB887" stroke-opacity="0.45" stroke-width="2"/>
+    <circle cx="640" cy="330" r="210" fill="none" stroke="#DEB887" stroke-opacity="0.8" stroke-width="2"/>
+    <circle cx="640" cy="330" r="6" fill="#DEB887"/>
+    <circle cx="790" cy="330" r="6" fill="#DEB887"/>
+    <circle cx="550" cy="240" r="6" fill="#DEB887"/>
+    <circle cx="730" cy="180" r="6" fill="#DEB887"/>
+    <circle cx="550" cy="420" r="6" fill="#DEB887"/>
+    <circle cx="730" cy="480" r="6" fill="#DEB887"/>
+  </g>
+  <text x="72" y="96" font-family="monospace" font-size="28" fill="#DEB887" letter-spacing="6">02</text>
+  <text x="72" y="640" font-family="monospace" font-size="22" fill="#5c5c5c" letter-spacing="4">MEDALLION LAKEHOUSE</text>
+</svg>

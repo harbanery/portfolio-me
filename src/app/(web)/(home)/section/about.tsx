@@ -10,27 +10,7 @@ interface AboutSectionProps {
   images?: string[];
 }
 
-const PRINCIPLES = [
-  {
-    number: "01",
-    title: "Structure before styling",
-    description:
-      "A layout is a system, not a decoration. Semantics, spacing, and hierarchy come first; the rest follows naturally.",
-  },
-  {
-    number: "02",
-    title: "Details carry the experience",
-    description:
-      "Transitions, timing, and states are not polish. They are the difference between a page and a product.",
-  },
-  {
-    number: "03",
-    title: "Measured, then shipped",
-    description:
-      "Every change is verified against real builds and real browsers before it goes anywhere near production.",
-  },
-];
-
+/** Shown while the profile has no photos uploaded yet. */
 const AboutSection = ({ about, images }: AboutSectionProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const profileImages = Array.isArray(images) ? images : [];
@@ -58,36 +38,9 @@ const AboutSection = ({ about, images }: AboutSectionProps) => {
           lineTwo="operational noise."
         />
 
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
-          {/* Text column */}
-          <div>
-            {/* Principles */}
-            <div className="mt-14 space-y-10">
-              {PRINCIPLES.map((principle, index) => (
-                <div
-                  key={principle.number}
-                  data-aos="fade-up"
-                  data-aos-delay={`${(index + 1) * 100}`}
-                  className="grid grid-cols-[3rem_1fr] gap-4 border-t border-white/10 pt-6"
-                >
-                  <span className="text-xs text-[#DEB887] tabular-nums pt-1">
-                    {principle.number}
-                  </span>
-                  <div>
-                    <h3 className="text-lg font-inter font-semibold text-white mb-2">
-                      {principle.title}
-                    </h3>
-                    <p className="text-base text-gray-400 font-neue-haas font-light leading-relaxed">
-                      {principle.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
+        <div className="mt-14 grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
           {/* Image column */}
-          <div data-aos="fade-left" data-aos-delay="200" className="relative">
+          <div data-aos="fade-right" className="relative">
             <div className="aspect-square rounded-2xl bg-gray-900 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 overflow-hidden">
               {profileImages.length > 0 ? (
                 profileImages.map((image, index) => (
@@ -132,6 +85,21 @@ const AboutSection = ({ about, images }: AboutSectionProps) => {
                   />
                 ))}
               </div>
+            )}
+          </div>
+
+          {/* Body column */}
+          <div data-aos="fade-left" data-aos-delay="150" className="min-w-0">
+            {about ? (
+              <div
+                className="text-lg text-gray-300 font-neue-haas font-light text-justify leading-relaxed paragraph-wrapper"
+                dangerouslySetInnerHTML={{ __html: about }}
+              />
+            ) : (
+              <p className="text-lg text-gray-400 font-neue-haas font-light leading-relaxed">
+                A longer profile is on its way. In the meantime: I take systems
+                nobody had modelled and make them answerable.
+              </p>
             )}
           </div>
         </div>

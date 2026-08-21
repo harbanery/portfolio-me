@@ -1,6 +1,6 @@
 "use client";
 
-import { Menu, X } from "lucide-react";
+import { Download, Menu, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect, useSyncExternalStore } from "react";
 
@@ -155,9 +155,10 @@ const Navbar = () => {
             <a
               href="/cv.pdf"
               download
-              className="text-[11px] uppercase tracking-[0.2em] font-inter font-medium text-gray-400 hover:text-white transition-colors duration-300"
+              className="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/10 px-4 py-2 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-white hover:bg-white/20 hover:border-white/25 transition-colors duration-300"
             >
               CV
+              <Download size={13} />
             </a>
             <button
               onClick={() => goToSection("contact")}
@@ -204,9 +205,10 @@ const Navbar = () => {
             <a
               href="/cv.pdf"
               download
-              className="mt-4 inline-block rounded-full border border-white/20 px-6 py-3 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-white"
+              className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-white/10 border border-white/10 px-6 py-3 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-white hover:bg-white/20 hover:border-white/25 transition-colors duration-300"
             >
               Download CV
+              <Download size={14} />
             </a>
           </div>
         )}

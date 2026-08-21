@@ -6,18 +6,10 @@ import SectionHeading from "@/components/section-heading";
 import { getProjectSlug } from "@/utils/slug";
 import { logoMap } from "@/models/icons";
 import { masterDataMap } from "@/models/master-data";
+import type { Project } from "@/models/project";
 
 interface ProjectSectionProps {
-  projects: Array<{
-    id: number;
-    title: string;
-    role: string;
-    image: string;
-    description: string | null;
-    skills: string[];
-    repoLinks: string[];
-    webLink: string | null;
-  }>;
+  projects: Project[];
 }
 
 const ProjectSection = ({ projects }: ProjectSectionProps) => {

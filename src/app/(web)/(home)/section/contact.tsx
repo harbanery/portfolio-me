@@ -4,7 +4,6 @@ import { useState, type FormEvent } from "react";
 import SectionHeading from "@/components/section-heading";
 import { logoMap } from "@/models/icons";
 import { formatURLContact } from "@/helpers";
-import { masterDataMap } from "@/models/master-data";
 import Link from "next/link";
 
 interface Contact {

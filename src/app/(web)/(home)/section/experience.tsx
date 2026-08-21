@@ -1,23 +1,10 @@
 import SectionHeading from "@/components/section-heading";
 import { logoMap } from "@/models/icons";
 import { masterDataMap } from "@/models/master-data";
-
-interface ExperienceContent {
-  jobTitle: string;
-  previousJobTitles?: string[];
-  companyName: string;
-  description: string;
-  techStack: string[];
-  images: string[];
-}
-
-interface TimelineEntry {
-  title: string;
-  content: ExperienceContent;
-}
+import type { ExperienceTimelineEntry } from "@/models/experience";
 
 interface ExperienceSectionProps {
-  experiences: TimelineEntry[];
+  experiences: ExperienceTimelineEntry[];
 }
 
 /** Numbered experience list, following the reference design. */

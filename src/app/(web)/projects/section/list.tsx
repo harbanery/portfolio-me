@@ -1,25 +1,17 @@
 "use client";
 
 import { ExternalLink } from "lucide-react";
+import { useRouter } from "next/navigation";
+import type { CSSProperties } from "react";
 import { getProjectSlug } from "@/utils/slug";
 import { StarsBackground } from "@/components/effects/bg-stars";
 import { ShootingStars } from "@/components/effects/shooting-stars";
-import { useRouter } from "next/navigation";
-import type { CSSProperties } from "react";
 import { logoMap } from "@/models/icons";
 import { masterDataMap } from "@/models/master-data";
+import type { Project } from "@/models/project";
 
 interface ProjectSectionProps {
-  projects: Array<{
-    id: number;
-    title: string;
-    role: string;
-    image: string;
-    description: string | null;
-    skills: string[];
-    repoLinks: string[];
-    webLink: string | null;
-  }>;
+  projects: Project[];
 }
 
 const ListProjectSection = ({ projects }: ProjectSectionProps) => {
