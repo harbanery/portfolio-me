@@ -16,7 +16,7 @@ const ACTIVE_LINE_RATIO = 0.35;
 const SideMenu = () => {
   const pathname = usePathname();
   const isHome = pathname === "/";
-  const [activeId, setActiveId] = useState<string>("about");
+  const [activeId, setActiveId] = useState<string | null>(null);
   const [visible, setVisible] = useState(false);
   const frame = useRef<number | null>(null);
 
@@ -29,7 +29,9 @@ const SideMenu = () => {
     /** Mark the section crossing the active line as current. */
     const syncActive = () => {
       const line = window.innerHeight * ACTIVE_LINE_RATIO;
-      let current = menuSections[0]?.id ?? "";
+      // None active until a section actually crosses the line — the hero
+      // viewport is not part of any menu item (not even "About").
+      let current: string | null = null;
 
       for (const section of menuSections) {
         const el = document.getElementById(section.id);
@@ -40,7 +42,6 @@ const SideMenu = () => {
         }
       }
 
-      // Past the last section entirely (footer in view) — keep the last item.
       setActiveId(current);
     };
 

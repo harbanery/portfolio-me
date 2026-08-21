@@ -20,7 +20,7 @@ interface HeroSectionProps {
 
 /** Fallback lead while public/data/me.en.json is unavailable. */
 const DEFAULT_LEAD =
-  "Fullstack Developer building scalable, user-friendly web applications. I develop production-grade frontend and backend systems with Next.js, TypeScript, and Golang.";
+  "Fullstack Developer building <strong>scalable web applications</strong>. I develop <span>production-grade systems</span> with Next.js, TypeScript, and Golang.";
 
 /** Focus line, aligned with the Fullstack Developer profile. */
 const FOCUS_LINE =
@@ -80,7 +80,7 @@ const HeroSection = ({
         <StarsBackground className="pointer-events-none" />
         <ShootingStars className="pointer-events-none" />
 
-        <div className="mx-auto w-full max-w-6xl px-6 lg:px-10 pt-28 pb-32">
+        <div className="mx-auto w-full max-w-6xl px-6 lg:px-10 py-28">
           <div className="grid items-center gap-16 lg:grid-cols-[1.6fr_1fr]">
             {/* Left: identity — the full status row (availability, location,
                 local time) lives in the navbar on the home route. */}
@@ -106,20 +106,19 @@ const HeroSection = ({
                 )}
               </h1>
 
-              {/* Lead */}
-              <p
-                data-aos="fade-up"
-                data-aos-delay="300"
-                className="mt-8 max-w-[52ch] text-lg md:text-xl text-gray-400 font-neue-haas text-balance leading-relaxed"
-              >
-                {lead ?? DEFAULT_LEAD}
-              </p>
+              {/* Lead — rich text: <strong> emphasis, <span> underlined */}
+              <div data-aos="fade-up" data-aos-delay="300" className="mt-8">
+                <p
+                  className="text-lg md:text-xl text-gray-400 font-neue-haas text-balance leading-relaxed paragraph-wrapper [&_strong]:font-medium [&_strong]:text-white"
+                  dangerouslySetInnerHTML={{ __html: lead ?? DEFAULT_LEAD }}
+                />
+              </div>
 
               {/* Focus line */}
               <p
                 data-aos="fade-up"
                 data-aos-delay="350"
-                className="mt-4 max-w-[52ch] text-sm md:text-base text-gray-500 font-neue-haas font-light text-balance leading-relaxed"
+                className="mt-4 text-sm md:text-base text-gray-500 font-neue-haas font-light text-balance leading-relaxed"
               >
                 {FOCUS_LINE}
               </p>
@@ -128,6 +127,7 @@ const HeroSection = ({
               <div
                 data-aos="fade-up"
                 data-aos-delay="400"
+                data-aos-offset="0"
                 className="mt-10 flex flex-wrap items-center gap-4"
               >
                 <button

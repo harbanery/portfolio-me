@@ -30,15 +30,14 @@ export interface HeroContent {
 }
 
 /**
- * Hero lead, curated from the strongest highlights in me.en.json
- * (work[0].highlights: 94% commit ownership across six enterprise systems,
- * 60% dashboard load-time reduction, test coverage 20% → 80%+).
- * Two sentences, progress only, last sentence starts with "I develop".
- * Hero stats are NOT sourced here — they are computed from the database
- * (see personalService.getExperienceStats and projectService).
+ * Hero lead, curated from the strongest highlights in me.en.json.
+ * Two sentences max, with bold and underline emphasis (styled like the
+ * rich-text bodies). Hero stats are NOT sourced here — they are computed
+ * from the database (see personalService.getExperienceStats and
+ * projectService).
  */
 const HERO_LEAD =
-  "Principal frontend engineer across six enterprise systems, owning ~94% of commits on a national rail ticketing platform serving thousands of daily passengers. I develop and optimize fullstack applications, cutting dashboard load times by up to 60% and raising test coverage from under 20% to 80%+.";
+  'Principal engineer on <strong>six enterprise systems</strong>, owning ~94% of commits on a national rail ticketing platform. I develop <span>fullstack applications</span> that cut load times by 60% and raise coverage to 80%+.';
 
 async function readMeProfile(): Promise<MeProfile | null> {
   try {

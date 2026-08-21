@@ -10,12 +10,10 @@ import OpenSourceSection from "./section/open-source";
 import CredentialsSection from "./section/credentials";
 import WritingSection from "./section/writing";
 import HomeContactSection from "./section/contact";
+import SkillsMarqueeSection from "./section/skills-marquee";
 
 const HomePage = async () => {
-  const [{ data }, hero] = await Promise.all([
-    getHomeData(),
-    getHeroContent(),
-  ]);
+  const [{ data }, hero] = await Promise.all([getHomeData(), getHeroContent()]);
 
   // Hero stats from database data: projects, distinct companies, and total
   // professional experience. Labels stay formal and count-aware.
@@ -46,6 +44,7 @@ const HomePage = async () => {
           lead={hero?.lead}
           stats={stats}
         />
+        <SkillsMarqueeSection skills={data?.skills || []} />
         <AboutSection
           about={data?.personal?.about}
           images={data?.personal?.images?.map((img) => img.url) || []}
