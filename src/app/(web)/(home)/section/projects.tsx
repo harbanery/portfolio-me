@@ -22,7 +22,6 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
     <section id="projects" className="relative bg-black py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
         <SectionHeading
-          number="03"
           label="Work"
           meta={`${projects.length} PROJECTS`}
           lineOne="What shipped,"

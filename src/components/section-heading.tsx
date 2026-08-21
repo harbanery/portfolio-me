@@ -1,6 +1,4 @@
 interface SectionHeadingProps {
-  /** Section number, e.g. "01". */
-  number: string;
   /** Section label, e.g. "ABOUT". */
   label: string;
   /** Optional right-aligned meta, e.g. "3 PROJECTS". */
@@ -12,7 +10,6 @@ interface SectionHeadingProps {
 
 /** Editorial section header following the reference portfolio design. */
 const SectionHeading = ({
-  number,
   label,
   meta,
   lineOne,
@@ -23,7 +20,6 @@ const SectionHeading = ({
       data-aos="fade-up"
       className="mb-6 flex flex-wrap items-baseline gap-x-5 gap-y-1"
     >
-      <span className="text-xs text-[#DEB887] tabular-nums">{number}</span>
       <span className="text-xs uppercase tracking-[0.25em] text-gray-500">
         {label}
       </span>

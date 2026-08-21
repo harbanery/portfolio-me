@@ -49,8 +49,7 @@ const OpenSourceSection = () => (
   >
     <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
       <SectionHeading
-        number="05"
-        label="Open Source"
+        label="Source Code"
         meta="4 PUBLIC REPOS"
         lineOne="Every public repository,"
         lineTwo="six years deep."

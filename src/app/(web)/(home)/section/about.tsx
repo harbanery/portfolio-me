@@ -31,7 +31,6 @@ const AboutSection = ({ about, images }: AboutSectionProps) => {
     <section id="about" className="relative bg-black py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
         <SectionHeading
-          number="01"
           label="About"
           meta="Profile"
           lineOne="Signal out of"

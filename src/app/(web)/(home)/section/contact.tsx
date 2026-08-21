@@ -56,7 +56,6 @@ const HomeContactSection = ({ contacts }: HomeContactSectionProps) => {
     <section id="contact" className="relative bg-black py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
         <SectionHeading
-          number="08"
           label="Contact"
           lineOne="Tell me what"
           lineTwo="you're building."

@@ -11,10 +11,12 @@ const BaseLayout = ({
   navbar = false,
   children,
   footer = true,
+  locationLabel,
 }: {
   navbar?: boolean;
   children: React.ReactNode;
   footer?: boolean;
+  locationLabel?: string;
 }) => {
   const pathname = usePathname();
 
@@ -34,7 +36,7 @@ const BaseLayout = ({
 
   return (
     <main className="w-full hide-scrollbar select-none overflow-x-clip">
-      {navbar && <Navbar />}
+      {navbar && <Navbar locationLabel={locationLabel} />}
       {children}
       {footer && <Footer />}
     </main>

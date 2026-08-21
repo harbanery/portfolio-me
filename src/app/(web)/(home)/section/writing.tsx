@@ -37,7 +37,6 @@ const WritingSection = () => (
   >
     <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
       <SectionHeading
-        number="07"
         label="Writing"
         meta="3 NOTES"
         lineOne="Notes from"

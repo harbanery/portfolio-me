@@ -43,7 +43,6 @@ const SkillsSection = () => {
     >
       <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
         <SectionHeading
-          number="04"
           label="Capabilities"
           meta={`${tracked} TRACKED`}
           lineOne="The stack,"

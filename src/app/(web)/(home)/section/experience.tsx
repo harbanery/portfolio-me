@@ -13,11 +13,10 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => (
   <section id="experience" className="relative bg-black py-24 md:py-32">
     <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
       <SectionHeading
-        number="02"
         label="Experience"
         meta={`${experiences.length} ROLES`}
-        lineOne="Five years,"
-        lineTwo="five industries."
+        lineOne="From bootcamp"
+        lineTwo="to enterprise."
       />
 
       {experiences.length === 0 ? (

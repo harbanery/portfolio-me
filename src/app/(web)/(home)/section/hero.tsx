@@ -7,27 +7,38 @@ import IntroSection from "./intro";
 import { StarsBackground } from "@/components/effects/bg-stars";
 import { ShootingStars } from "@/components/effects/shooting-stars";
 
-const formatClock = () =>
-  `${new Date().toLocaleTimeString("en-GB", {
-    hour12: false,
-    timeZone: "Asia/Jakarta",
-  })} GMT+7`;
+interface HeroStat {
+  value: string;
+  label: string;
+}
 
 interface HeroSectionProps {
   name?: string;
-  stats?: Array<{ value: string; label: string }>;
+  lead?: string;
+  stats?: HeroStat[];
 }
 
-const DEFAULT_STATS: Array<{ value: string; label: string }> = [
-  { value: "25,000 km", label: "DWDM backbone operated on" },
-  { value: "3 layers", label: "AI, data platform, agents built from zero" },
-  { value: "6+ years", label: "Across five industries" },
+/** Fallback lead while public/data/me.en.json is unavailable. */
+const DEFAULT_LEAD =
+  "Fullstack Developer building scalable, user-friendly web applications. I develop production-grade frontend and backend systems with Next.js, TypeScript, and Golang.";
+
+/** Focus line, aligned with the Fullstack Developer profile. */
+const FOCUS_LINE =
+  "Fullstack web development. Scalable frontend platforms. Performance-focused engineering.";
+
+const DEFAULT_STATS: HeroStat[] = [
+  { value: "9", label: "Projects delivered" },
+  { value: "2", label: "Companies worked with" },
+  { value: "2", label: "Years of professional experience" },
 ];
 
-const HeroSection = ({ name, stats = DEFAULT_STATS }: HeroSectionProps) => {
+const HeroSection = ({
+  name,
+  lead,
+  stats = DEFAULT_STATS,
+}: HeroSectionProps) => {
   const router = useRouter();
   const [showIntro, setShowIntro] = useState(true);
-  const [clock, setClock] = useState<string | null>(null);
 
   useEffect(() => {
     if (showIntro) {
@@ -43,16 +54,6 @@ const HeroSection = ({ name, stats = DEFAULT_STATS }: HeroSectionProps) => {
       document.documentElement.style.overflow = "";
     };
   }, [showIntro]);
-
-  useEffect(() => {
-    // Deferred into a frame to avoid synchronous state updates in the effect.
-    const raf = requestAnimationFrame(() => setClock(formatClock()));
-    const id = setInterval(() => setClock(formatClock()), 1000);
-    return () => {
-      cancelAnimationFrame(raf);
-      clearInterval(id);
-    };
-  }, []);
 
   const handleIntroComplete = () => {
     setShowIntro(false);
@@ -79,7 +80,7 @@ const HeroSection = ({ name, stats = DEFAULT_STATS }: HeroSectionProps) => {
         <StarsBackground className="pointer-events-none" />
         <ShootingStars className="pointer-events-none" />
 
-        <div className="mx-auto w-full max-w-6xl px-6 lg:px-10 py-24">
+        <div className="mx-auto w-full max-w-6xl px-6 lg:px-10 pt-28 pb-32">
           <div className="grid items-center gap-16 lg:grid-cols-[1.6fr_1fr]">
             {/* Left: identity */}
             <div className="min-w-0">
@@ -97,17 +98,6 @@ const HeroSection = ({ name, stats = DEFAULT_STATS }: HeroSectionProps) => {
                     Available for work
                   </span>
                 </span>
-                <span className="hidden h-3 w-px bg-white/15 sm:block" />
-                <span className="text-xs uppercase tracking-[0.2em] text-gray-400">
-                  Jakarta, Indonesia
-                </span>
-                <span className="hidden h-3 w-px bg-white/15 sm:block" />
-                <span
-                  className="text-xs uppercase tracking-[0.2em] text-gray-400 tabular-nums"
-                  suppressHydrationWarning
-                >
-                  {clock ?? "--:--:-- GMT+7"}
-                </span>
               </div>
 
               {/* Name */}
@@ -123,9 +113,10 @@ const HeroSection = ({ name, stats = DEFAULT_STATS }: HeroSectionProps) => {
                   <span
                     data-aos="fade-up"
                     data-aos-delay="200"
-                    className="block text-[clamp(3rem,9vw,7.5rem)]"
+                    className="block text-[clamp(3rem,9vw,6.5rem)]"
                   >
                     {lastName}
+                    <span className="ml-4 inline-block h-[0.14em] w-[0.14em] translate-y-[-0.08em] rounded-full bg-[#DEB887]" />
                   </span>
                 )}
               </h1>
@@ -136,19 +127,16 @@ const HeroSection = ({ name, stats = DEFAULT_STATS }: HeroSectionProps) => {
                 data-aos-delay="300"
                 className="mt-8 max-w-[52ch] text-lg md:text-xl text-gray-400 font-neue-haas text-balance leading-relaxed"
               >
-                Manager, AI Engineering at a 25,000 km DWDM fiber backbone
-                operator. I build the AI function, the data platform, and the
-                agent layer from zero.
+                {lead ?? DEFAULT_LEAD}
               </p>
 
               {/* Focus line */}
               <p
                 data-aos="fade-up"
                 data-aos-delay="350"
-                className="mt-4 text-sm md:text-base text-gray-500 font-neue-haas font-light text-balance leading-relaxed"
+                className="mt-4 max-w-[52ch] text-sm md:text-base text-gray-500 font-neue-haas font-light text-balance leading-relaxed"
               >
-                Multi-agent LLM systems. Medallion data platforms. Smart
-                contract security research.
+                {FOCUS_LINE}
               </p>
 
               {/* CTAs */}
@@ -159,7 +147,7 @@ const HeroSection = ({ name, stats = DEFAULT_STATS }: HeroSectionProps) => {
               >
                 <button
                   onClick={() => scrollTo("contact")}
-                  className="inline-flex items-center gap-2.5 rounded-full bg-white px-8 py-4 text-sm font-inter font-semibold tracking-wider text-black hover:bg-gray-200 transition-colors duration-300"
+                  className="inline-flex items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-inter font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] transition-colors duration-300"
                 >
                   <MessageSquare size={16} />
                   START A CONVERSATION
@@ -186,11 +174,11 @@ const HeroSection = ({ name, stats = DEFAULT_STATS }: HeroSectionProps) => {
                     key={stat.label}
                     className="group py-6 first:pt-7 last:pb-7 transition-colors"
                   >
-                    <dt className="text-[10px] uppercase tracking-[0.25em] text-gray-500">
-                      {stat.label}
-                    </dt>
-                    <dd className="mt-2 font-inter text-3xl font-bold tracking-tight text-white transition-colors group-hover:text-[#DEB887]">
+                    <dt className="font-inter text-3xl font-bold tracking-tight text-white transition-colors group-hover:text-[#DEB887]">
                       {stat.value}
+                    </dt>
+                    <dd className="mt-2 text-[10px] uppercase tracking-[0.25em] text-gray-500">
+                      {stat.label}
                     </dd>
                   </div>
                 ))}

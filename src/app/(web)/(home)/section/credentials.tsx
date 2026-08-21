@@ -71,7 +71,6 @@ const CredentialsSection = () => {
     >
       <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
         <SectionHeading
-          number="06"
           label="Credentials"
           meta={`${CREDENTIALS.length} VERIFIED`}
           lineOne="Verified,"
