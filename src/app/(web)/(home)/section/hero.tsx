@@ -105,10 +105,11 @@ const HeroSection = ({
                 )}
               </h1>
 
-              {/* Lead — rich text: <strong> emphasis, <span> italic accent */}
+              {/* Lead — rich text: <strong> emphasis, <span> italic accent.
+                  No paragraph-wrapper here on purpose: it underlines spans. */}
               <div data-aos="fade-up" data-aos-delay="300" className="mt-8">
                 <p
-                  className="text-lg md:text-xl text-gray-400 font-neue-haas text-balance leading-relaxed paragraph-wrapper [&_span]:font-medium [&_span]:italic [&_span]:text-[#DEB887] [&_strong]:font-medium [&_strong]:text-white"
+                  className="text-lg md:text-xl text-gray-400 font-neue-haas text-balance leading-relaxed [&_span]:font-medium [&_span]:italic [&_span]:text-[#DEB887] [&_strong]:font-medium [&_strong]:text-white"
                   dangerouslySetInnerHTML={{ __html: lead ?? DEFAULT_LEAD }}
                 />
               </div>

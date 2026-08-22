@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, ExternalLink, Folder, Github } from "lucide-react";
+import { ArrowRight, ExternalLink, Github } from "lucide-react";
 import { useRouter } from "next/navigation";
 import SectionHeading from "@/components/section-heading";
 import { getProjectSlug } from "@/utils/slug";
@@ -60,13 +60,14 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                 className="group grid items-center gap-6 md:grid-cols-12 md:gap-0"
               >
                 {/* Screenshot — under the content panel, gradient washing
-                    toward the panel side on desktop. */}
+                    toward the panel side on desktop. Rests in black &
+                    white, coloring up on hover. */}
                 <button
                   onClick={() =>
                     router.push(`/projects/${getProjectSlug(project)}`)
                   }
                   aria-label={`Open ${project.title}`}
-                  className={`relative block overflow-hidden rounded-lg border border-white/10 transition-colors duration-500 hover:border-[#DEB887]/50 md:col-span-7 ${
+                  className={`relative block overflow-hidden rounded-lg border border-white/10 md:col-span-7 ${
                     flipped
                       ? "md:col-start-6 md:row-start-1"
                       : "md:col-span-7 md:col-start-1 md:row-start-1"
@@ -77,7 +78,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                       <img
                         src={project.image}
                         alt={project.title}
-                        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                        className="h-full w-full object-cover grayscale transition-[filter] duration-500 ease-out group-hover:grayscale-0"
                         loading={index === 0 ? "eager" : "lazy"}
                         fetchPriority={index === 0 ? "high" : "auto"}
                       />
