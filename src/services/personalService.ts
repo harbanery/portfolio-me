@@ -17,11 +17,23 @@ import type {
  * data access + grouping logic to `src/services`.
  */
 
+/** Spoken language entry stored as JSON on the Personal row. */
+export interface PersonalLanguage {
+  name: string;
+  /** NATIVE | PROFESSIONAL | LIMITED */
+  level: string;
+}
+
 export interface PersonalProfile {
   name: string;
   about: string | null;
   availability: PersonalAvailability | null;
+  /** Role labels the profile is open to (e.g. "Full Stack Engineer"). */
+  openTo: string[];
   skills: string[];
+  /** Priority skill keys — the "Focusing on" list on the about card. */
+  prioritySkills: string[];
+  languages: PersonalLanguage[];
   contacts: unknown;
   images: Array<{ url: string }>;
 }
@@ -125,10 +137,59 @@ const SKILL_ORDER = [
 /** Fallback skill marquee when the profile has no skills yet. */
 const dummySkills = SKILL_ORDER.filter((key) => !!masterDataMap[key]);
 
+/** Normalizes the languages JSON into a typed list (bad shapes dropped). */
+const toLanguages = (value: unknown): PersonalLanguage[] =>
+  Array.isArray(value)
+    ? value.filter(
+        (item): item is PersonalLanguage =>
+          !!item &&
+          typeof item === "object" &&
+          typeof (item as PersonalLanguage).name === "string" &&
+          typeof (item as PersonalLanguage).level === "string",
+      )
+    : [];
+
 export async function getPersonalProfile(): Promise<PersonalProfile | null> {
   try {
-    // Explicit select: only the columns the UI renders (availability drives
-    // the navbar status badge and the Hire Me button).
+    // Explicit select: only the columns the UI renders (availability,
+    // open_to, priority_skills and languages drive the navbar and the
+    // about card). Newer columns may not exist in an unmigrated database —
+    // retry without them in that case.
+    const personal = await prisma.personal.findFirst({
+      select: {
+        name: true,
+        about: true,
+        availability: true,
+        openTo: true,
+        skills: true,
+        prioritySkills: true,
+        languages: true,
+        contacts: true,
+        images: { select: { url: true }, orderBy: { order: "asc" } },
+      },
+    });
+
+    if (!personal) return null;
+
+    return {
+      name: personal.name,
+      about: personal.about,
+      availability: personal.availability,
+      openTo: personal.openTo ?? [],
+      skills: personal.skills,
+      prioritySkills: personal.prioritySkills ?? [],
+      languages: toLanguages(personal.languages),
+      contacts: personal.contacts,
+      images: personal.images.map((image) => ({ url: image.url })),
+    };
+  } catch (error) {
+    console.warn(
+      "Newer personal columns not available, retrying without them:",
+      (error as Error).message,
+    );
+  }
+
+  try {
     const personal = await prisma.personal.findFirst({
       select: {
         name: true,
@@ -146,7 +207,10 @@ export async function getPersonalProfile(): Promise<PersonalProfile | null> {
       name: personal.name,
       about: personal.about,
       availability: personal.availability,
+      openTo: [],
       skills: personal.skills,
+      prioritySkills: [],
+      languages: [],
       contacts: personal.contacts,
       images: personal.images.map((image) => ({ url: image.url })),
     };

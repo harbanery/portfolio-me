@@ -8,9 +8,15 @@ interface SkillsSectionProps {
 
 /**
  * Fixed six-group layout, mapped straight from the admin master-data
- * categories: languages, frameworks, libraries, databases + cloud, tools,
- * and methodologies.
+ * categories: languages, frameworks, libraries, databases + cloud,
+ * workflow & AI tools, and methodologies. "application" and "soft-skill"
+ * entries are never listed.
  */
+const EXCLUDED_CATEGORIES = new Set(["application", "soft-skill"]);
+
+const isVisibleSkill = (categories: string[]) =>
+  !categories.some((category) => EXCLUDED_CATEGORIES.has(category));
+
 const GROUP_RULES: Array<{
   title: string;
   subtitle: string;
@@ -42,9 +48,9 @@ const GROUP_RULES: Array<{
       c.includes("platform"),
   },
   {
-    title: "Tools",
-    subtitle: "Daily workflow tooling",
-    match: (c) => c.includes("tool"),
+    title: "Workflow & AI Tools",
+    subtitle: "Daily workflow and AI tooling",
+    match: (c) => c.includes("tool") || c.includes("ai-tool"),
   },
   {
     title: "Methodologies",
@@ -87,7 +93,9 @@ const FALLBACK_KEYS = [
 
 /** Grouped capability grid built from the DB skill list. */
 const SkillsSection = ({ skills }: SkillsSectionProps) => {
-  const keys = skills.filter((key) => masterDataMap[key]);
+  const keys = skills.filter(
+    (key) => masterDataMap[key] && isVisibleSkill(masterDataMap[key].category),
+  );
   const source = keys.length > 0 ? keys : FALLBACK_KEYS;
 
   const groups = GROUP_RULES.map((rule) => ({

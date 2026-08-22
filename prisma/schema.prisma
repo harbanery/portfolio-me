@@ -85,15 +85,18 @@ enum FileOrigin {
 }
 
 model Personal {
-  id           Int                 @id @default(autoincrement())
-  name         String
-  about        String?
-  availability PersonalAvailability @default(AVAILABLE)
-  skills       String[]
-  contacts     Json?
-  images       PersonalImage[]
-  createdAt    DateTime            @default(now())
-  updatedAt    DateTime            @updatedAt
+  id             Int                 @id @default(autoincrement())
+  name           String
+  about          String?
+  availability   PersonalAvailability @default(AVAILABLE)
+  openTo         String[]            @default([]) @map("open_to") // role labels, e.g. "Full Stack Engineer"
+  skills         String[]
+  prioritySkills String[]            @default([]) @map("priority_skills") // subset of skills
+  languages      Json? // [{ name, level }] — level: NATIVE | PROFESSIONAL | LIMITED
+  contacts       Json?
+  images         PersonalImage[]
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
 }
 
 model PersonalImage {

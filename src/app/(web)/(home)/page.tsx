@@ -60,11 +60,14 @@ const HomePage = async () => {
         <AboutSection
           about={data?.personal?.about}
           availability={data?.personal?.availability}
+          openTo={data?.personal?.openTo || []}
+          languages={data?.personal?.languages || []}
+          prioritySkills={data?.personal?.prioritySkills || []}
           education={data?.education || []}
         />
         <ExperienceSection experiences={data?.experiences || []} />
-        <SkillsSection skills={data?.skills || []} />
         <ProjectSection projects={data?.projects || []} />
+        <SkillsSection skills={data?.skills || []} />
         {/* Hidden for now — kept in the tree to be re-enabled later. */}
         {/* <OpenSourceSection /> */}
         <CredentialsSection items={credentials} />

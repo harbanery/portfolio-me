@@ -99,15 +99,16 @@ const HeroSection = ({
                     className="block text-[clamp(3rem,9vw,6.5rem)]"
                   >
                     {lastName}
-                    <span className="ml-4 inline-block h-[0.14em] w-[0.14em] translate-y-[-0.08em] rounded-full bg-[#DEB887]" />
+                    {/* Accent strip — same treatment as the side-menu rules. */}
+                    <span className="ml-5 inline-block h-[0.055em] w-[1.05em] translate-y-[-0.14em] bg-[#DEB887]" />
                   </span>
                 )}
               </h1>
 
-              {/* Lead — rich text: <strong> emphasis, <span> underlined */}
+              {/* Lead — rich text: <strong> emphasis, <span> italic accent */}
               <div data-aos="fade-up" data-aos-delay="300" className="mt-8">
                 <p
-                  className="text-lg md:text-xl text-gray-400 font-neue-haas text-balance leading-relaxed paragraph-wrapper [&_span]:font-semibold [&_span]:text-blue-400 [&_strong]:font-medium [&_strong]:text-white"
+                  className="text-lg md:text-xl text-gray-400 font-neue-haas text-balance leading-relaxed paragraph-wrapper [&_span]:font-medium [&_span]:italic [&_span]:text-[#DEB887] [&_strong]:font-medium [&_strong]:text-white"
                   dangerouslySetInnerHTML={{ __html: lead ?? DEFAULT_LEAD }}
                 />
               </div>

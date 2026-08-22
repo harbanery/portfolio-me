@@ -1,22 +1,39 @@
 import SectionHeading from "@/components/section-heading";
 import { normalizeHtmlBody } from "@/helpers";
+import { logoMap } from "@/models/icons";
+import { masterDataMap } from "@/models/master-data";
 import type { EducationItem } from "@/services/credentialService";
+import type { PersonalLanguage } from "@/services/personalService";
 
 interface AboutSectionProps {
   about?: string | null;
   /** Mirrors the Prisma `PersonalAvailability` enum. */
   availability?: string | null;
+  /** Role labels from the Personal row ("open_to" column). */
+  openTo?: string[];
+  /** Languages from the Personal row ("languages" JSON column). */
+  languages?: PersonalLanguage[];
+  /** Priority skill keys from the Personal row ("priority_skills"). */
+  prioritySkills?: string[];
   education: EducationItem[];
 }
 
-/** Spoken languages — profile-level facts, not tracked in the database. */
-const LANGUAGES = [
-  { name: "Bahasa Indonesia", level: "Native" },
-  { name: "English", level: "Professional" },
+/** Display label per language level stored in the database. */
+const LANGUAGE_LEVEL_LABEL: Record<string, string> = {
+  NATIVE: "Native",
+  PROFESSIONAL: "Professional",
+  LIMITED: "Limited",
+};
+
+/** Used while the profile row has no languages stored yet. */
+const FALLBACK_LANGUAGES: PersonalLanguage[] = [
+  { name: "Bahasa Indonesia", level: "NATIVE" },
+  { name: "English", level: "PROFESSIONAL" },
 ];
 
-/** What the profile is open to, derived from the availability status. */
-const openToOf = (
+/** What the profile is open to, derived from availability when the
+ *  database list is empty. */
+const fallbackOpenToOf = (
   availability?: string | null,
 ): { label: string; active: boolean }[] => {
   switch (availability) {
@@ -46,10 +63,26 @@ const rowLabelClass =
 
 /**
  * About section: rich-text body on the left, compact profile card on the
- * right (open to, languages, education). No portrait image by design.
+ * right (focusing on, open to, languages, education). No portrait image
+ * by design.
  */
-const AboutSection = ({ about, availability, education }: AboutSectionProps) => {
-  const openTo = openToOf(availability);
+const AboutSection = ({
+  about,
+  availability,
+  openTo,
+  languages,
+  prioritySkills,
+  education,
+}: AboutSectionProps) => {
+  const openToItems =
+    openTo && openTo.length > 0
+      ? openTo.map((label) => ({ label, active: true }))
+      : fallbackOpenToOf(availability);
+
+  const languageItems =
+    languages && languages.length > 0 ? languages : FALLBACK_LANGUAGES;
+
+  const focusingOn = (prioritySkills ?? []).filter((key) => masterDataMap[key]);
 
   return (
     <section id="about" className="relative bg-black py-24 md:py-32">
@@ -88,11 +121,36 @@ const AboutSection = ({ about, availability, education }: AboutSectionProps) => 
             data-aos-delay="150"
             className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7 transition-[border-color] duration-500 ease-out hover:border-[#DEB887]/60"
           >
+            {/* Focusing on — priority skills from the database */}
+            {focusingOn.length > 0 && (
+              <div className="pb-6">
+                <h3 className={rowLabelClass}>Focusing on</h3>
+                <div className="flex flex-wrap gap-2">
+                  {focusingOn.map((key) => {
+                    const Icon = logoMap[key];
+                    return (
+                      <span
+                        key={key}
+                        className="inline-flex items-center gap-2 rounded-full border border-white/13 px-3 py-1 text-xs text-gray-300 font-neue-haas"
+                      >
+                        {Icon && <Icon className="h-3.5 w-3.5" />}
+                        {masterDataMap[key]?.name || key}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Open to */}
-            <div className="pb-6">
+            <div
+              className={`border-t border-white/10 py-6 ${
+                focusingOn.length === 0 ? "border-t-0 pt-0" : ""
+              }`}
+            >
               <h3 className={rowLabelClass}>Open to</h3>
               <ul className="space-y-2">
-                {openTo.map((option) => (
+                {openToItems.map((option) => (
                   <li
                     key={option.label}
                     className={`flex items-center gap-2 text-sm font-neue-haas font-light ${
@@ -114,14 +172,15 @@ const AboutSection = ({ about, availability, education }: AboutSectionProps) => 
             <div className="border-t border-white/10 py-6">
               <h3 className={rowLabelClass}>Languages</h3>
               <ul className="space-y-2">
-                {LANGUAGES.map((language) => (
+                {languageItems.map((language) => (
                   <li
                     key={language.name}
                     className="flex items-baseline justify-between gap-3 text-sm font-neue-haas font-light text-gray-200"
                   >
                     {language.name}
                     <span className="text-xs text-gray-500">
-                      {language.level}
+                      {LANGUAGE_LEVEL_LABEL[language.level] ??
+                        language.level}
                     </span>
                   </li>
                 ))}

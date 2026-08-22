@@ -3,8 +3,8 @@
 export const menuSections = [
   { name: "About", id: "about" },
   { name: "Experience", id: "experience" },
-  { name: "Capabilities", id: "skills" },
   { name: "Projects", id: "projects" },
+  { name: "Capabilities", id: "skills" },
   // Hidden together with the OpenSourceSection — restore both together.
   // { name: "Source Code", id: "open-source" },
   { name: "Credentials", id: "credentials" },
