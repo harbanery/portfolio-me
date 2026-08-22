@@ -1,31 +1,55 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import SectionHeading from "@/components/section-heading";
 import { normalizeHtmlBody } from "@/helpers";
+import type { EducationItem } from "@/services/credentialService";
 
 interface AboutSectionProps {
   about?: string | null;
-  skills?: string[];
-  images?: string[];
+  /** Mirrors the Prisma `PersonalAvailability` enum. */
+  availability?: string | null;
+  education: EducationItem[];
 }
 
-/** Shown while the profile has no photos uploaded yet. */
-const AboutSection = ({ about, images }: AboutSectionProps) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const profileImages = Array.isArray(images) ? images : [];
+/** Spoken languages — profile-level facts, not tracked in the database. */
+const LANGUAGES = [
+  { name: "Bahasa Indonesia", level: "Native" },
+  { name: "English", level: "Professional" },
+];
 
-  useEffect(() => {
-    if (profileImages.length < 2) return;
+/** What the profile is open to, derived from the availability status. */
+const openToOf = (
+  availability?: string | null,
+): { label: string; active: boolean }[] => {
+  switch (availability) {
+    case "AVAILABLE":
+      return [
+        { label: "Full-time roles", active: true },
+        { label: "Freelance projects", active: true },
+      ];
+    case "ONLY_FREELANCE":
+      return [
+        { label: "Full-time roles", active: false },
+        { label: "Freelance projects", active: true },
+      ];
+    case "NOT_AVAILABLE":
+      return [{ label: "Nothing at the moment", active: false }];
+    default:
+      return [
+        { label: "Full-time roles", active: true },
+        { label: "Freelance projects", active: true },
+      ];
+  }
+};
 
-    const interval = setInterval(() => {
-      setCurrentImageIndex(
-        (prevIndex) => (prevIndex + 1) % profileImages.length,
-      );
-    }, 3000);
+/** Row label styling shared by every info row. */
+const rowLabelClass =
+  "text-[10px] uppercase tracking-[0.25em] text-gray-600 mb-2.5";
 
-    return () => clearInterval(interval);
-  }, [profileImages.length]);
+/**
+ * About section: rich-text body on the left, compact profile card on the
+ * right (open to, languages, education). No portrait image by design.
+ */
+const AboutSection = ({ about, availability, education }: AboutSectionProps) => {
+  const openTo = openToOf(availability);
 
   return (
     <section id="about" className="relative bg-black py-24 md:py-32">
@@ -39,49 +63,11 @@ const AboutSection = ({ about, images }: AboutSectionProps) => {
           lineTwo="into code."
         />
 
-        <div className="mt-14 grid items-start gap-12 lg:grid-cols-2 lg:gap-20">
-          {/* Image column stays hidden until a profile photo exists. */}
-          {profileImages.length > 0 && (
-            <div data-aos="fade-right" className="relative">
-              <div className="aspect-square rounded-2xl bg-gray-900 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 overflow-hidden">
-                {profileImages.map((image, index) => (
-                  <img
-                    key={index + 1}
-                    src={image}
-                    alt={`Portrait ${index + 1}`}
-                    className={`absolute w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
-                      index === currentImageIndex ? "opacity-100" : "opacity-0"
-                    }`}
-                    loading={index === 0 ? "eager" : "lazy"}
-                  />
-                ))}
-              </div>
-              {profileImages.length > 1 && (
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-                  {profileImages.map((_, index) => (
-                    <button
-                      key={index + 1}
-                      onClick={() => setCurrentImageIndex(index)}
-                      className={`h-2 rounded-full transition-all duration-300 ${
-                        index === currentImageIndex
-                          ? "bg-white w-8"
-                          : "bg-white/50 hover:bg-white/75 w-2"
-                      }`}
-                      aria-label={`Go to image ${index + 1}`}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
+        <div className="mt-14 grid items-start gap-12 lg:grid-cols-[1fr_20rem] lg:gap-16">
           {/* Body column */}
           <div
-            data-aos="fade-left"
-            data-aos-delay="150"
-            className={`min-w-0 wrap-break-word ${
-              profileImages.length > 0 ? "lg:col-start-2" : "lg:col-span-2"
-            }`}
+            data-aos="fade-right"
+            className="min-w-0 wrap-break-word lg:pt-2"
           >
             {about ? (
               <div
@@ -95,6 +81,73 @@ const AboutSection = ({ about, images }: AboutSectionProps) => {
               </p>
             )}
           </div>
+
+          {/* Info card */}
+          <aside
+            data-aos="fade-left"
+            data-aos-delay="150"
+            className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7 transition-[border-color] duration-500 ease-out hover:border-[#DEB887]/60"
+          >
+            {/* Open to */}
+            <div className="pb-6">
+              <h3 className={rowLabelClass}>Open to</h3>
+              <ul className="space-y-2">
+                {openTo.map((option) => (
+                  <li
+                    key={option.label}
+                    className={`flex items-center gap-2 text-sm font-neue-haas font-light ${
+                      option.active ? "text-gray-200" : "text-gray-600"
+                    }`}
+                  >
+                    <span
+                      className={`h-1.5 w-1.5 rounded-full ${
+                        option.active ? "bg-[#2DD4BF]" : "bg-gray-700"
+                      }`}
+                    />
+                    {option.label}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Languages */}
+            <div className="border-t border-white/10 py-6">
+              <h3 className={rowLabelClass}>Languages</h3>
+              <ul className="space-y-2">
+                {LANGUAGES.map((language) => (
+                  <li
+                    key={language.name}
+                    className="flex items-baseline justify-between gap-3 text-sm font-neue-haas font-light text-gray-200"
+                  >
+                    {language.name}
+                    <span className="text-xs text-gray-500">
+                      {language.level}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Education */}
+            <div className="border-t border-white/10 pt-6">
+              <h3 className={rowLabelClass}>Education</h3>
+              <ul className="space-y-4">
+                {education.map((item) => (
+                  <li key={`${item.school}-${item.year}`}>
+                    <p className="text-sm font-neue-haas font-light text-gray-200">
+                      {item.school}
+                    </p>
+                    <p className="mt-0.5 text-xs text-gray-500 font-neue-haas font-light">
+                      {[item.degree, item.field].filter(Boolean).join(" · ")}
+                    </p>
+                    <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-gray-600 tabular-nums">
+                      {item.kind} · {item.year}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </aside>
         </div>
       </div>
     </section>

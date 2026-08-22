@@ -9,8 +9,8 @@ interface CredentialsSectionProps {
   items: CredentialItem[];
 }
 
-/** Human-readable filter labels per Certification category. */
-const FILTERS = ["All", "Certification", "Training", "Competency", "Academic"];
+/** Display order for the category filters. */
+const CATEGORY_ORDER = ["Certification", "Competency", "Academic", "Training"];
 
 /** Rows revealed per click of "show more". */
 const PAGE_SIZE = 5;
@@ -20,16 +20,34 @@ const capitalize = (value: string) =>
 
 /** Filterable, paginated credential list backed by the Certification table. */
 const CredentialsSection = ({ items }: CredentialsSectionProps) => {
+  // A credential without a verification link is not shown, so the whole
+  // section is hidden when nothing qualifies.
+  const credentials = items.filter((item) => item.url);
+
   const [active, setActive] = useState("All");
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const sectionRef = useRef<HTMLElement | null>(null);
 
+  // Only categories that actually hold data get a filter button.
+  const filters = [
+    "All",
+    ...Array.from(
+      new Set(credentials.map((item) => capitalize(item.category))),
+    ).sort((a, b) => {
+      const rank = (value: string) => {
+        const index = CATEGORY_ORDER.indexOf(value);
+        return index === -1 ? CATEGORY_ORDER.length : index;
+      };
+      return rank(a) - rank(b);
+    }),
+  ];
+
   const filtered =
     active === "All"
-      ? items
-      : items.filter((item) => capitalize(item.category) === active);
+      ? credentials
+      : credentials.filter((item) => capitalize(item.category) === active);
 
-  const list = filtered.length > 0 ? filtered : items;
+  const list = filtered.length > 0 ? filtered : credentials;
   const visibleList = list.slice(0, visibleCount);
   const hasMore = visibleCount < list.length;
 
@@ -57,6 +75,8 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
     return () => observer.disconnect();
   }, []);
 
+  if (credentials.length === 0) return null;
+
   return (
     <section
       id="credentials"
@@ -66,7 +86,7 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
       <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
         <SectionHeading
           label="Credentials"
-          meta={`${items.length} VERIFIED`}
+          meta={`${credentials.length} VERIFIED`}
           lineOne="Verified,"
           lineTwo="not asserted."
         />
@@ -83,7 +103,7 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
           data-aos="fade-up"
           className="flex flex-wrap gap-2 mb-10 md:mb-14"
         >
-          {FILTERS.map((filter) => (
+          {filters.map((filter) => (
             <button
               key={filter}
               onClick={() => selectFilter(filter)}

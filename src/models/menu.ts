@@ -5,7 +5,8 @@ export const menuSections = [
   { name: "Experience", id: "experience" },
   { name: "Capabilities", id: "skills" },
   { name: "Projects", id: "projects" },
-  { name: "Source Code", id: "open-source" },
+  // Hidden together with the OpenSourceSection — restore both together.
+  // { name: "Source Code", id: "open-source" },
   { name: "Credentials", id: "credentials" },
   { name: "Writing", id: "writing" },
   { name: "Contact", id: "contact" },

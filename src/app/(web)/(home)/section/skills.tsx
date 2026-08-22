@@ -49,7 +49,7 @@ const GROUP_RULES: Array<{
   {
     title: "Methodologies",
     subtitle: "Practices and concepts",
-    match: (c) => c.includes("methodology") || c.includes("design"),
+    match: (c) => c.includes("methodology"),
   },
 ];
 
@@ -102,10 +102,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
   const tracked = source.length;
 
   return (
-    <section
-      id="skills"
-      className="relative bg-black py-24 md:py-32"
-    >
+    <section id="skills" className="relative bg-black py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
         <SectionHeading
           label="Capabilities"
@@ -122,25 +119,27 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
           to production or to a client deliverable.
         </p>
 
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+        {/* One card per category — fixed three-column grid at every
+            breakpoint; the border warms up smoothly on hover. */}
+        <div className="grid grid-cols-3 gap-3 sm:gap-4 md:gap-6">
           {groups.map((group, index) => (
             <div
               key={group.title}
               data-aos="fade-up"
               data-aos-delay={`${(index + 1) * 100}`}
-              className="border-t border-white/10 pt-6"
+              className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-4 md:p-6 transition-[border-color,background-color] duration-500 ease-out hover:border-[#DEB887]/60 hover:bg-[#DEB887]/[0.04]"
             >
-              <h3 className="text-lg font-inter font-semibold text-white mb-1">
+              <h3 className="text-sm md:text-lg font-inter font-semibold text-white mb-0.5 md:mb-1">
                 {group.title}
               </h3>
-              <p className="text-sm text-gray-500 font-neue-haas font-light mb-5">
+              <p className="mb-4 md:mb-5 text-[10px] md:text-sm text-gray-500 font-neue-haas font-light">
                 {group.subtitle}
               </p>
-              <div className="flex flex-wrap gap-2">
+              <div className="flex flex-wrap gap-1.5 md:gap-2">
                 {group.keys.map((key) => (
                   <span
                     key={key}
-                    className="rounded-full border border-white/13 px-3 py-1 text-xs text-gray-300 font-neue-haas"
+                    className="rounded-full border border-white/13 px-2 py-0.5 md:px-3 md:py-1 text-[10px] md:text-xs text-gray-300 font-neue-haas"
                   >
                     {masterDataMap[key]?.name || key}
                   </span>

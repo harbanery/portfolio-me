@@ -1,6 +1,10 @@
 import prisma from "@/server/db";
 import { dummyExperiences } from "@/models/dummy-experiences";
 import { masterDataMap } from "@/models/master-data";
+import {
+  normalizeEmploymentType,
+  type EmploymentType,
+} from "@/models/experience";
 import type { Experience, PersonalAvailability } from "@prisma/client";
 import type {
   ExperienceContent,
@@ -159,6 +163,63 @@ export function getMarqueeSkills(skills: string[] | undefined): string[] {
 }
 
 /**
+ * Active experiences, newest first. Tries to include `employmentType`
+ * (newer schema); when the shared database has not been migrated yet the
+ * query fails on the missing column and is retried without it — those rows
+ * simply default to "full-time".
+ */
+async function fetchExperiences(): Promise<Experience[]> {
+  try {
+    return await prisma.experience.findMany({
+      where: { status: "ACTIVE" },
+      orderBy: { startDate: "desc" },
+      select: {
+        id: true,
+        jobTitle: true,
+        companyName: true,
+        employmentType: true,
+        description: true,
+        skills: true,
+        images: true,
+        startDate: true,
+        endDate: true,
+        isPresent: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+  } catch (error) {
+    // Enum not migrated into this database yet — query every other column
+    // explicitly so the generated SQL omits it. Those rows simply default
+    // their employment type.
+    console.warn(
+      "employment_type not available, retrying without it:",
+      (error as Error).message,
+    );
+    const legacy = await prisma.experience.findMany({
+      where: { status: "ACTIVE" },
+      orderBy: { startDate: "desc" },
+      select: {
+        id: true,
+        jobTitle: true,
+        companyName: true,
+        description: true,
+        skills: true,
+        images: true,
+        startDate: true,
+        endDate: true,
+        isPresent: true,
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+    return legacy as Experience[];
+  }
+}
+
+/**
  * Group raw experiences by company, merge consecutive roles, and sort by
  * most recent start date. Falls back to dummy entries while the database
  * has no active experience rows yet.
@@ -167,10 +228,7 @@ export async function getExperiences(): Promise<ExperienceTimelineEntry[]> {
   let experiences: Experience[];
 
   try {
-    experiences = await prisma.experience.findMany({
-      where: { status: "ACTIVE" },
-      orderBy: { startDate: "desc" },
-    });
+    experiences = await fetchExperiences();
   } catch (error) {
     console.error(
       "Error fetching experiences, falling back to dummy data:",
@@ -236,12 +294,21 @@ export async function getExperiences(): Promise<ExperienceTimelineEntry[]> {
           new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
       );
 
+      // Tag values come from the most recent role at this company; the
+      // group counts as "present" while any of its roles is ongoing.
+      const employmentType: EmploymentType = normalizeEmploymentType(
+        sortedChronologically[0].employmentType,
+      );
+      const isPresent = companyExperiences.some((exp) => exp.isPresent);
+
       const content: ExperienceContent = {
         jobTitle: sortedChronologically[0].jobTitle,
         previousJobTitles: sortedChronologically
           .slice(1)
           .map((exp) => exp.jobTitle),
         companyName: companyExperiences[0].companyName,
+        employmentType,
+        isPresent,
         description: companyExperiences
           .map((exp) => exp.description || "")
           .filter((desc) => desc.trim())

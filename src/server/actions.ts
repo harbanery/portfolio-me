@@ -9,6 +9,7 @@ import {
   getProjectById,
   getOtherProjects,
 } from "@/services/projectService";
+import { getEducation } from "@/services/credentialService";
 
 /**
  * Server actions for fetching page data (SSR).
@@ -19,12 +20,13 @@ import {
 
 export async function getHomeData() {
   try {
-    const [personal, projects, experiences, experienceStats] =
+    const [personal, projects, experiences, experienceStats, education] =
       await Promise.all([
         getPersonalProfile(),
         getProjects(),
         getExperiences(),
         getExperienceStats(),
+        getEducation(),
       ]);
 
     return {
@@ -35,6 +37,7 @@ export async function getHomeData() {
         projects,
         experiences,
         experienceStats,
+        education,
       },
     };
   } catch (error) {

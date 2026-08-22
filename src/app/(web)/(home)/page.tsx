@@ -7,7 +7,8 @@ import AboutSection from "./section/about";
 import ExperienceSection from "./section/experience";
 import SkillsSection from "./section/skills";
 import ProjectSection from "./section/projects";
-import OpenSourceSection from "./section/open-source";
+// Hidden for now — kept in the tree to be re-enabled later.
+// import OpenSourceSection from "./section/open-source";
 import CredentialsSection from "./section/credentials";
 import WritingSection from "./section/writing";
 import HomeContactSection from "./section/contact";
@@ -58,12 +59,14 @@ const HomePage = async () => {
         <SkillsMarqueeSection skills={data?.skills || []} />
         <AboutSection
           about={data?.personal?.about}
-          images={data?.personal?.images?.map((img) => img.url) || []}
+          availability={data?.personal?.availability}
+          education={data?.education || []}
         />
         <ExperienceSection experiences={data?.experiences || []} />
         <SkillsSection skills={data?.skills || []} />
         <ProjectSection projects={data?.projects || []} />
-        <OpenSourceSection />
+        {/* Hidden for now — kept in the tree to be re-enabled later. */}
+        {/* <OpenSourceSection /> */}
         <CredentialsSection items={credentials} />
         <WritingSection items={publications} />
         <HomeContactSection contacts={data?.personal?.contacts || []} />

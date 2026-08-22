@@ -23,6 +23,34 @@ export interface WritingItem {
   url: string | null;
 }
 
+export interface EducationItem {
+  /** "Formal" or "Non-formal" — display label of the education type. */
+  kind: string;
+  school: string;
+  /** e.g. "Bachelor" — omitted for non-formal education. */
+  degree: string | null;
+  field: string;
+  year: string;
+}
+
+/** Dummy education for the about info card. */
+const dummyEducation: EducationItem[] = [
+  {
+    kind: "Formal",
+    school: "Institute of Technology",
+    degree: "Bachelor",
+    field: "Informatics Engineering",
+    year: "2019 – 2023",
+  },
+  {
+    kind: "Non-formal",
+    school: "Pijar Camp",
+    degree: null,
+    field: "Fullstack Web & Golang Developer",
+    year: "2024",
+  },
+];
+
 /** Dummy credentials, aligned with the Certification categories. */
 const dummyCredentials: CredentialItem[] = [
   {
@@ -75,6 +103,51 @@ const dummyWriting: WritingItem[] = [
 
 const yearOf = (date: Date) => `${date.getFullYear()}`;
 
+/** Year range label for an education entry ("2023" or "2019 – 2023"). */
+const yearRangeOf = (start: Date, end: Date | null): string => {
+  const startYear = start.getFullYear();
+  const endYear = end ? end.getFullYear() : null;
+  return endYear && endYear !== startYear
+    ? `${startYear} – ${endYear}`
+    : `${startYear}`;
+};
+
+/** Education history from the database, newest first. */
+export async function getEducation(): Promise<EducationItem[]> {
+  try {
+    const rows = await prisma.education.findMany({
+      where: { status: "ACTIVE" },
+      orderBy: { startDate: "desc" },
+      select: {
+        educationType: true,
+        school: true,
+        degree: true,
+        field: true,
+        startDate: true,
+        endDate: true,
+      },
+    });
+
+    if (rows.length > 0) {
+      return rows.map((row) => ({
+        kind:
+          row.educationType === "FORMAL" ? "Formal" : "Non-formal",
+        school: row.school,
+        degree: row.degree || null,
+        field: row.field,
+        year: yearRangeOf(
+          new Date(row.startDate),
+          row.endDate ? new Date(row.endDate) : null,
+        ),
+      }));
+    }
+  } catch (error) {
+    console.error("Error fetching education, falling back to dummy data:", error);
+  }
+
+  return dummyEducation;
+}
+
 /** Certifications from the database, newest first. */
 export async function getCredentials(): Promise<CredentialItem[]> {
   try {
@@ -86,12 +159,22 @@ export async function getCredentials(): Promise<CredentialItem[]> {
         issuer: true,
         category: true,
         issueDate: true,
+        expiryDate: true,
         credentialUrl: true,
       },
     });
 
+    // Once the table responds, its rows are the source of truth (no dummy
+    // fallback). Visibility rules: a credential needs a verification link,
+    // and one with a passed expiry date is retired.
     if (rows.length > 0) {
-      return rows.map((row) => ({
+      const now = new Date();
+      const visible = rows.filter(
+        (row): row is typeof row & { credentialUrl: string } =>
+          !!row.credentialUrl && (!row.expiryDate || row.expiryDate >= now),
+      );
+
+      return visible.map((row) => ({
         category: row.category,
         year: yearOf(row.issueDate),
         title: row.title,

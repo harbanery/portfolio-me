@@ -24,6 +24,14 @@ enum ExperienceStatus {
   NONACTIVE
 }
 
+enum EmploymentType {
+  FULL_TIME
+  PART_TIME
+  CONTRACT
+  FREELANCE
+  INTERNSHIP
+}
+
 enum PersonalAvailability {
   AVAILABLE
   ONLY_FREELANCE
@@ -140,18 +148,19 @@ model Portfolio {
 }
 
 model Experience {
-  id          Int              @id @default(autoincrement())
-  jobTitle    String           @map("job_title")
-  companyName String           @map("company_name")
-  description String?
-  skills      String[]
-  images      String[]
-  startDate   DateTime         @map("start_date")
-  endDate     DateTime?        @map("end_date")
-  isPresent   Boolean          @default(false) @map("is_present")
-  status      ExperienceStatus @default(ACTIVE)
-  createdAt   DateTime         @default(now())
-  updatedAt   DateTime         @updatedAt
+  id             Int              @id @default(autoincrement())
+  jobTitle       String           @map("job_title")
+  companyName    String           @map("company_name")
+  employmentType EmploymentType     @default(FULL_TIME) @map("employment_type")
+  description    String?
+  skills         String[]
+  images         String[]
+  startDate      DateTime         @map("start_date")
+  endDate        DateTime?        @map("end_date")
+  isPresent      Boolean          @default(false) @map("is_present")
+  status         ExperienceStatus @default(ACTIVE)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
 }
 
 model Certification {

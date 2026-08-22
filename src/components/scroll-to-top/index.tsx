@@ -22,7 +22,8 @@ const ScrollToTop = () => {
     const sync = () => {
       const about = document.getElementById("about");
       setVisible(
-        !!about && about.getBoundingClientRect().top <= window.innerHeight * 0.5,
+        !!about &&
+          about.getBoundingClientRect().top <= window.innerHeight * 0.5,
       );
     };
 
@@ -53,7 +54,7 @@ const ScrollToTop = () => {
     <button
       onClick={scrollTop}
       aria-label="Scroll back to top"
-      className={`fixed left-5 bottom-8 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/60 text-gray-400 backdrop-blur-md transition-all duration-500 hover:border-white/40 hover:text-white ${
+      className={`fixed left-5 bottom-3 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/60 text-gray-400 backdrop-blur-md transition-all duration-500 hover:border-white/40 hover:text-white ${
         visible
           ? "translate-y-0 opacity-100"
           : "pointer-events-none translate-y-4 opacity-0"

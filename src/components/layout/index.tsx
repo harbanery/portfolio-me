@@ -33,9 +33,10 @@ const BaseLayout = ({
   useEffect(() => {
     Aos.init();
 
-    // Scroll to top when on home page
+    // Scroll to top when on home page — "instant" opts out of the global
+    // CSS smooth scrolling so route changes never animate the jump.
     if (shouldScrollToTop) {
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     }
   }, [pathname, shouldScrollToTop]);
 

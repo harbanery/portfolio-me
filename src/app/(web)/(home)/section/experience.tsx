@@ -1,7 +1,9 @@
 import SectionHeading from "@/components/section-heading";
+import SmoothSticky from "@/components/smooth-sticky";
 import { logoMap } from "@/models/icons";
 import { masterDataMap } from "@/models/master-data";
 import { normalizeHtmlBody } from "@/helpers";
+import { employmentTypeLabel } from "@/models/experience";
 import type { ExperienceTimelineEntry } from "@/models/experience";
 
 interface ExperienceSectionProps {
@@ -32,19 +34,40 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => (
             <article
               key={item.title}
               data-aos="fade-up"
-              className="grid md:grid-cols-[16rem_1fr] gap-4 md:gap-10 border-t border-white/10 py-10 first:border-t-0 first:pt-0"
+              className="relative grid md:grid-cols-[16rem_1fr] gap-4 md:gap-10 border-t border-white/10 py-10 first:border-t-0 first:pt-0"
             >
               {/* Company + date range — company keeps to one line via
-                  truncation within the wider column. Sticks to the viewport
-                  (below the floating navbar) while the role body scrolls. */}
-              <div className="min-w-0 md:sticky md:top-28 md:self-start md:pt-1.5 md:pb-1.5">
-                <h3 className="truncate text-xl md:text-2xl font-inter font-bold text-white tracking-tight leading-snug">
-                  {item.content.companyName}
-                </h3>
-                <span className="mt-1.5 block text-xs uppercase tracking-[0.2em] text-[#DEB887] tabular-nums">
-                  {item.title}
-                </span>
-              </div>
+                  truncation within the wider column. Follows the viewport
+                  while the role body scrolls, easing smoothly in and out of
+                  the stuck state (see SmoothSticky). */}
+              <SmoothSticky>
+                <div className="md:pt-1.5">
+                  {/* Employment type tag — bright with a pulsing dot while
+                      still working there, dark and dotless otherwise (same
+                      dot treatment as the navbar "Available for work"). */}
+                  <span
+                    className={`mb-2 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-[10px] uppercase tracking-[0.18em] font-inter font-medium ${
+                      item.content.isPresent
+                        ? "border-[#2DD4BF]/40 bg-[#2DD4BF]/10 text-[#2DD4BF]"
+                        : "border-white/10 bg-white/[0.03] text-gray-500"
+                    }`}
+                  >
+                    {item.content.isPresent && (
+                      <span className="relative flex h-1.5 w-1.5">
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#2DD4BF] opacity-60" />
+                        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#2DD4BF]" />
+                      </span>
+                    )}
+                    {employmentTypeLabel[item.content.employmentType]}
+                  </span>
+                  <h3 className="truncate text-xl md:text-2xl font-inter font-bold text-white tracking-tight leading-snug">
+                    {item.content.companyName}
+                  </h3>
+                  <span className="mt-1.5 block text-xs uppercase tracking-[0.2em] text-[#DEB887] tabular-nums">
+                    {item.title}
+                  </span>
+                </div>
+              </SmoothSticky>
 
               {/* Body — job title is the heading */}
               <div className="min-w-0 wrap-break-word">
