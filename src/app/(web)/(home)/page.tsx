@@ -23,8 +23,9 @@ const HomePage = async () => {
   ]);
 
   // Hero stats from database data: projects, distinct companies, and total
-  // professional experience. Labels stay formal and count-aware.
-  const projectCount = data?.projects.length ?? 0;
+  // professional experience. The project count covers every ACTIVE project,
+  // not only the showcaseable ones. Labels stay formal and count-aware.
+  const projectCount = data?.allProjects.length ?? 0;
   const companyCount = data?.experienceStats.companies ?? 0;
   const years = data?.experienceStats.years ?? 0;
 

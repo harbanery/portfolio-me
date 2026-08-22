@@ -1,166 +1,129 @@
 "use client";
 
-import { ExternalLink } from "lucide-react";
-import { getProjectSlug } from "@/utils/slug";
-import { StarsBackground } from "@/components/effects/bg-stars";
-import { ShootingStars } from "@/components/effects/shooting-stars";
-import { useRouter } from "next/navigation";
-import type { CSSProperties } from "react";
+import { ExternalLink, Github } from "lucide-react";
 import { logoMap } from "@/models/icons";
 import { masterDataMap } from "@/models/master-data";
-import { normalizeHtmlBody } from "@/helpers";
 import type { Project } from "@/models/project";
 
 interface ProjectSectionProps {
   projects: Project[];
 }
 
+/**
+ * Project archive table — every ACTIVE project in a four-column index:
+ * project name, made at (company for internal/client work), built with
+ * (all skills, icons + names), and a single link (website, else repo).
+ */
 const ListProjectSection = ({ projects }: ProjectSectionProps) => {
-  const router = useRouter();
-
   if (!projects || projects.length === 0) {
     return (
-      <section
-        id="projects"
-        className="min-h-screen bg-black flex items-center justify-center px-4 py-20 relative"
-      >
-        <StarsBackground className="pointer-events-none" />
-        <ShootingStars className="pointer-events-none" />
-        <div className="max-w-6xl mx-auto w-full text-center">
-          {/* <h2 className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-20 text-center">
-            Projects
-          </h2> */}
-          <p className="text-2xl text-gray-400 font-neue-haas font-light">
-            No projects available at the moment.
-          </p>
-        </div>
+      <section className="flex min-h-[80vh] items-center justify-center bg-black px-4 py-20">
+        <p className="text-2xl text-gray-400 font-neue-haas font-light">
+          No projects available at the moment.
+        </p>
       </section>
     );
   }
 
   return (
-    <section
-      id="projects"
-      className="min-h-screen bg-black flex items-center justify-center px-4 py-20 relative"
-    >
-      <StarsBackground className="pointer-events-none" />
-      <ShootingStars className="pointer-events-none" />
-      <div className="max-w-6xl mx-auto w-full mt-16">
-        {/* <h2 className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-32 text-center">
-          Projects
-        </h2> */}
+    <section id="projects" className="relative bg-black py-24 md:py-32">
+      <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
+        <p
+          data-aos="fade-up"
+          className="mb-2 text-xs uppercase tracking-[0.25em] text-gray-500"
+        >
+          Archive
+        </p>
+        <h2
+          data-aos="fade-up"
+          data-aos-delay="100"
+          className="mb-10 font-inter font-extrabold text-white leading-[1.02] tracking-tight text-[clamp(2.25rem,6vw,4.75rem)]"
+        >
+          Things I&apos;ve built.
+        </h2>
 
-        <div className="space-y-32">
-          {projects.map((project, index) => (
-            <div
-              key={project.id}
-              className={`grid lg:grid-cols-2 gap-16 items-center ${
-                index % 2 === 1 ? "lg:grid-flow-col-dense" : ""
-              }`}
-            >
-              <button
-                data-aos={index % 2 === 1 ? "fade-left" : "fade-right"}
-                data-aos-delay="100"
-                onClick={() =>
-                  router.push(`/projects/${getProjectSlug(project)}`)
-                }
-                className={index % 2 === 1 ? "lg:col-start-2" : ""}
-              >
-                <div className="aspect-video bg-gray-800 rounded-none overflow-hidden grayscale hover:grayscale-0 transition-all duration-300">
-                  {project.image && (
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-                </div>
-              </button>
+        {/* Table header */}
+        <div
+          data-aos="fade-up"
+          className="hidden grid-cols-[1.4fr_0.9fr_1.8fr_auto] gap-x-8 border-b border-white/10 pb-3 text-[10px] uppercase tracking-[0.25em] text-gray-600 md:grid"
+        >
+          <span>Project</span>
+          <span>Made at</span>
+          <span>Built with</span>
+          <span className="text-right">Link</span>
+        </div>
+
+        <div>
+          {projects.map((project, index) => {
+            // Made at: company name for internal/client work, blank for
+            // personal projects.
+            const madeAt =
+              project.projectType === "internal" ||
+              project.projectType === "client"
+                ? project.companyName || project.clientName || ""
+                : "";
+
+            // One link max: website preferred, else the first repo.
+            const href = project.webLink || project.repoLinks[0] || null;
+            const isRepo = !project.webLink && !!project.repoLinks[0];
+
+            return (
               <div
-                className={
-                  index % 2 === 1
-                    ? "lg:col-start-1 lg:row-start-1 lg:text-right space-y-6"
-                    : "space-y-6"
-                }
+                key={project.id}
+                data-aos="fade-up"
+                data-aos-delay={`${(index % 3 + 1) * 75}`}
+                className="group grid grid-cols-1 gap-x-8 gap-y-2 border-b border-white/10 py-5 transition-colors duration-300 hover:bg-white/[0.02] md:grid-cols-[1.4fr_0.9fr_1.8fr_auto] md:items-baseline md:py-6"
               >
-                <h3
-                  data-aos={index % 2 === 1 ? "fade-left" : "fade-right"}
-                  data-aos-delay="100"
-                  className="text-3xl lg:text-4xl font-neue-haas text-white font-light"
-                >
+                {/* Project */}
+                <span className="font-inter font-semibold text-white transition-colors duration-300 group-hover:text-[#DEB887]">
                   {project.title}
-                </h3>
-                {project.description && (
-                  <div
-                    data-aos={index % 2 === 1 ? "fade-left" : "fade-right"}
-                    data-md-aos="fade-left"
-                    data-aos-delay="175"
-                  >
-                    <div
-                      className="text-lg text-gray-300 font-neue-haas leading-relaxed line-clamp-3 paragraph-wrapper [overflow-wrap:anywhere]"
-                      dangerouslySetInnerHTML={{
-                        __html:
-                          normalizeHtmlBody(project.description || "") ||
-                          "No description available",
-                      }}
-                    />
-                  </div>
-                )}
+                </span>
 
-                <div
-                  className={`flex flex-wrap ${index % 2 === 1 ? "lg:justify-end" : ""} gap-4`}
-                >
-                  {(project.skills || []).map(
-                    (tech: string, techIndex: number) => {
-                      const Icon = logoMap[tech.toLowerCase()];
+                {/* Made at */}
+                <span className="text-sm text-gray-400 font-neue-haas font-light">
+                  {madeAt || <span className="text-gray-700">—</span>}
+                </span>
 
-                      return (
-                        <div
-                          key={techIndex + 1}
-                          data-aos={
-                            index % 2 === 1 ? "fade-left" : "fade-right"
-                          }
-                          data-aos-delay={`${(techIndex + 2) * 100}`}
-                        >
-                          <div
-                            className="w-5 h-5 flex items-center justify-center transition-all duration-300 text-gray-200 hover:text-[var(--skill-color)]"
-                            style={
-                              {
-                                "--skill-color":
-                                  masterDataMap[tech]?.color || "#FFFFFF",
-                              } as CSSProperties
-                            }
-                          >
-                            {Icon ? (
-                              <Icon className="w-full h-full" />
-                            ) : (
-                              <div className="w-full h-full bg-gray-600 rounded-full flex items-center justify-center text-xs text-white font-medium">
-                                {tech.charAt(0)}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    },
+                {/* Built with — every skill, icon + name */}
+                <span className="flex flex-wrap items-center gap-2">
+                  {project.skills.map((tech) => {
+                    const Icon = logoMap[tech.toLowerCase()];
+                    const name = masterDataMap[tech.toLowerCase()]?.name || tech;
+                    return (
+                      <span
+                        key={tech}
+                        className="inline-flex items-center gap-1.5 rounded-full border border-white/13 px-2.5 py-0.5 text-xs text-gray-300 font-neue-haas"
+                      >
+                        {Icon ? (
+                          <Icon className="h-3 w-3 shrink-0" />
+                        ) : (
+                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gray-500" />
+                        )}
+                        {name}
+                      </span>
+                    );
+                  })}
+                </span>
+
+                {/* Link */}
+                <span className="flex items-center md:justify-self-end">
+                  {href ? (
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${project.title} ${isRepo ? "repository" : "website"}`}
+                      className="text-gray-500 transition-colors duration-300 hover:text-[#DEB887]"
+                    >
+                      {isRepo ? <Github size={16} /> : <ExternalLink size={16} />}
+                    </a>
+                  ) : (
+                    <span className="text-gray-700">—</span>
                   )}
-                </div>
-
-                <div className="mb-4">
-                  <button
-                    data-aos={index % 2 === 1 ? "fade-left" : "fade-right"}
-                    data-aos-delay="100"
-                    onClick={() =>
-                      router.push(`/projects/${getProjectSlug(project)}`)
-                    }
-                    className={`inline-flex items-center gap-2 text-white font-neue-haas font-medium tracking-wider ${index % 2 === 1 ? "hover:-translate-x-1!" : "hover:translate-x-1!"} transition-transform duration-200`}
-                  >
-                    VIEW PROJECT
-                    <ExternalLink size={16} />
-                  </button>
-                </div>
+                </span>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

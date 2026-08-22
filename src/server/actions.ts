@@ -8,6 +8,7 @@ import {
   getProjects,
   getProjectById,
   getOtherProjects,
+  getAllProjects,
 } from "@/services/projectService";
 import { getEducation, getPrimaryCv } from "@/services/credentialService";
 
@@ -20,10 +21,11 @@ import { getEducation, getPrimaryCv } from "@/services/credentialService";
 
 export async function getHomeData() {
   try {
-    const [personal, projects, experiences, experienceStats, education, cv] =
+    const [personal, projects, allProjects, experiences, experienceStats, education, cv] =
       await Promise.all([
         getPersonalProfile(),
         getProjects(),
+        getAllProjects(),
         getExperiences(),
         getExperienceStats(),
         getEducation(),
@@ -36,6 +38,9 @@ export async function getHomeData() {
         personal,
         skills: getMarqueeSkills(personal?.skills),
         projects,
+        // Hero "projects delivered" counts every ACTIVE project, not only
+        // the showcaseable ones on the home grid.
+        allProjects,
         experiences,
         experienceStats,
         education,
@@ -60,12 +65,16 @@ export async function getExperienceData() {
 
 export async function getProjectsData() {
   try {
-    const [personal, projects, cv] = await Promise.all([
+    const [personal, projects, archiveProjects, cv] = await Promise.all([
       getPersonalProfile(),
       getProjects(),
+      getAllProjects(),
       getPrimaryCv(),
     ]);
-    return { success: true, data: { personal, projects, cv } };
+    return {
+      success: true,
+      data: { personal, projects, archiveProjects, cv },
+    };
   } catch (error) {
     console.error("Error fetching projects data:", error);
     return { success: false, error: "Failed to fetch data" };

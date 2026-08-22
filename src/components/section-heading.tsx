@@ -6,6 +6,8 @@ interface SectionHeadingProps {
   /** Two-line headline (rendered on separate lines). */
   lineOne: string;
   lineTwo?: string;
+  /** Tighter spacing for full-viewport pages. */
+  compact?: boolean;
 }
 
 /** Editorial section header following the reference portfolio design. */
@@ -14,8 +16,9 @@ const SectionHeading = ({
   meta,
   lineOne,
   lineTwo,
+  compact = false,
 }: SectionHeadingProps) => (
-  <div className="mb-14 md:mb-20">
+  <div className={compact ? "mb-8 md:mb-10" : "mb-14 md:mb-20"}>
     <div
       data-aos="fade-up"
       className="mb-6 flex flex-wrap items-baseline gap-x-5 gap-y-1"

@@ -37,7 +37,7 @@ export interface HeroContent {
  * projectService).
  */
 const HERO_LEAD =
-  'Principal engineer on <strong>six enterprise systems</strong>, owning ~94% of commits on a national rail ticketing platform. I develop <span>fullstack applications</span> that cut load times by 60% and raise coverage to 80%+.';
+  "Principal engineer on <strong>enterprise systems</strong>, owning ~94% of commits on a national rail ticketing platform. I develop <span>fullstack applications</span> that cut load times by 60% and raise coverage to 80%+.";
 
 async function readMeProfile(): Promise<MeProfile | null> {
   try {

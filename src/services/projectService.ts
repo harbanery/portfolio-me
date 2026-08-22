@@ -106,3 +106,23 @@ export async function getOtherProjects(
   // Database unavailable or empty: serve matching dummy data.
   return dummyProjects.filter((project) => project.id !== projectId);
 }
+
+/**
+ * Every ACTIVE project for the archive page — no showcase filter, so work
+ * without a cover image or live link still counts.
+ */
+export async function getAllProjects(): Promise<Project[]> {
+  try {
+    const projects = await prisma.portfolio.findMany({
+      where: { status: "ACTIVE" },
+      orderBy: projectOrdering,
+      select: projectColumns,
+    });
+
+    if (projects.length === 0) return dummyProjects;
+    return projects as Project[];
+  } catch (error) {
+    console.error("Error fetching all projects, falling back to dummy data:", error);
+    return dummyProjects;
+  }
+}

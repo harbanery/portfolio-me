@@ -23,8 +23,15 @@ const ContactsPage = async () => {
 
   return (
     <BaseLayout navbar={true} footer={true} cvUrl={data?.cv?.url}>
-      <div className="w-full bg-black min-h-screen pt-28 md:pt-32">
-        <ContactsDetailSection contacts={data?.personal?.contacts} />
+      {/* Viewport-height shell: navbar overlays (no flow height), the slim
+          footer (~4.5rem) is subtracted so the page itself does not scroll
+          on desktop. Content centers vertically; very short viewports fall
+          back to internal scrolling via min-h. */}
+      <div className="relative flex h-[calc(100dvh-4.5rem)] min-h-[36rem] w-full flex-col bg-black">
+        <ContactsDetailSection
+          contacts={data?.personal?.contacts}
+          availability={availability}
+        />
       </div>
     </BaseLayout>
   );

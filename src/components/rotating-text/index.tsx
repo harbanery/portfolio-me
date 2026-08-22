@@ -23,9 +23,11 @@ const TRANSITION_MS = 800;
 const RotatingText = ({
   items,
   className,
+  align,
 }: {
   items: string[];
   className?: string;
+  align?: "left" | "center" | "right";
 }) => {
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState<number | null>(null);
@@ -68,6 +70,7 @@ const RotatingText = ({
             aria-hidden={!isActive}
             className="[grid-area:1/1] motion-safe:transition-[opacity,transform] motion-safe:duration-[800ms] motion-safe:ease-[cubic-bezier(0.65,0,0.35,1)]"
             style={{
+              textAlign: align,
               opacity: isActive ? 1 : 0,
               transform: isActive
                 ? "translateY(0)"

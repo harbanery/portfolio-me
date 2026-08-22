@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import SectionHeading from "@/components/section-heading";
 import { logoMap } from "@/models/icons";
+import { masterDataMap } from "@/models/master-data";
 import { formatURLContact } from "@/helpers";
 import type { AvailabilityStatus } from "@/components/navbar";
 
@@ -45,43 +45,68 @@ const HomeContactSection = ({
   return (
     <section id="contact" className="relative bg-black py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
-        <SectionHeading label="Contact" lineOne="Get in touch." />
-
-        <div className="max-w-[60ch] space-y-8">
+        {/* Centered teaser — label, title, description, icons, CTA. */}
+        <div className="mx-auto flex max-w-[60ch] flex-col items-center text-center">
           <p
             data-aos="fade-up"
-            className="text-lg text-gray-400 font-neue-haas font-light leading-relaxed"
+            className="mb-6 text-xs uppercase tracking-[0.25em] text-gray-500"
+          >
+            What&apos;s next?
+          </p>
+
+          <h2
+            data-aos="fade-up"
+            data-aos-delay="100"
+            className="font-inter font-extrabold text-white leading-[1.02] tracking-tight text-[clamp(2.25rem,6vw,4.75rem)]"
+          >
+            Get in touch.
+          </h2>
+
+          <p
+            data-aos="fade-up"
+            data-aos-delay="150"
+            className="mt-6 text-lg text-gray-400 font-neue-haas font-light leading-relaxed"
           >
             I&apos;m always interested in hearing about new projects and
             opportunities. Whether you have a question or just want to say hi,
             feel free to reach out.
           </p>
 
-          {/* Contact channel icons */}
+          {/* Contact channel pills — icon-only with a transparent border;
+              hovering expands the channel name and shows the pill border
+              (same behavior as "Focusing on" on the about card). */}
           <div
             data-aos="fade-up"
-            data-aos-delay="100"
-            className="flex items-center gap-2 flex-wrap"
+            data-aos-delay="200"
+            className="mt-8 flex flex-wrap items-center justify-center gap-2"
           >
             {contactList.map((contact) => {
               const Icon = logoMap[contact.type];
               if (!Icon) return null;
+              const name =
+                contact.value ||
+                masterDataMap[contact.type]?.name ||
+                contact.type;
               return (
                 <Link
                   key={`${contact.type}-${contact.value}`}
                   href={formatURLContact(contact.value, contact.type) || "#"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gray-400 hover:text-white transition-colors duration-300"
+                  title={name}
+                  className="group/pill inline-flex items-center rounded-full border border-transparent px-2.5 py-1 text-xs text-gray-400 font-neue-haas transition-[border-color] duration-300 hover:border-white/13 hover:text-gray-200"
                 >
-                  <Icon size={30} />
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span className="max-w-0 overflow-hidden text-nowrap opacity-0 transition-[max-width,opacity,margin] duration-300 group-hover/pill:max-w-[12rem] group-hover/pill:opacity-100 group-hover/pill:ml-2">
+                    {name}
+                  </span>
                 </Link>
               );
             })}
           </div>
 
           {isReachable && (
-            <div data-aos="fade-up" data-aos-delay="150">
+            <div data-aos="fade-up" data-aos-delay="250" className="mt-10">
               <Link
                 href="/contacts"
                 className="group inline-flex items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-inter font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] transition-colors duration-300"
