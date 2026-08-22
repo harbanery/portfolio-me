@@ -1,4 +1,5 @@
 import SectionHeading from "@/components/section-heading";
+import RotatingText from "@/components/rotating-text";
 import { normalizeHtmlBody } from "@/helpers";
 import { logoMap } from "@/models/icons";
 import { masterDataMap } from "@/models/master-data";
@@ -175,11 +176,12 @@ const AboutSection = ({
               </ul>
             </div>
 
-            {/* Open to — comma-separated, no bullets */}
+            {/* Open to — roles rotate one at a time with the same crossfade
+                loop as the Bogor/Jakarta city swap in the navbar. */}
             <div className="border-t border-white/10 py-6">
               <h3 className={rowLabelClass}>Open to</h3>
               <p className="text-sm text-gray-200 font-neue-haas font-light leading-relaxed">
-                {openToItems.map((option) => option.label).join(", ")}
+                <RotatingText items={openToItems.map((option) => option.label)} />
               </p>
             </div>
 

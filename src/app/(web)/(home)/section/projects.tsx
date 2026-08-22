@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, ExternalLink, Github } from "lucide-react";
+import { ArrowRight, ExternalLink, Github, Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import SectionHeading from "@/components/section-heading";
 import { getProjectSlug } from "@/utils/slug";
@@ -73,7 +73,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                       : "md:col-span-7 md:col-start-1 md:row-start-1"
                   }`}
                 >
-                  <div className="aspect-[16/10] bg-gray-900">
+                  <div className="aspect-video bg-gray-900">
                     {project.image && (
                       <img
                         src={project.image}
@@ -103,9 +103,25 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                       : "md:col-start-6 md:row-start-1 md:ml-8"
                   }`}
                 >
-                  <p className="mb-2 text-[10px] font-inter font-semibold uppercase tracking-[0.25em] text-[#DEB887]">
-                    Featured Project
-                  </p>
+                  {/* Eyebrow + ownership badge. Internal work is private
+                      (lock icon), client work is client owned, personal
+                      projects carry no badge. */}
+                  <div className="mb-2 flex items-center justify-between gap-3">
+                    <p className="text-[10px] font-inter font-semibold uppercase tracking-[0.25em] text-[#DEB887]">
+                      Featured Project
+                    </p>
+                    {project.projectType === "internal" && (
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-white/13 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.18em] text-gray-400">
+                        <Lock size={10} />
+                        Private
+                      </span>
+                    )}
+                    {project.projectType === "client" && (
+                      <span className="inline-flex items-center rounded-full border border-[#DEB887]/40 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.18em] text-[#DEB887]">
+                        Client Owned
+                      </span>
+                    )}
+                  </div>
 
                   <button
                     onClick={() =>
@@ -127,7 +143,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
 
                   {/* Skill tags — the site's pill component with icons. */}
                   <div className="mt-5 flex flex-wrap gap-2">
-                    {project.skills.slice(0, 6).map((tech) => {
+                    {project.skills.map((tech) => {
                       const Icon = logoMap[tech.toLowerCase()];
                       const techData = masterDataMap[tech.toLowerCase()];
                       return (
@@ -186,10 +202,13 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
           <div data-aos="fade-up" className="mt-16 flex justify-center">
             <button
               onClick={() => router.push("/projects")}
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 px-8 py-4 text-sm font-inter font-semibold tracking-wider text-white hover:border-white/50 transition-colors duration-300"
+              className="group inline-flex items-center gap-2 rounded-full border border-white/20 px-8 py-4 text-sm font-inter font-semibold tracking-wider text-white hover:border-white/50 transition-colors duration-300"
             >
-              ALL PROJECTS
-              <ArrowRight size={16} />
+              CLICK FOR ALL PROJECTS
+              <ArrowRight
+                size={16}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
             </button>
           </div>
         )}

@@ -5,7 +5,7 @@ interface SectionHeadingProps {
   meta?: string;
   /** Two-line headline (rendered on separate lines). */
   lineOne: string;
-  lineTwo: string;
+  lineTwo?: string;
 }
 
 /** Editorial section header following the reference portfolio design. */
@@ -38,7 +38,7 @@ const SectionHeading = ({
       className="font-inter font-extrabold text-white leading-[1.02] tracking-tight text-[clamp(2.25rem,6vw,4.75rem)]"
     >
       <span className="block">{lineOne}</span>
-      <span className="block">{lineTwo}</span>
+      {lineTwo && <span className="block">{lineTwo}</span>}
     </h2>
   </div>
 );

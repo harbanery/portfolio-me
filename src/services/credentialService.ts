@@ -112,6 +112,42 @@ const yearRangeOf = (start: Date, end: Date | null): string => {
     : `${startYear}`;
 };
 
+export interface CvFile {
+  name: string;
+  url: string;
+}
+
+/**
+ * The primary CV for the navbar download button: the ACTIVE row flagged
+ * `is_primary`, falling back to the most recent ACTIVE row. Null when the
+ * table is empty or unreachable (the button hides).
+ */
+export async function getPrimaryCv(): Promise<CvFile | null> {
+  try {
+    const primary = await prisma.cv.findFirst({
+      where: { status: "ACTIVE", isPrimary: true },
+      orderBy: { updatedAt: "desc" },
+      select: { name: true, fileUrl: true },
+    });
+    if (primary?.fileUrl) {
+      return { name: primary.name, url: primary.fileUrl };
+    }
+
+    const anyActive = await prisma.cv.findFirst({
+      where: { status: "ACTIVE" },
+      orderBy: { updatedAt: "desc" },
+      select: { name: true, fileUrl: true },
+    });
+    if (anyActive?.fileUrl) {
+      return { name: anyActive.name, url: anyActive.fileUrl };
+    }
+  } catch (error) {
+    console.error("Error fetching primary CV:", error);
+  }
+
+  return null;
+}
+
 /** Education history from the database, newest first. */
 export async function getEducation(): Promise<EducationItem[]> {
   try {

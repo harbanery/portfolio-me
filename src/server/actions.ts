@@ -9,7 +9,7 @@ import {
   getProjectById,
   getOtherProjects,
 } from "@/services/projectService";
-import { getEducation } from "@/services/credentialService";
+import { getEducation, getPrimaryCv } from "@/services/credentialService";
 
 /**
  * Server actions for fetching page data (SSR).
@@ -20,13 +20,14 @@ import { getEducation } from "@/services/credentialService";
 
 export async function getHomeData() {
   try {
-    const [personal, projects, experiences, experienceStats, education] =
+    const [personal, projects, experiences, experienceStats, education, cv] =
       await Promise.all([
         getPersonalProfile(),
         getProjects(),
         getExperiences(),
         getExperienceStats(),
         getEducation(),
+        getPrimaryCv(),
       ]);
 
     return {
@@ -38,6 +39,7 @@ export async function getHomeData() {
         experiences,
         experienceStats,
         education,
+        cv,
       },
     };
   } catch (error) {
@@ -58,13 +60,28 @@ export async function getExperienceData() {
 
 export async function getProjectsData() {
   try {
-    const [personal, projects] = await Promise.all([
+    const [personal, projects, cv] = await Promise.all([
       getPersonalProfile(),
       getProjects(),
+      getPrimaryCv(),
     ]);
-    return { success: true, data: { personal, projects } };
+    return { success: true, data: { personal, projects, cv } };
   } catch (error) {
     console.error("Error fetching projects data:", error);
+    return { success: false, error: "Failed to fetch data" };
+  }
+}
+
+/** Personal profile for the dedicated /contacts page. */
+export async function getContactsData() {
+  try {
+    const [personal, cv] = await Promise.all([
+      getPersonalProfile(),
+      getPrimaryCv(),
+    ]);
+    return { success: true, data: { personal, cv } };
+  } catch (error) {
+    console.error("Error fetching contacts data:", error);
     return { success: false, error: "Failed to fetch data" };
   }
 }
@@ -74,13 +91,16 @@ export async function getProjectDetailData(slug: string) {
     const projectId = Number.parseInt(slug, 10);
     if (Number.isNaN(projectId)) throw new Error("Invalid project ID");
 
-    const project = await getProjectById(projectId);
+    const [project, cv] = await Promise.all([
+      getProjectById(projectId),
+      getPrimaryCv(),
+    ]);
     if (!project) {
-      return { success: true, data: { project: null, otherProjects: [] } };
+      return { success: true, data: { project: null, otherProjects: [], cv } };
     }
 
     const otherProjects = await getOtherProjects(projectId);
-    return { success: true, data: { project, otherProjects } };
+    return { success: true, data: { project, otherProjects, cv } };
   } catch (error) {
     console.error("Error fetching project detail:", error);
     return { success: false, error: "Failed to fetch data" };

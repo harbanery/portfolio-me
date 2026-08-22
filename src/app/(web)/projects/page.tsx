@@ -8,7 +8,7 @@ const ProjectsPage = async () => {
   const { data } = await getProjectsData();
 
   return (
-    <BaseLayout navbar={true} footer={true}>
+    <BaseLayout navbar={true} footer={true} cvUrl={data?.cv?.url}>
       <div className="w-full bg-black">
         <ListProjectSection projects={data?.projects || []} />
         <ContactSection contacts={data?.personal?.contacts || []} />

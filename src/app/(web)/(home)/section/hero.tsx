@@ -132,17 +132,23 @@ const HeroSection = ({
               >
                 <button
                   onClick={() => scrollTo("contact")}
-                  className="inline-flex items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-inter font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] transition-colors duration-300"
+                  className="group inline-flex items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-inter font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] transition-colors duration-300"
                 >
-                  <MessageSquare size={16} />
+                  <MessageSquare
+                    size={16}
+                    className="transition-transform duration-300 group-hover:-rotate-45"
+                  />
                   START A CONVERSATION
                 </button>
                 <button
                   onClick={() => scrollTo("projects")}
-                  className="inline-flex items-center gap-2.5 rounded-full border border-white/20 px-8 py-4 text-sm font-inter font-semibold tracking-wider text-white hover:border-white/50 transition-colors duration-300"
+                  className="group inline-flex items-center gap-2.5 rounded-full border border-white/20 px-8 py-4 text-sm font-inter font-semibold tracking-wider text-white hover:border-white/50 transition-colors duration-300"
                 >
                   VIEW PROJECTS
-                  <ArrowRight size={16} />
+                  <ArrowRight
+                    size={16}
+                    className="transition-transform duration-300 group-hover:translate-x-1"
+                  />
                 </button>
               </div>
             </div>

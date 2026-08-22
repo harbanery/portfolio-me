@@ -49,6 +49,7 @@ const HomePage = async () => {
       footer={true}
       locationLabel={hero?.locationLabel}
       availability={data?.personal?.availability}
+      cvUrl={data?.cv?.url}
     >
       <div className="w-full bg-black">
         <HeroSection
@@ -72,7 +73,10 @@ const HomePage = async () => {
         {/* <OpenSourceSection /> */}
         <CredentialsSection items={credentials} />
         <WritingSection items={publications} />
-        <HomeContactSection contacts={data?.personal?.contacts || []} />
+        <HomeContactSection
+          contacts={data?.personal?.contacts || []}
+          availability={data?.personal?.availability}
+        />
       </div>
     </BaseLayout>
   );

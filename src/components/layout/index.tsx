@@ -16,12 +16,15 @@ const BaseLayout = ({
   footer = true,
   locationLabel,
   availability,
+  cvUrl,
 }: {
   navbar?: boolean;
   children: React.ReactNode;
   footer?: boolean;
   locationLabel?: string;
   availability?: AvailabilityStatus | null;
+  /** Primary CV from the database — navbar download button. */
+  cvUrl?: string | null;
 }) => {
   const pathname = usePathname();
 
@@ -42,7 +45,13 @@ const BaseLayout = ({
 
   return (
     <main className="w-full hide-scrollbar select-none overflow-x-clip">
-      {navbar && <Navbar locationLabel={locationLabel} availability={availability} />}
+      {navbar && (
+        <Navbar
+          locationLabel={locationLabel}
+          availability={availability}
+          cvUrl={cvUrl}
+        />
+      )}
       {/* Vertical section menu on the right edge — renders itself only on
           the home route. */}
       {navbar && <SideMenu />}

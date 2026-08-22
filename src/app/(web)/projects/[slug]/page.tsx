@@ -19,7 +19,7 @@ const ProjectDetailPage = async ({
   }
 
   return (
-    <BaseLayout navbar={true} footer={true}>
+    <BaseLayout navbar={true} footer={true} cvUrl={data?.cv?.url}>
       <div className="min-h-screen bg-gray-950 text-white relative">
         {/* Hero Section with Parallax */}
         <HeroSection project={project} />

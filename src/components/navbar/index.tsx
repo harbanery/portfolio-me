@@ -55,9 +55,12 @@ const CITY_SWAP_INTERVAL = 3200;
 const Navbar = ({
   locationLabel,
   availability,
+  cvUrl,
 }: {
   locationLabel?: string;
   availability?: AvailabilityStatus | null;
+  /** Primary CV from the database — direct download, no viewer. */
+  cvUrl?: string | null;
 }) => {
   const pathname = usePathname();
   const router = useRouter();
@@ -295,15 +298,16 @@ const Navbar = ({
 
           {/* Desktop actions */}
           <div className="hidden lg:flex items-center gap-3 shrink-0">
-            {/* Dummy until a real CV file is added at /cv.pdf */}
-            <a
-              href="/cv.pdf"
-              download
-              className="inline-flex items-center gap-1.5 rounded-full bg-[#DEB887]/15 border border-transparent px-4 py-2 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-300"
-            >
-              CV
-              <Download size={13} />
-            </a>
+            {cvUrl && (
+              <a
+                href={cvUrl}
+                download
+                className="inline-flex items-center gap-1.5 rounded-full bg-[#DEB887]/15 border border-transparent px-4 py-2 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-300"
+              >
+                CV
+                <Download size={13} />
+              </a>
+            )}
             {isHireable && (
               <button
                 onClick={() => goToSection("contact")}
@@ -350,15 +354,16 @@ const Navbar = ({
               </button>
             ))}
           </div>
-          {/* Dummy until a real CV file is added at /cv.pdf */}
-          <a
-            href="/cv.pdf"
-            download
-            className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[#DEB887]/15 border border-transparent px-6 py-3 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-300"
-          >
-            Download CV
-            <Download size={14} />
-          </a>
+          {cvUrl && (
+            <a
+              href={cvUrl}
+              download
+              className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[#DEB887]/15 border border-transparent px-6 py-3 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-300"
+            >
+              Download CV
+              <Download size={14} />
+            </a>
+          )}
         </div>
       )}
     </nav>

@@ -183,9 +183,12 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
         {hasMore && (
           <button
             onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
-            className="mt-10 inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2 text-xs uppercase tracking-[0.15em] font-inter font-semibold text-gray-400 transition-colors duration-300 hover:border-white/40 hover:text-white"
+            className="group mt-10 inline-flex items-center gap-2 rounded-full border border-white/15 px-5 py-2 text-xs uppercase tracking-[0.15em] font-inter font-semibold text-gray-400 transition-colors duration-300 hover:border-white/40 hover:text-white"
           >
-            <Plus size={12} />
+            <Plus
+              size={12}
+              className="transition-transform duration-300 group-hover:-rotate-90"
+            />
             Show {Math.min(PAGE_SIZE, list.length - visibleCount)} more
           </button>
         )}
