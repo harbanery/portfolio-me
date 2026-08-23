@@ -135,7 +135,7 @@ const AboutSection = ({
                       <span
                         key={key}
                         title={masterDataMap[key]?.name || key}
-                        className="group/pill inline-flex items-center rounded-full border border-transparent px-2.5 py-1 text-xs text-gray-300 font-neue-haas transition-[border-color] duration-300 hover:border-white/13"
+                        className="group/pill inline-flex cursor-pointer items-center rounded-full border border-transparent px-2.5 py-1 text-xs text-gray-300 font-neue-haas transition-[border-color] duration-300 hover:border-white/13"
                       >
                         {Icon ? (
                           <Icon className="h-3.5 w-3.5 shrink-0" />

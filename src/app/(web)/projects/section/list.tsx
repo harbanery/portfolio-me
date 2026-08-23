@@ -9,11 +9,11 @@ interface ProjectSectionProps {
   projects: Project[];
 }
 
-/** Desktop column template — sized so no column crowds another:
- *  year fixed, project/made-at/link content-width via max-content,
- *  built-with absorbs the rest and wraps its pills. */
+/** Desktop column template with EVEN fr-based tracks so the gaps between
+ *  columns stay consistent no matter the content: year fixed, made-at
+ *  fixed-ish, project/built-with share the flexible space. */
 const TABLE_COLS =
-  "md:grid-cols-[3.5rem_minmax(9rem,1fr)_minmax(8rem,0.9fr)_minmax(12rem,1.6fr)_minmax(7rem,max-content)]";
+  "md:grid-cols-[4rem_minmax(10rem,1.3fr)_minmax(9rem,1fr)_minmax(12rem,1.7fr)_minmax(8rem,1fr)]";
 
 /** Link host without protocol — "vercel.com" from the full URL. */
 const hostOf = (url: string): string => {
@@ -69,16 +69,17 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
           Things I&apos;ve built.
         </h2>
 
-        {/* Table header */}
+        {/* Table header — alignment mirrors the rows: year and made at
+            centered, project/built-with/link left. */}
         <div
           data-aos="fade-up"
           className={`hidden gap-x-6 border-b border-white/10 pb-3 text-[10px] uppercase tracking-[0.25em] text-gray-600 md:grid lg:gap-x-8 ${TABLE_COLS}`}
         >
-          <span>Year</span>
+          <span className="text-center">Year</span>
           <span>Project</span>
-          <span>Made at</span>
+          <span className="text-center">Made at</span>
           <span>Built with</span>
-          <span className="text-right">Link</span>
+          <span>Link</span>
         </div>
 
         <div>
@@ -102,23 +103,26 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                 data-aos-delay={`${(index % 3 + 1) * 75}`}
                 className={`group grid grid-cols-1 gap-x-6 gap-y-2 border-b border-white/10 py-5 transition-colors duration-300 hover:bg-white/[0.02] md:items-baseline md:py-6 lg:gap-x-8 ${TABLE_COLS}`}
               >
-                {/* Year */}
-                <span className="text-xs text-[#DEB887] tabular-nums md:text-sm">
+                {/* Year — centered */}
+                <span className="text-center text-xs text-[#DEB887] tabular-nums md:text-sm">
                   {yearOf(project)}
                 </span>
 
-                {/* Project — information only, no detail navigation */}
+                {/* Project — left aligned, information only */}
                 <span className="min-w-0 font-inter font-semibold text-white transition-colors duration-300 group-hover:text-[#DEB887]">
                   {project.title}
                 </span>
 
-                {/* Made at */}
-                <span className="min-w-0 truncate text-sm text-gray-400 font-neue-haas font-light" title={madeAt}>
+                {/* Made at — centered */}
+                <span
+                  className="min-w-0 truncate text-center text-sm text-gray-400 font-neue-haas font-light"
+                  title={madeAt}
+                >
                   {madeAt || <span className="text-gray-700">—</span>}
                 </span>
 
-                {/* Built with — every skill, icon + name; pills wrap within
-                    the column instead of stretching the row. */}
+                {/* Built with — left aligned; every skill, icon + name;
+                    pills wrap within the column. */}
                 <span className="flex min-w-0 flex-wrap items-center gap-1.5">
                   {project.skills.map((tech) => {
                     const Icon = logoMap[tech.toLowerCase()];
@@ -139,26 +143,35 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                   })}
                 </span>
 
-                {/* Link — host name with the icon on its right; repo links
-                    read "github"; no link at all reads "Coming soon". The
-                    only interactive element: opens externally, in a new
-                    tab, never the detail page. */}
-                <span className="flex min-w-0 items-center justify-start md:justify-end">
+                {/* Link — left aligned. Website: host name with the icon on
+                    its right. Repo (only when no website): "github" with
+                    the icon on its LEFT. Neither: "Coming soon". Opens
+                    externally in a new tab, never the detail page. */}
+                <span className="flex min-w-0 items-center justify-start">
                   {href ? (
-                    <a
-                      href={href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${project.title} ${isRepo ? "repository" : "website"}`}
-                      className="inline-flex items-center gap-1.5 whitespace-nowrap text-sm text-gray-400 font-neue-haas font-light transition-colors duration-300 hover:text-[#DEB887]"
-                    >
-                      {isRepo ? "github" : hostOf(href)}
-                      {isRepo ? (
+                    isRepo ? (
+                      <a
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${project.title} repository`}
+                        className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap text-sm text-gray-400 font-neue-haas font-light transition-colors duration-300 hover:text-[#DEB887]"
+                      >
                         <Github size={15} className="shrink-0" />
-                      ) : (
+                        github
+                      </a>
+                    ) : (
+                      <a
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${project.title} website`}
+                        className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap text-sm text-gray-400 font-neue-haas font-light transition-colors duration-300 hover:text-[#DEB887]"
+                      >
+                        {hostOf(href)}
                         <ExternalLink size={15} className="shrink-0" />
-                      )}
-                    </a>
+                      </a>
+                    )
                   ) : (
                     <span className="text-sm text-gray-600 font-neue-haas font-light italic">
                       Coming soon

@@ -292,7 +292,7 @@ const Navbar = ({
                       style={{ backgroundColor: badge.color }}
                     />
                   </span>
-                  <span className="text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-white group-hover:text-[#DEB887] transition-colors duration-300">
+                  <span className="text-[11px] cursor-pointer uppercase tracking-[0.2em] font-inter font-semibold text-white group-hover:text-[#DEB887] transition-colors duration-300">
                     {name ?? "Raihan Yusuf"}
                   </span>
                 </button>
@@ -327,7 +327,7 @@ const Navbar = ({
             {isHireable && (
               <button
                 onClick={goToContacts}
-                className="rounded-full bg-white px-5 py-2 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-black hover:bg-gray-200 transition-colors duration-300"
+                className="cursor-pointer rounded-full bg-white px-5 py-2 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-black hover:bg-gray-200 transition-colors duration-300"
               >
                 Hire Me
               </button>
@@ -339,7 +339,7 @@ const Navbar = ({
             {isHireable && (
               <button
                 onClick={goToContacts}
-                className="rounded-full bg-white px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] font-inter font-semibold text-black"
+                className="cursor-pointer rounded-full bg-white px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] font-inter font-semibold text-black"
               >
                 Hire Me
               </button>

@@ -132,7 +132,7 @@ const HeroSection = ({
               >
                 <button
                   onClick={() => scrollTo("contact")}
-                  className="group inline-flex items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-inter font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] transition-colors duration-300"
+                  className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-inter font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] transition-colors duration-300"
                 >
                   <MessageSquare
                     size={16}
@@ -142,7 +142,7 @@ const HeroSection = ({
                 </button>
                 <button
                   onClick={() => scrollTo("projects")}
-                  className="group inline-flex items-center gap-2.5 rounded-full border border-white/20 px-8 py-4 text-sm font-inter font-semibold tracking-wider text-white hover:border-white/50 transition-colors duration-300"
+                  className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full border border-white/20 px-8 py-4 text-sm font-inter font-semibold tracking-wider text-white hover:border-white/50 transition-colors duration-300"
                 >
                   VIEW PROJECTS
                   <ArrowRight
@@ -185,7 +185,7 @@ const HeroSection = ({
           data-aos="fade-up"
           data-aos-delay="600"
           data-aos-offset="0"
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-gray-500 hover:text-white transition-colors"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 cursor-pointer text-gray-500 hover:text-white transition-colors"
         >
           <ChevronDown className="animate-bounce" size={20} />
         </button>
