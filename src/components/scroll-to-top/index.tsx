@@ -54,13 +54,21 @@ const ScrollToTop = () => {
     <button
       onClick={scrollTop}
       aria-label="Scroll back to top"
-      className={`fixed left-5 bottom-3 z-40 flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-black/60 text-gray-400 backdrop-blur-md transition-all duration-500 hover:border-white/40 hover:text-white ${
+      className={`group fixed bottom-3 left-5 z-40 flex cursor-pointer items-center gap-2 rounded-full border border-white/15 bg-black/60 py-2 pl-3 pr-3 text-gray-400 backdrop-blur-md transition-all duration-500 hover:border-white/40 hover:text-white ${
         visible
           ? "translate-y-0 opacity-100"
           : "pointer-events-none translate-y-4 opacity-0"
       }`}
     >
-      <ArrowUp size={18} />
+      <ArrowUp
+        size={18}
+        className="transition-transform duration-300 group-hover:-translate-y-0.5"
+      />
+      {/* Short label — expands out on hover, hidden on the smallest
+          screens so the pill stays compact. */}
+      <span className="hidden max-w-0 overflow-hidden text-[10px] uppercase tracking-[0.2em] font-inter font-medium text-nowrap opacity-0 transition-[max-width,opacity] duration-300 group-hover:max-w-[8rem] group-hover:opacity-100 sm:inline">
+        Back to top
+      </span>
     </button>
   );
 };

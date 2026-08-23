@@ -86,7 +86,7 @@ const SideMenu = () => {
             key={section.id}
             onClick={() => goToSection(section.id)}
             aria-current={isActive ? "true" : undefined}
-            className={`group flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] font-inter font-medium transition-colors duration-300 ${
+            className={`group flex cursor-pointer items-center gap-2 text-[10px] uppercase tracking-[0.25em] font-inter font-medium transition-colors duration-300 ${
               isActive
                 ? "text-[#DEB887]"
                 : "text-gray-600 hover:text-white"
