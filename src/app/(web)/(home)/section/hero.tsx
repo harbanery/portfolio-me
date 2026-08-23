@@ -136,7 +136,7 @@ const HeroSection = ({
                 >
                   <MessageSquare
                     size={16}
-                    className="transition-transform duration-300 group-hover:-rotate-45"
+                    className="transition-transform duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:-rotate-45"
                   />
                   START A CONVERSATION
                 </button>
