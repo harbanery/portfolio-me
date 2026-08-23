@@ -86,7 +86,7 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => (
 
                 {item.content.description && (
                   <div
-                    className="html-body mt-4 text-base text-gray-400 text-justify font-neue-haas font-light leading-relaxed paragraph-wrapper wrap-anywhere"
+                    className="html-body mt-4 text-base text-gray-400 text-justify font-neue-haas font-light tracking-wider leading-relaxed paragraph-wrapper wrap-anywhere"
                     dangerouslySetInnerHTML={{
                       __html: normalizeHtmlBody(item.content.description),
                     }}

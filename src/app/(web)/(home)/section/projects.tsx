@@ -41,7 +41,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
 
         <p
           data-aos="fade-up"
-          className="max-w-[60ch] text-lg text-gray-400 font-neue-haas font-light leading-relaxed mb-16 md:mb-24"
+          className="max-w-[60ch] text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed mb-16 md:mb-24"
         >
           Selected work, front to back. Each one shipped, measured, and still
           standing.
@@ -125,7 +125,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
 
                   {project.description && (
                     <div
-                      className="mt-3 text-sm text-gray-400 text-justify font-neue-haas font-light leading-relaxed line-clamp-3 paragraph-wrapper wrap-anywhere"
+                      className="mt-3 text-sm text-gray-400 text-justify font-neue-haas font-light tracking-wider leading-relaxed line-clamp-3 paragraph-wrapper wrap-anywhere"
                       dangerouslySetInnerHTML={{
                         __html: normalizeHtmlBody(project.description),
                       }}

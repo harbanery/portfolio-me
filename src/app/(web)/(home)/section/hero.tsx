@@ -109,7 +109,7 @@ const HeroSection = ({
                   No paragraph-wrapper here on purpose: it underlines spans. */}
               <div data-aos="fade-up" data-aos-delay="300" className="mt-8">
                 <p
-                  className="text-lg md:text-xl text-gray-400 font-neue-haas text-balance leading-relaxed [&_span]:font-medium [&_span]:italic [&_span]:text-[#DEB887] [&_strong]:font-medium [&_strong]:text-white"
+                  className="text-lg md:text-xl text-gray-400 font-neue-haas text-balance tracking-wide leading-relaxed [&_span]:font-medium [&_span]:italic [&_span]:text-[#DEB887] [&_strong]:font-medium [&_strong]:text-white"
                   dangerouslySetInnerHTML={{ __html: lead ?? DEFAULT_LEAD }}
                 />
               </div>
@@ -118,7 +118,7 @@ const HeroSection = ({
               <p
                 data-aos="fade-up"
                 data-aos-delay="350"
-                className="mt-4 text-sm md:text-base text-gray-500 font-neue-haas font-light text-balance leading-relaxed"
+                className="mt-4 text-sm md:text-base text-gray-500 font-neue-haas font-light text-balance tracking-wide leading-relaxed"
               >
                 {FOCUS_LINE}
               </p>

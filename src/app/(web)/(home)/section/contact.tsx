@@ -68,7 +68,7 @@ const HomeContactSection = ({
           <p
             data-aos="fade-up"
             data-aos-delay="150"
-            className="mt-6 text-lg text-gray-400 font-neue-haas font-light leading-relaxed"
+            className="mt-6 text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed"
           >
             I&apos;m always interested in hearing about new projects and
             opportunities. Whether you have a question or just want to say hi,

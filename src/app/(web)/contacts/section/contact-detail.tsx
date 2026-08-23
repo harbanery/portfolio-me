@@ -122,7 +122,7 @@ const ContactsDetailSection = ({
 
   /** Shared input styling — red border only when marked invalid. */
   const fieldClass = (field: keyof typeof form) =>
-    `w-full rounded-xl border bg-transparent px-4 py-2.5 text-sm text-white placeholder:text-gray-600 font-neue-haas focus:outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+    `w-full rounded-xl border bg-transparent px-4 py-2.5 text-sm text-white placeholder:text-gray-600 font-neue-haas tracking-wider focus:outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
       invalid[field]
         ? "border-red-500/70"
         : "border-white/13 focus:border-white/40"
@@ -156,7 +156,7 @@ const ContactsDetailSection = ({
               </p>
             )}
 
-            <p className="max-w-[46ch] text-base md:text-lg text-gray-400 font-neue-haas font-light leading-relaxed">
+            <p className="max-w-[46ch] text-base md:text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed">
               I&apos;m open to opportunities anywhere, remote or on-site. I
               reply during working hours (9–6 GMT+7), and promptly outside them
               for anything urgent.

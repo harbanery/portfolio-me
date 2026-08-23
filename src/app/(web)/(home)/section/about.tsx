@@ -105,7 +105,7 @@ const AboutSection = ({
           >
             {about ? (
               <div
-                className="html-body text-lg text-gray-300 text-justify font-neue-haas font-light leading-relaxed paragraph-wrapper wrap-anywhere"
+                className="html-body text-lg text-gray-300 text-justify font-neue-haas font-light tracking-wider leading-relaxed paragraph-wrapper wrap-anywhere"
                 dangerouslySetInnerHTML={{ __html: normalizeHtmlBody(about) }}
               />
             ) : (
@@ -162,10 +162,10 @@ const AboutSection = ({
               <ul className="space-y-4">
                 {education.map((item) => (
                   <li key={`${item.school}-${item.year}`}>
-                    <p className="text-sm font-neue-haas font-light text-gray-200">
+                    <p className="text-sm font-neue-haas font-light tracking-widest text-gray-200">
                       {item.school}
                     </p>
-                    <p className="mt-0.5 text-xs text-gray-500 font-neue-haas font-light">
+                    <p className="mt-0.5 text-xs text-gray-500 font-neue-haas tracking-wider font-light">
                       {[item.degree, item.field].filter(Boolean).join(" · ")}
                     </p>
                     <p className="mt-1 text-[10px] uppercase tracking-[0.2em] text-gray-600 tabular-nums">
@@ -180,8 +180,10 @@ const AboutSection = ({
                 loop as the Bogor/Jakarta city swap in the navbar. */}
             <div className="border-t border-white/10 py-6">
               <h3 className={rowLabelClass}>Open to</h3>
-              <p className="text-sm text-gray-200 font-neue-haas font-light leading-relaxed">
-                <RotatingText items={openToItems.map((option) => option.label)} />
+              <p className="text-sm text-gray-200 font-neue-haas font-light tracking-widest leading-relaxed">
+                <RotatingText
+                  items={openToItems.map((option) => option.label)}
+                />
               </p>
             </div>
 
@@ -192,12 +194,11 @@ const AboutSection = ({
                 {languageItems.map((language) => (
                   <li
                     key={language.name}
-                    className="flex items-baseline justify-between gap-3 text-sm font-neue-haas font-light text-gray-200"
+                    className="flex items-baseline justify-between gap-3 text-sm font-neue-haas font-light tracking-widest text-gray-200"
                   >
                     {language.name}
                     <span className="text-xs text-gray-500">
-                      {LANGUAGE_LEVEL_LABEL[language.level] ??
-                        language.level}
+                      {LANGUAGE_LEVEL_LABEL[language.level] ?? language.level}
                     </span>
                   </li>
                 ))}

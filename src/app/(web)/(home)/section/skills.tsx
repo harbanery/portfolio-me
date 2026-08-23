@@ -121,7 +121,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
 
         <p
           data-aos="fade-up"
-          className="max-w-[60ch] text-lg text-gray-400 font-neue-haas font-light leading-relaxed mb-14 md:mb-20"
+          className="max-w-[60ch] text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed mb-14 md:mb-20"
         >
           Grouped by what it is actually used for. Everything here has shipped
           to production or to a client deliverable.
@@ -140,7 +140,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
               <h3 className="text-sm md:text-lg font-inter font-semibold text-white mb-0.5 md:mb-1">
                 {group.title}
               </h3>
-              <p className="mb-4 md:mb-5 text-[10px] md:text-sm text-gray-500 font-neue-haas font-light">
+              <p className="mb-4 md:mb-5 text-[10px] md:text-sm text-gray-500 font-neue-haas tracking-wider font-light">
                 {group.subtitle}
               </p>
               <div className="flex flex-wrap gap-1.5 md:gap-2">

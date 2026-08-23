@@ -26,7 +26,7 @@ const AuthorLine = ({ authors }: { authors: string[] }) => {
   const rest = authors.slice(NAMED_AUTHORS);
 
   return (
-    <p className="mt-2 text-xs text-gray-500 font-neue-haas font-light">
+    <p className="mt-2 text-xs text-gray-500 font-neue-haas tracking-wider font-light">
       {"with "}
       {named.map((author, index) => (
         <span key={author}>
@@ -79,7 +79,7 @@ const WritingSection = ({ items }: WritingSectionProps) => (
               </h3>
               <AuthorLine authors={post.authors} />
               {post.excerpt && (
-                <p className="mt-3 text-sm text-gray-400 font-neue-haas font-light leading-relaxed flex-1 line-clamp-3">
+                <p className="mt-3 text-sm text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed flex-1 line-clamp-3">
                   {post.excerpt}
                 </p>
               )}

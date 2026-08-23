@@ -93,16 +93,13 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
 
         <p
           data-aos="fade-up"
-          className="max-w-[60ch] text-lg text-gray-400 font-neue-haas font-light leading-relaxed mb-10"
+          className="max-w-[60ch] text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed mb-10"
         >
           Trainings, competencies, and certifications behind the practice.
         </p>
 
         {/* Filters */}
-        <div
-          data-aos="fade-up"
-          className="flex flex-wrap gap-2 mb-10 md:mb-14"
-        >
+        <div data-aos="fade-up" className="flex flex-wrap gap-2 mb-10 md:mb-14">
           {filters.map((filter) => (
             <button
               key={filter}
@@ -135,7 +132,7 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
                   <h3 className="text-lg font-inter font-semibold text-white mb-1">
                     {credential.title}
                   </h3>
-                  <p className="text-sm text-gray-500 font-neue-haas font-light">
+                  <p className="text-sm text-gray-500 font-neue-haas tracking-wider font-light">
                     {credential.detail
                       ? `${credential.issuer} — ${credential.detail}`
                       : credential.issuer}
@@ -159,7 +156,7 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
             const shared = {
               key: `${credential.title}-${credential.year}`,
               "data-aos": "fade-up",
-              "data-aos-delay": `${(index % 3 + 1) * 75}`,
+              "data-aos-delay": `${((index % 3) + 1) * 75}`,
               className:
                 "group grid md:grid-cols-[10rem_1fr_auto] gap-3 md:gap-8 items-baseline border-t border-white/10 py-6 first:border-t-0 first:pt-0",
             } as const;
