@@ -223,7 +223,7 @@ const Navbar = ({
                     />
                   </span>
                   <span
-                    className="text-[11px] uppercase tracking-[0.2em] font-inter font-medium"
+                    className="text-[11px] uppercase tracking-[0.2em] font-martian-mono font-medium"
                     style={{ color: badge.color }}
                   >
                     {badge.label}
@@ -232,7 +232,7 @@ const Navbar = ({
                 {locationLabel && (
                   <>
                     <span className="h-3 w-px bg-white/15" />
-                    <span className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] font-inter font-medium text-gray-400">
+                    <span className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] font-martian-mono font-medium text-gray-400">
                       <MapPin size={12} className="text-[#DEB887]" />
                       <div className="flex items-center gap-0">
                         {/* Both cities share one grid cell: the container
@@ -269,7 +269,7 @@ const Navbar = ({
                 )}
                 <span className="h-3 w-px bg-white/15" />
                 <span
-                  className="text-[11px] uppercase tracking-[0.2em] font-inter font-medium text-gray-400 tabular-nums"
+                  className="text-[11px] uppercase tracking-[0.2em] font-martian-mono font-medium text-gray-400 tabular-nums"
                   suppressHydrationWarning
                 >
                   {clock ?? "--:--:-- GMT+7"}
@@ -298,7 +298,7 @@ const Navbar = ({
                 </button>
                 <span className="h-3 w-px bg-white/15" />
                 <span
-                  className="text-[11px] uppercase tracking-[0.2em] font-inter font-medium text-gray-400 tabular-nums"
+                  className="text-[11px] uppercase tracking-[0.2em] font-martian-mono font-medium text-gray-400 tabular-nums"
                   suppressHydrationWarning
                 >
                   {clock ?? "--:--:-- GMT+7"}
@@ -308,7 +308,7 @@ const Navbar = ({
           </div>
 
           {/* Mobile title / spacer */}
-          <span className="lg:hidden text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-white">
+          <span className="lg:hidden text-[11px] uppercase tracking-[0.2em] font-martian-mono font-semibold text-white">
             {isHome ? "Menu" : ""}
           </span>
 
@@ -318,16 +318,16 @@ const Navbar = ({
               <a
                 href={cvUrl}
                 download
-                className="inline-flex items-center gap-1.5 rounded-full bg-[#DEB887]/15 border border-transparent px-4 py-2 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-300"
+                className="inline-flex items-center gap-1.5 rounded-full bg-[#DEB887]/15 border border-transparent px-4 py-2 text-[11px] uppercase tracking-[0.2em] font-martian-mono text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-300"
               >
-                CV
+                Resume
                 <Download size={13} />
               </a>
             )}
             {isHireable && (
               <button
                 onClick={goToContacts}
-                className="cursor-pointer rounded-full bg-white px-5 py-2 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-black hover:bg-gray-200 transition-colors duration-300"
+                className="cursor-pointer rounded-full bg-white px-5 py-2 text-[11px] uppercase tracking-[0.2em] font-martian-mono font-semibold text-black hover:bg-gray-200 transition-colors duration-300"
               >
                 Hire Me
               </button>

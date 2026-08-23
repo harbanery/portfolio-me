@@ -1,7 +1,13 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { ArrowRight, Check, Loader2, MapPin } from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  Loader2,
+  MapPin,
+  SendHorizonal,
+} from "lucide-react";
 import SectionHeading from "@/components/section-heading";
 import RotatingText from "@/components/rotating-text";
 import { logoMap } from "@/models/icons";
@@ -147,7 +153,7 @@ const ContactsDetailSection = ({
             className="space-y-5 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7 transition-[border-color] duration-500 ease-out hover:border-[#DEB887]/60"
           >
             {availabilityLine(availability) && (
-              <p className="flex items-center gap-2 text-sm font-inter font-semibold uppercase tracking-[0.2em] text-[#2DD4BF]">
+              <p className="flex items-center gap-2 text-sm font-martian-mono uppercase tracking-[0.2em] text-[#2DD4BF]">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#2DD4BF] opacity-60" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-[#2DD4BF]" />
@@ -180,7 +186,7 @@ const ContactsDetailSection = ({
               })}
             </div>
 
-            <p className="flex items-center gap-1.5 font-space-mono text-xs uppercase tracking-[0.25em] text-gray-600">
+            <p className="flex items-center gap-1.5 font-martian-mono text-xs uppercase tracking-[0.25em] text-gray-600">
               <MapPin size={12} className="text-[#DEB887]" />
               <span className="flex items-center">
                 <RotatingText
@@ -203,7 +209,7 @@ const ContactsDetailSection = ({
           >
             <div className="grid sm:grid-cols-2 gap-4">
               <label className="block">
-                <span className="mb-1.5 block font-space-mono text-xs uppercase tracking-[0.25em] text-gray-500">
+                <span className="mb-1.5 block font-martian-mono text-xs uppercase tracking-[0.25em] text-gray-500">
                   Name *
                 </span>
                 <input
@@ -216,7 +222,7 @@ const ContactsDetailSection = ({
                 />
               </label>
               <label className="block">
-                <span className="mb-1.5 block font-space-mono text-xs uppercase tracking-[0.25em] text-gray-500">
+                <span className="mb-1.5 block font-martian-mono text-xs uppercase tracking-[0.25em] text-gray-500">
                   Email *
                 </span>
                 <input
@@ -231,7 +237,7 @@ const ContactsDetailSection = ({
               </label>
             </div>
             <label className="block">
-              <span className="mb-1.5 block font-space-mono text-xs uppercase tracking-[0.25em] text-gray-500">
+              <span className="mb-1.5 block font-martian-mono text-xs uppercase tracking-[0.25em] text-gray-500">
                 Message *
               </span>
               <textarea
@@ -252,11 +258,12 @@ const ContactsDetailSection = ({
                 <button
                   type="button"
                   disabled
-                  className="inline-flex cursor-not-allowed items-center gap-2 rounded-full bg-green-600 px-8 py-3 text-sm font-inter font-semibold tracking-wider text-white"
+                  className="inline-flex cursor-not-allowed items-center gap-2 rounded-full bg-green-600 px-8 py-3 text-sm font-martian-mono font-semibold tracking-wider text-white"
                 >
                   SENT
                   <Check
                     size={16}
+                    strokeWidth={2}
                     className="animate-[scale-in_0.4s_ease-out_both]"
                   />
                 </button>
@@ -264,7 +271,7 @@ const ContactsDetailSection = ({
                 <button
                   type="submit"
                   disabled={status === "loading"}
-                  className={`group inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-inter font-semibold tracking-wider transition-colors duration-300 ${
+                  className={`group inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-martian-mono font-semibold tracking-wider transition-colors duration-300 ${
                     status === "loading"
                       ? "cursor-not-allowed bg-gray-300 text-gray-600"
                       : "cursor-pointer bg-white text-black hover:bg-gray-200"
@@ -273,13 +280,18 @@ const ContactsDetailSection = ({
                   {status === "loading" ? (
                     <>
                       SENDING
-                      <Loader2 size={16} className="animate-spin" />
+                      <Loader2
+                        size={16}
+                        strokeWidth={2}
+                        className="animate-spin"
+                      />
                     </>
                   ) : (
                     <>
                       SEND MESSAGE
-                      <ArrowRight
+                      <SendHorizonal
                         size={16}
+                        strokeWidth={2}
                         className="transition-transform duration-300 group-hover:translate-x-1"
                       />
                     </>

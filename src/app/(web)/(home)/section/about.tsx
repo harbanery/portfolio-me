@@ -60,7 +60,7 @@ const fallbackOpenToOf = (
 
 /** Row label styling shared by every info row. */
 const rowLabelClass =
-  "font-space-mono text-[10px] uppercase tracking-[0.25em] text-gray-600 mb-2.5";
+  "font-martian-mono text-[10px] uppercase tracking-[0.25em] text-gray-600 mb-2.5";
 
 /**
  * About section: rich-text body on the left, compact profile card on the
@@ -168,7 +168,7 @@ const AboutSection = ({
                     <p className="mt-0.5 text-xs text-gray-500 font-neue-haas tracking-wider font-light">
                       {[item.degree, item.field].filter(Boolean).join(" · ")}
                     </p>
-                    <p className="mt-1 font-space-mono text-[10px] uppercase tracking-[0.2em] text-gray-600 tabular-nums">
+                    <p className="mt-1 font-martian-mono text-[10px] uppercase tracking-[0.2em] text-gray-600 tabular-nums">
                       {item.kind} · {item.year}
                     </p>
                   </li>

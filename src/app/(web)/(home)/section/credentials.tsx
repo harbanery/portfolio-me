@@ -104,7 +104,7 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
             <button
               key={filter}
               onClick={() => selectFilter(filter)}
-              className={`cursor-pointer rounded-full border px-4 py-1.5 text-xs uppercase tracking-[0.15em] font-inter font-semibold transition-colors duration-300 ${
+              className={`cursor-pointer rounded-full border px-4 py-1.5 text-xs uppercase tracking-[0.15em] font-martian-mono font-semibold transition-colors duration-300 ${
                 active === filter
                   ? "border-white/60 text-white bg-white/10"
                   : "border-white/13 text-gray-500 hover:text-gray-300 hover:border-white/30"
@@ -121,10 +121,10 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
             const content = (
               <>
                 <div className="flex items-center gap-3">
-                  <span className="font-space-mono text-[10px] uppercase tracking-[0.2em] text-gray-600">
+                  <span className="font-martian-mono text-[10px] uppercase tracking-[0.2em] text-gray-600">
                     {capitalize(credential.category)}
                   </span>
-                  <span className="font-space-mono text-xs text-[#DEB887] tabular-nums md:hidden">
+                  <span className="font-martian-mono text-xs text-[#DEB887] tabular-nums md:hidden">
                     {credential.year}
                   </span>
                 </div>
@@ -139,10 +139,10 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
                   </p>
                 </div>
                 <div className="hidden md:flex items-center gap-6">
-                  <span className="font-space-mono text-xs text-[#DEB887] tabular-nums">
+                  <span className="font-martian-mono text-xs text-[#DEB887] tabular-nums">
                     {credential.year}
                   </span>
-                  <span className="inline-flex items-center gap-1.5 font-space-mono text-xs uppercase tracking-[0.15em] text-gray-500 group-hover:text-white transition-colors">
+                  <span className="inline-flex items-center gap-1.5 font-martian-mono text-xs uppercase tracking-[0.15em] text-gray-500 group-hover:text-white transition-colors">
                     View
                     <ArrowRight
                       size={12}
@@ -180,10 +180,11 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
         {hasMore && (
           <button
             onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
-            className="group mt-10 inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/15 px-5 py-2 text-xs uppercase tracking-[0.15em] font-inter font-semibold text-gray-400 transition-colors duration-300 hover:border-white/40 hover:text-white"
+            className="group mt-10 inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/15 px-5 py-2 text-xs uppercase tracking-[0.15em] font-martian-mono font-semibold text-gray-400 transition-colors duration-300 hover:border-white/40 hover:text-white"
           >
             <Plus
               size={12}
+              strokeWidth={3}
               className="transition-transform duration-300 group-hover:-rotate-90"
             />
             Show {Math.min(PAGE_SIZE, list.length - visibleCount)} more

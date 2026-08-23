@@ -66,7 +66,7 @@ const ScrollToTop = () => {
       />
       {/* Short label — expands out on hover, hidden on the smallest
           screens so the pill stays compact. */}
-      <span className="hidden max-w-0 overflow-hidden text-[10px] uppercase tracking-[0.2em] font-inter font-medium text-nowrap opacity-0 transition-[max-width,opacity] duration-300 group-hover:max-w-[8rem] group-hover:opacity-100 sm:inline">
+      <span className="hidden max-w-0 overflow-hidden text-[10px] uppercase tracking-[0.2em] font-martian-mono text-nowrap opacity-0 transition-[max-width,opacity] duration-300 group-hover:max-w-[8rem] group-hover:opacity-100 sm:inline">
         Back to top
       </span>
     </button>

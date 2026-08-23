@@ -8,7 +8,7 @@ import {
   NODE_ENV,
 } from "@/config/variables";
 import { VercelCompatibleComponents } from "@/components/vercel";
-import { inter, spaceMono } from "@/utils/fonts/next-google";
+import { inter, martianMono } from "@/utils/fonts/next-google";
 import { neueHaasDisplay } from "@/utils/fonts/next-local";
 
 export const metadata: Metadata = {
@@ -113,7 +113,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${neueHaasDisplay.variable} ${inter.variable} ${spaceMono.variable} antialiased ${NODE_ENV === "development" ? "relative" : ""}`}
+        className={`${neueHaasDisplay.variable} ${inter.variable} ${martianMono.variable} antialiased ${NODE_ENV === "development" ? "relative" : ""}`}
       >
         {NODE_ENV === "development" && (
           <div className="font-inter fixed top-10 -left-12 z-99999 text-white px-10! py-1 bg-red-600 -rotate-45">

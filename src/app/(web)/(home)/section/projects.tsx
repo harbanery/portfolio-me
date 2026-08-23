@@ -103,7 +103,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                       (lock icon), client work is client owned, personal
                       projects carry no badge. */}
                   <div className="mb-2 flex items-center justify-between gap-3">
-                    <p className="text-[10px] font-space-mono uppercase tracking-[0.25em] text-[#DEB887]">
+                    <p className="text-[10px] font-martian-mono uppercase tracking-[0.25em] text-[#DEB887]">
                       Featured Project
                     </p>
                     {project.projectType === "internal" && (
@@ -184,7 +184,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
           <div data-aos="fade-up" className="mt-16 flex justify-center">
             <button
               onClick={() => router.push("/projects")}
-              className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 px-8 py-4 text-sm font-inter font-semibold tracking-wider text-white hover:border-white/50 transition-colors duration-300"
+              className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 px-8 py-4 text-sm font-martian-mono tracking-wider text-white hover:border-white/50 transition-colors duration-300"
             >
               CLICK FOR ALL PROJECTS
               <ArrowRight

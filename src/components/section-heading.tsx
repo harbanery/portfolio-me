@@ -23,13 +23,13 @@ const SectionHeading = ({
       data-aos="fade-up"
       className="mb-6 flex flex-wrap items-baseline gap-x-5 gap-y-1"
     >
-      <span className="font-space-mono text-xs uppercase tracking-[0.25em] text-gray-500">
+      <span className="font-martian-mono text-xs uppercase tracking-[0.25em] text-gray-500">
         {label}
       </span>
       {meta && (
         <>
           <span className="hidden h-3 w-px bg-white/15 sm:block" />
-          <span className="font-space-mono text-xs uppercase tracking-[0.25em] text-gray-600">
+          <span className="font-martian-mono text-xs uppercase tracking-[0.25em] text-gray-600">
             {meta}
           </span>
         </>

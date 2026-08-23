@@ -132,17 +132,18 @@ const HeroSection = ({
               >
                 <button
                   onClick={() => scrollTo("contact")}
-                  className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-inter font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] transition-colors duration-300"
+                  className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-martian-mono font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] transition-colors duration-300"
                 >
                   <MessageSquare
                     size={16}
+                    strokeWidth={3}
                     className="transition-transform duration-300 group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:-rotate-45"
                   />
                   START A CONVERSATION
                 </button>
                 <button
                   onClick={() => scrollTo("projects")}
-                  className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full border border-white/20 px-8 py-4 text-sm font-inter font-semibold tracking-wider text-white hover:border-white/50 transition-colors duration-300"
+                  className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full border border-white/20 px-8 py-4 text-sm font-martian-mono tracking-wider text-white hover:border-white/50 transition-colors duration-300"
                 >
                   VIEW PROJECTS
                   <ArrowRight
@@ -168,7 +169,7 @@ const HeroSection = ({
                     <dt className="font-inter text-3xl font-bold tracking-tight text-white transition-colors group-hover:text-[#DEB887]">
                       {stat.value}
                     </dt>
-                    <dd className="mt-2 text-[10px] font-space-mono uppercase tracking-[0.25em] text-gray-500">
+                    <dd className="mt-2 text-[10px] font-martian-mono uppercase tracking-[0.25em] text-gray-500">
                       {stat.label}
                     </dd>
                   </div>
