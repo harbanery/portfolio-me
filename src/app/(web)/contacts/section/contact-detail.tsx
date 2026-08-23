@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { MapPin } from "lucide-react";
+import { ArrowRight, Check, Loader2, MapPin } from "lucide-react";
 import SectionHeading from "@/components/section-heading";
 import RotatingText from "@/components/rotating-text";
 import { logoMap } from "@/models/icons";
@@ -58,26 +58,75 @@ const ContactsDetailSection = ({
     : [];
 
   const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [sent, setSent] = useState(false);
+  const [invalid, setInvalid] = useState<Record<string, boolean>>({});
+  const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    // Dummy submit: no endpoint yet. Opens the user's mail client instead.
+  const isLocked = status === "loading" || status === "success";
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const mailto = contactList.find((c) => c.type === "mail")?.value;
-    if (mailto) {
-      window.location.assign(
-        `mailto:${mailto}?subject=${encodeURIComponent(
-          `Message from ${form.name || "portfolio visitor"}`,
-        )}&body=${encodeURIComponent(`${form.message}\n\n— ${form.name} (${form.email})`)}`,
-      );
+    if (isLocked) return;
+
+    // Validation: red borders only, no error text.
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim());
+    const marks = {
+      name: form.name.trim().length > 0,
+      email: emailOk,
+      message: form.message.trim().length > 0,
+    };
+    setInvalid({
+      name: !marks.name,
+      email: !marks.email,
+      message: !marks.message,
+    });
+    if (!marks.name || !marks.email || !marks.message) return;
+
+    setStatus("loading");
+    setError(null);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name.trim(),
+          email: form.email.trim(),
+          message: form.message.trim(),
+        }),
+      });
+      const result = (await response.json()) as {
+        success?: boolean;
+        error?: string;
+      };
+
+      if (response.ok && result.success) {
+        setStatus("success");
+      } else {
+        setStatus("idle");
+        setError(result.error ?? "Failed to send. Please try again later.");
+      }
+    } catch {
+      setStatus("idle");
+      setError("Network error. Please try again later.");
     }
-    setSent(true);
   };
 
   const update =
     (field: keyof typeof form) =>
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setForm((prev) => ({ ...prev, [field]: event.target.value }));
+      // Clear the red border as soon as the field is edited.
+      setInvalid((prev) => ({ ...prev, [field]: false }));
+    };
+
+  /** Shared input styling — red border only when marked invalid. */
+  const fieldClass = (field: keyof typeof form) =>
+    `w-full rounded-xl border bg-transparent px-4 py-2.5 text-sm text-white placeholder:text-gray-600 font-neue-haas focus:outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
+      invalid[field]
+        ? "border-red-500/70"
+        : "border-white/13 focus:border-white/40"
+    }`;
 
   return (
     <section
@@ -144,7 +193,8 @@ const ContactsDetailSection = ({
             </p>
           </div>
 
-          {/* Form */}
+          {/* Form — validation shows red borders only; fields lock while
+              sending and after success. */}
           <form
             data-aos="fade-left"
             data-aos-delay="150"
@@ -161,7 +211,8 @@ const ContactsDetailSection = ({
                   value={form.name}
                   onChange={update("name")}
                   placeholder="Your name"
-                  className="w-full rounded-xl border border-white/13 bg-transparent px-4 py-2.5 text-sm text-white placeholder:text-gray-600 font-neue-haas focus:border-white/40 focus:outline-none transition-colors"
+                  disabled={isLocked}
+                  className={fieldClass("name")}
                 />
               </label>
               <label className="block">
@@ -174,7 +225,8 @@ const ContactsDetailSection = ({
                   value={form.email}
                   onChange={update("email")}
                   placeholder="you@example.com"
-                  className="w-full rounded-xl border border-white/13 bg-transparent px-4 py-2.5 text-sm text-white placeholder:text-gray-600 font-neue-haas focus:border-white/40 focus:outline-none transition-colors"
+                  disabled={isLocked}
+                  className={fieldClass("email")}
                 />
               </label>
             </div>
@@ -188,20 +240,57 @@ const ContactsDetailSection = ({
                 value={form.message}
                 onChange={update("message")}
                 placeholder="What are you building?"
-                className="w-full rounded-xl border border-white/13 bg-transparent px-4 py-2.5 text-sm text-white placeholder:text-gray-600 font-neue-haas focus:border-white/40 focus:outline-none transition-colors resize-none"
+                disabled={isLocked}
+                className={`${fieldClass("message")} resize-none`}
               />
             </label>
             <div className="flex items-center gap-4">
-              <button
-                type="submit"
-                className="rounded-full bg-white px-8 py-3 text-sm font-inter font-semibold tracking-wider text-black hover:bg-gray-200 transition-colors duration-300"
-              >
-                SEND MESSAGE
-              </button>
-              {sent && (
-                <span className="text-xs text-[#DEB887] uppercase tracking-[0.2em]">
-                  Opening your mail client
-                </span>
+              {/* Idle: white with an arrow that slides right on hover.
+                  Loading: spinner, not clickable. Success: green, "Sent"
+                  with an animated check, permanently not clickable. */}
+              {status === "success" ? (
+                <button
+                  type="button"
+                  disabled
+                  className="inline-flex cursor-not-allowed items-center gap-2 rounded-full bg-green-600 px-8 py-3 text-sm font-inter font-semibold tracking-wider text-white"
+                >
+                  SENT
+                  <Check
+                    size={16}
+                    className="animate-[scale-in_0.4s_ease-out_both]"
+                  />
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={status === "loading"}
+                  className={`group inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-inter font-semibold tracking-wider transition-colors duration-300 ${
+                    status === "loading"
+                      ? "cursor-not-allowed bg-gray-300 text-gray-600"
+                      : "cursor-pointer bg-white text-black hover:bg-gray-200"
+                  }`}
+                >
+                  {status === "loading" ? (
+                    <>
+                      SENDING
+                      <Loader2 size={16} className="animate-spin" />
+                    </>
+                  ) : (
+                    <>
+                      SEND MESSAGE
+                      <ArrowRight
+                        size={16}
+                        className="transition-transform duration-300 group-hover:translate-x-1"
+                      />
+                    </>
+                  )}
+                </button>
+              )}
+              {/* Failure: short inline explanation right of the button. */}
+              {error && status === "idle" && (
+                <p className="text-xs text-red-400/90 font-neue-haas font-light leading-snug">
+                  {error}
+                </p>
               )}
             </div>
           </form>

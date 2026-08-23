@@ -115,7 +115,9 @@ export async function getExperienceStats(): Promise<ExperienceStats> {
       );
   }
 
-  const months = earliest ? Math.max(0, monthsBetween(earliest, new Date())) : 0;
+  const months = earliest
+    ? Math.max(0, monthsBetween(earliest, new Date()))
+    : 0;
   return { companies, years: Math.max(1, Math.round(months / 12)) };
 }
 
@@ -224,6 +226,46 @@ export async function getPersonalProfile(): Promise<PersonalProfile | null> {
 export function getMarqueeSkills(skills: string[] | undefined): string[] {
   const list = (skills ?? []).filter((skill) => !!masterDataMap[skill]);
   return list.length > 0 ? list : dummySkills;
+}
+
+/** Single entry of the Personal `contacts` JSON column. */
+interface PersonalContactEntry {
+  type: string;
+  value: string;
+}
+
+const isContactEntry = (value: unknown): value is PersonalContactEntry =>
+  !!value &&
+  typeof value === "object" &&
+  typeof (value as PersonalContactEntry).type === "string" &&
+  typeof (value as PersonalContactEntry).value === "string";
+
+/**
+ * Email address from the Personal `contacts` JSON (type "mail"). Contact
+ * form submissions are delivered here — the recipient lives in the data,
+ * not in environment variables.
+ */
+export async function getPersonalContactEmail(): Promise<string | null> {
+  try {
+    const personal = await prisma.personal.findFirst({
+      select: { contacts: true },
+    });
+    if (!personal || !Array.isArray(personal.contacts)) return null;
+
+    // Prisma types the column as JsonValue; treat entries as unknown
+    // before validating their shape.
+    const entries = personal.contacts as unknown[];
+    const mail = entries.find(
+      (item): item is PersonalContactEntry =>
+        isContactEntry(item) &&
+        (item.type === "mail" || item.type === "email") &&
+        !!item.value.trim(),
+    );
+    return mail ? mail.value.trim() : null;
+  } catch (error) {
+    console.error("Error fetching personal contact email:", error);
+    return null;
+  }
 }
 
 /**
