@@ -7,8 +7,8 @@ import {
   META_TITLE,
   NODE_ENV,
 } from "@/config/variables";
-import { bebas, inter, spaceMono } from "@/utils/fonts/next-google";
 import { VercelCompatibleComponents } from "@/components/vercel";
+import { inter, spaceMono } from "@/utils/fonts/next-google";
 import { neueHaasDisplay } from "@/utils/fonts/next-local";
 
 export const metadata: Metadata = {
@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   applicationName: META_APP,
   ...(META_DESCRIPTION && { description: META_DESCRIPTION }),
   metadataBase: new URL(BASE_URL),
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: META_APP,
+  },
   formatDetection: {
     telephone: false,
     email: false,
@@ -28,7 +33,6 @@ export const metadata: Metadata = {
     siteName: META_APP,
     countryName: "Indonesia",
     locale: "en-US",
-    alternateLocale: "id-ID",
     url: `/`,
     images: [
       {
@@ -54,7 +58,9 @@ export const metadata: Metadata = {
   //   ],
   // },
   creator: "Raihan Yusuf",
-  authors: [{ name: "Raihan Yusuf" }],
+  authors: [
+    { name: "Raihan Yusuf", url: "https://www.linkedin.com/in/raihan-yusuf" },
+  ],
   icons: [
     {
       rel: "icon",
@@ -64,8 +70,27 @@ export const metadata: Metadata = {
     },
     {
       rel: "apple-touch-icon",
-      type: "image/x-icon",
-      url: `/favicon.ico`,
+      type: "image/png",
+      url: `/ios/180.png`,
+      sizes: "180x180",
+    },
+    {
+      rel: "apple-touch-icon",
+      type: "image/png",
+      url: `/ios/120.png`,
+      sizes: "120x120",
+    },
+    {
+      rel: "apple-touch-icon",
+      type: "image/png",
+      url: `/ios/152.png`,
+      sizes: "152x152",
+    },
+    {
+      rel: "apple-touch-icon",
+      type: "image/png",
+      url: `/ios/1024.png`,
+      sizes: "1024x1024",
     },
     {
       rel: "shortcut icon",
@@ -88,7 +113,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${neueHaasDisplay.variable} ${inter.variable} ${bebas.variable} ${spaceMono.variable} antialiased ${NODE_ENV === "development" ? "relative" : ""}`}
+        className={`${neueHaasDisplay.variable} ${inter.variable} ${spaceMono.variable} antialiased ${NODE_ENV === "development" ? "relative" : ""}`}
       >
         {NODE_ENV === "development" && (
           <div className="font-inter fixed top-10 -left-12 z-99999 text-white px-10! py-1 bg-red-600 -rotate-45">
