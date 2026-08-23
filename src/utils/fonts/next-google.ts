@@ -1,4 +1,4 @@
-import { Bebas_Neue, Inter } from "next/font/google";
+import { Inter, Space_Mono } from "next/font/google";
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -9,11 +9,11 @@ export const inter = Inter({
   fallback: ["system-ui", "sans-serif"],
 });
 
-export const bebas = Bebas_Neue({
+export const spaceMono = Space_Mono({
   subsets: ["latin"],
-  variable: "--font-bebas",
+  variable: "--font-space-mono",
   display: "swap",
-  weight: ["400"],
+  weight: ["400", "700"],
   adjustFontFallback: true,
-  fallback: ["system-ui", "sans-serif"],
+  fallback: ["system-ui", "monospace"],
 });

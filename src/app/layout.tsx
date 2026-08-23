@@ -7,9 +7,9 @@ import {
   META_TITLE,
   NODE_ENV,
 } from "@/config/variables";
-import { bebas, inter } from "@/utils/fonts/next-google";
+import { bebas, inter, spaceMono } from "@/utils/fonts/next-google";
 import { VercelCompatibleComponents } from "@/components/vercel";
-import { neueHaasDisplay, tempting } from "@/utils/fonts/next-local";
+import { neueHaasDisplay } from "@/utils/fonts/next-local";
 
 export const metadata: Metadata = {
   title: META_TITLE,
@@ -88,7 +88,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${neueHaasDisplay.variable} ${inter.variable} ${bebas.variable} ${tempting.variable} antialiased ${NODE_ENV === "development" ? "relative" : ""}`}
+        className={`${neueHaasDisplay.variable} ${inter.variable} ${bebas.variable} ${spaceMono.variable} antialiased ${NODE_ENV === "development" ? "relative" : ""}`}
       >
         {NODE_ENV === "development" && (
           <div className="font-inter fixed top-10 -left-12 z-99999 text-white px-10! py-1 bg-red-600 -rotate-45">

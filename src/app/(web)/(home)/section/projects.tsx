@@ -103,17 +103,17 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                       (lock icon), client work is client owned, personal
                       projects carry no badge. */}
                   <div className="mb-2 flex items-center justify-between gap-3">
-                    <p className="text-[10px] font-inter font-semibold uppercase tracking-[0.25em] text-[#DEB887]">
+                    <p className="text-[10px] font-space-mono uppercase tracking-[0.25em] text-[#DEB887]">
                       Featured Project
                     </p>
                     {project.projectType === "internal" && (
-                      <span className="inline-flex items-center gap-1.5 rounded-full border border-white/13 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.18em] text-gray-400">
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-white/13 px-2.5 py-0.5 font-inter font-medium text-[10px] uppercase tracking-[0.18em] text-gray-400">
                         <Lock size={10} />
                         Private
                       </span>
                     )}
                     {project.projectType === "client" && (
-                      <span className="inline-flex items-center rounded-full border border-[#DEB887]/40 px-2.5 py-0.5 text-[10px] uppercase tracking-[0.18em] text-[#DEB887]">
+                      <span className="inline-flex items-center rounded-full border border-[#DEB887]/40 px-2.5 py-0.5 font-inter font-medium text-[10px] uppercase tracking-[0.18em] text-[#DEB887]">
                         Client Owned
                       </span>
                     )}

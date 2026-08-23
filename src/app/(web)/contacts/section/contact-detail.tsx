@@ -180,7 +180,7 @@ const ContactsDetailSection = ({
               })}
             </div>
 
-            <p className="flex items-center gap-1.5 text-xs uppercase tracking-[0.25em] text-gray-600">
+            <p className="flex items-center gap-1.5 font-space-mono text-xs uppercase tracking-[0.25em] text-gray-600">
               <MapPin size={12} className="text-[#DEB887]" />
               <span className="flex items-center">
                 <RotatingText
@@ -203,7 +203,7 @@ const ContactsDetailSection = ({
           >
             <div className="grid sm:grid-cols-2 gap-4">
               <label className="block">
-                <span className="mb-1.5 block text-xs uppercase tracking-[0.25em] text-gray-500">
+                <span className="mb-1.5 block font-space-mono text-xs uppercase tracking-[0.25em] text-gray-500">
                   Name *
                 </span>
                 <input
@@ -216,7 +216,7 @@ const ContactsDetailSection = ({
                 />
               </label>
               <label className="block">
-                <span className="mb-1.5 block text-xs uppercase tracking-[0.25em] text-gray-500">
+                <span className="mb-1.5 block font-space-mono text-xs uppercase tracking-[0.25em] text-gray-500">
                   Email *
                 </span>
                 <input
@@ -231,7 +231,7 @@ const ContactsDetailSection = ({
               </label>
             </div>
             <label className="block">
-              <span className="mb-1.5 block text-xs uppercase tracking-[0.25em] text-gray-500">
+              <span className="mb-1.5 block font-space-mono text-xs uppercase tracking-[0.25em] text-gray-500">
                 Message *
               </span>
               <textarea
@@ -288,7 +288,7 @@ const ContactsDetailSection = ({
               )}
               {/* Failure: short inline explanation right of the button. */}
               {error && status === "idle" && (
-                <p className="text-xs text-red-400/90 font-neue-haas font-light leading-snug">
+                <p className="text-xs text-red-400/90 font-neue-haas font-light tracking-wider leading-snug">
                   {error}
                 </p>
               )}

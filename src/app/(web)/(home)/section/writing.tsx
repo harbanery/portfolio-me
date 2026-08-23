@@ -67,10 +67,10 @@ const WritingSection = ({ items }: WritingSectionProps) => (
           const card = (
             <>
               <div className="flex items-center justify-between gap-4 mb-4">
-                <span className="text-[10px] uppercase tracking-[0.25em] text-[#DEB887]">
+                <span className="font-space-mono text-[10px] uppercase tracking-[0.25em] text-[#DEB887]">
                   {capitalize(post.kind)}
                 </span>
-                <span className="text-xs text-gray-600 tabular-nums">
+                <span className="font-space-mono text-xs text-gray-600 tabular-nums">
                   {post.year}
                 </span>
               </div>
@@ -83,7 +83,7 @@ const WritingSection = ({ items }: WritingSectionProps) => (
                   {post.excerpt}
                 </p>
               )}
-              <span className="mt-5 inline-flex items-center gap-2 text-xs uppercase tracking-[0.15em] text-gray-500 group-hover:text-white transition-colors">
+              <span className="mt-5 inline-flex items-center gap-2 font-space-mono text-xs uppercase tracking-[0.15em] text-gray-500 group-hover:text-white transition-colors">
                 Read
                 <ArrowRight
                   size={12}

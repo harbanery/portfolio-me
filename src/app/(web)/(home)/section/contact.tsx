@@ -52,7 +52,7 @@ const HomeContactSection = ({
         <div className="mx-auto flex max-w-[60ch] flex-col items-center text-center">
           <p
             data-aos="fade-up"
-            className="mb-6 text-xs uppercase tracking-[0.25em] text-gray-500"
+            className="mb-6 font-space-mono text-xs uppercase tracking-[0.25em] text-gray-500"
           >
             What&apos;s next?
           </p>

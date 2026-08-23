@@ -17,9 +17,7 @@
   --font-inter: var(--font-inter), sans-serif;
   --font-bebas: var(--font-bebas), sans-serif;
   --font-neue-haas: var(--font-neue-haas-display), sans-serif;
-  --font-tempting: var(--font-tempting), cursive;
-  --font-neue-haas-tempting:
-    var(--font-tempting), var(--font-neue-haas-display), sans-serif;
+  --font-space-mono: var(--font-space-mono), monospace;
 }
 
 @theme {

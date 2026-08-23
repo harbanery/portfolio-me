@@ -63,7 +63,7 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => (
                   <h3 className="truncate text-xl md:text-2xl font-inter font-bold text-white tracking-tight leading-snug">
                     {item.content.companyName}
                   </h3>
-                  <span className="mt-1.5 block text-xs uppercase tracking-[0.2em] text-[#DEB887] tabular-nums">
+                  <span className="mt-1.5 block font-space-mono text-xs uppercase tracking-[0.2em] text-[#DEB887] tabular-nums">
                     {item.title}
                   </span>
                 </div>

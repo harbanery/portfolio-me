@@ -59,18 +59,3 @@ export const neueHaasDisplay = localFont({
   display: "swap",
   fallback: ["system-ui", "sans-serif"],
 });
-
-// ** TEMPTING FONT FAMILY **
-
-export const tempting = localFont({
-  src: [
-    {
-      path: "../../assets/fonts/Tempting.ttf",
-      weight: "400",
-      style: "normal",
-    },
-  ],
-  variable: "--font-tempting",
-  display: "swap",
-  fallback: ["system-ui", "sans-serif"],
-});

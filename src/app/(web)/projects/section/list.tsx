@@ -57,7 +57,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
       <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
         <p
           data-aos="fade-up"
-          className="mb-2 text-xs uppercase tracking-[0.25em] text-gray-500"
+          className="mb-2 font-space-mono text-xs uppercase tracking-[0.25em] text-gray-500"
         >
           Archive
         </p>
@@ -73,7 +73,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
             centered, project/built-with/link left. */}
         <div
           data-aos="fade-up"
-          className={`hidden gap-x-6 border-b border-white/10 pb-3 text-[10px] uppercase tracking-[0.25em] text-gray-600 md:grid lg:gap-x-8 ${TABLE_COLS}`}
+          className={`hidden gap-x-6 border-b border-white/10 pb-3 font-space-mono text-[10px] uppercase tracking-[0.25em] text-gray-600 md:grid lg:gap-x-8 ${TABLE_COLS}`}
         >
           <span className="text-center">Year</span>
           <span>Project</span>
@@ -104,7 +104,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                 className={`group grid grid-cols-1 gap-x-6 gap-y-2 border-b border-white/10 py-5 transition-colors duration-300 hover:bg-white/[0.02] md:items-baseline md:py-6 lg:gap-x-8 ${TABLE_COLS}`}
               >
                 {/* Year — centered */}
-                <span className="text-center text-xs text-[#DEB887] tabular-nums md:text-sm">
+                <span className="font-space-mono text-center text-xs text-[#DEB887] tabular-nums md:text-sm">
                   {yearOf(project)}
                 </span>
 

@@ -168,7 +168,7 @@ const HeroSection = ({
                     <dt className="font-inter text-3xl font-bold tracking-tight text-white transition-colors group-hover:text-[#DEB887]">
                       {stat.value}
                     </dt>
-                    <dd className="mt-2 text-[10px] uppercase tracking-[0.25em] text-gray-500">
+                    <dd className="mt-2 text-[10px] font-space-mono uppercase tracking-[0.25em] text-gray-500">
                       {stat.label}
                     </dd>
                   </div>

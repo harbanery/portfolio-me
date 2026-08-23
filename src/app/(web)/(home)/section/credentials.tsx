@@ -121,10 +121,10 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
             const content = (
               <>
                 <div className="flex items-center gap-3">
-                  <span className="text-[10px] uppercase tracking-[0.2em] text-gray-600">
+                  <span className="font-space-mono text-[10px] uppercase tracking-[0.2em] text-gray-600">
                     {capitalize(credential.category)}
                   </span>
-                  <span className="text-xs text-[#DEB887] tabular-nums md:hidden">
+                  <span className="font-space-mono text-xs text-[#DEB887] tabular-nums md:hidden">
                     {credential.year}
                   </span>
                 </div>
@@ -139,10 +139,10 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
                   </p>
                 </div>
                 <div className="hidden md:flex items-center gap-6">
-                  <span className="text-xs text-[#DEB887] tabular-nums">
+                  <span className="font-space-mono text-xs text-[#DEB887] tabular-nums">
                     {credential.year}
                   </span>
-                  <span className="inline-flex items-center gap-1.5 text-xs uppercase tracking-[0.15em] text-gray-500 group-hover:text-white transition-colors">
+                  <span className="inline-flex items-center gap-1.5 font-space-mono text-xs uppercase tracking-[0.15em] text-gray-500 group-hover:text-white transition-colors">
                     View
                     <ArrowRight
                       size={12}
