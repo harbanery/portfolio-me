@@ -100,16 +100,20 @@ export async function getProjectDetailData(slug: string) {
     const projectId = Number.parseInt(slug, 10);
     if (Number.isNaN(projectId)) throw new Error("Invalid project ID");
 
-    const [project, cv] = await Promise.all([
+    const [project, cv, personal] = await Promise.all([
       getProjectById(projectId),
       getPrimaryCv(),
+      getPersonalProfile(),
     ]);
     if (!project) {
-      return { success: true, data: { project: null, otherProjects: [], cv } };
+      return {
+        success: true,
+        data: { project: null, otherProjects: [], cv, personal },
+      };
     }
 
     const otherProjects = await getOtherProjects(projectId);
-    return { success: true, data: { project, otherProjects, cv } };
+    return { success: true, data: { project, otherProjects, cv, personal } };
   } catch (error) {
     console.error("Error fetching project detail:", error);
     return { success: false, error: "Failed to fetch data" };

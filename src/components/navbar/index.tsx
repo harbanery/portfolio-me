@@ -15,15 +15,6 @@ const useMounted = () =>
     () => false,
   );
 
-/** Navbar target sections on non-home pages. */
-const NAV_SECTIONS = [
-  { name: "About", id: "about" },
-  { name: "Experience", id: "experience" },
-  { name: "Skills", id: "skills" },
-  { name: "Projects", id: "projects" },
-  { name: "Contact", id: "contact" },
-];
-
 const formatClock = () =>
   `${new Date().toLocaleTimeString("en-GB", {
     hour12: false,
@@ -56,11 +47,14 @@ const Navbar = ({
   locationLabel,
   availability,
   cvUrl,
+  name,
 }: {
   locationLabel?: string;
   availability?: AvailabilityStatus | null;
   /** Primary CV from the database — direct download, no viewer. */
   cvUrl?: string | null;
+  /** Profile name for the non-home brand button. */
+  name?: string | null;
 }) => {
   const pathname = usePathname();
   const router = useRouter();
@@ -183,6 +177,12 @@ const Navbar = ({
     }
   };
 
+  /** "Hire Me" always targets the dedicated contacts page. */
+  const goToContacts = () => {
+    setIsMenuOpen(false);
+    router.push("/contacts");
+  };
+
   // Transform-only show/hide: animating opacity on the ancestor breaks
   // backdrop-filter (blur flickers off) during the transition, so the bar
   // slides out instead of fading out.
@@ -194,9 +194,6 @@ const Navbar = ({
     mounted && isFixed
       ? "border-white/10 bg-black/60 backdrop-blur-md"
       : "border-transparent bg-transparent";
-
-  const linkClass =
-    "text-[11px] uppercase tracking-[0.2em] font-inter font-medium text-gray-400 hover:text-white transition-colors duration-300";
 
   return (
     <nav
@@ -279,15 +276,34 @@ const Navbar = ({
                 </span>
               </>
             ) : (
-              NAV_SECTIONS.map((section) => (
+              <>
+                {/* Brand — name with an availability dot, back to home. */}
                 <button
-                  key={section.id}
-                  onClick={() => goToSection(section.id)}
-                  className={linkClass}
+                  onClick={() => router.push("/")}
+                  className="group flex items-center gap-2.5"
                 >
-                  {section.name}
+                  <span className="relative flex h-2 w-2">
+                    <span
+                      className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
+                      style={{ backgroundColor: badge.color }}
+                    />
+                    <span
+                      className="relative inline-flex h-2 w-2 rounded-full"
+                      style={{ backgroundColor: badge.color }}
+                    />
+                  </span>
+                  <span className="text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-white group-hover:text-[#DEB887] transition-colors duration-300">
+                    {name ?? "Raihan Yusuf"}
+                  </span>
                 </button>
-              ))
+                <span className="h-3 w-px bg-white/15" />
+                <span
+                  className="text-[11px] uppercase tracking-[0.2em] font-inter font-medium text-gray-400 tabular-nums"
+                  suppressHydrationWarning
+                >
+                  {clock ?? "--:--:-- GMT+7"}
+                </span>
+              </>
             )}
           </div>
 
@@ -310,7 +326,7 @@ const Navbar = ({
             )}
             {isHireable && (
               <button
-                onClick={() => goToSection("contact")}
+                onClick={goToContacts}
                 className="rounded-full bg-white px-5 py-2 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-black hover:bg-gray-200 transition-colors duration-300"
               >
                 Hire Me
@@ -322,7 +338,7 @@ const Navbar = ({
           <div className="lg:hidden flex items-center gap-2 shrink-0">
             {isHireable && (
               <button
-                onClick={() => goToSection("contact")}
+                onClick={goToContacts}
                 className="rounded-full bg-white px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] font-inter font-semibold text-black"
               >
                 Hire Me

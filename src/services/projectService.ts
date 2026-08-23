@@ -35,6 +35,8 @@ const projectColumns = {
   repoLinks: true,
   webLink: true,
   order: true,
+  endDate: true,
+  createdAt: true,
 } as const;
 
 /**
@@ -73,7 +75,8 @@ export async function getProjectById(
   projectId: number,
 ): Promise<Project | null> {
   try {
-    const project = await prisma.portfolio.findUnique({
+    // findFirst, not findUnique: the status filter is not a unique field.
+    const project = await prisma.portfolio.findFirst({
       where: { id: projectId, status: "ACTIVE" },
       select: projectColumns,
     });

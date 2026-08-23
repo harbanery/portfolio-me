@@ -3,7 +3,6 @@
 import { ArrowRight, ExternalLink, Github, Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import SectionHeading from "@/components/section-heading";
-import { getProjectSlug } from "@/utils/slug";
 import { logoMap } from "@/models/icons";
 import { masterDataMap } from "@/models/master-data";
 import { normalizeHtmlBody } from "@/helpers";
@@ -61,12 +60,9 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
               >
                 {/* Screenshot — under the content panel, gradient washing
                     toward the panel side on desktop. Rests in black &
-                    white, coloring up on hover. */}
-                <button
-                  onClick={() =>
-                    router.push(`/projects/${getProjectSlug(project)}`)
-                  }
-                  aria-label={`Open ${project.title}`}
+                    white, coloring up on hover. Presentation only: no
+                    click-through to the detail page. */}
+                <div
                   className={`relative block overflow-hidden rounded-lg border border-white/10 md:col-span-7 ${
                     flipped
                       ? "md:col-start-6 md:row-start-1"
@@ -93,7 +89,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                         : "md:bg-linear-to-r md:from-transparent md:via-black/35 md:to-black/70"
                     } transition-opacity duration-500 group-hover:opacity-75`}
                   />
-                </button>
+                </div>
 
                 {/* Content panel — overlaps the screenshot, elevated. */}
                 <div
@@ -123,14 +119,9 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                     )}
                   </div>
 
-                  <button
-                    onClick={() =>
-                      router.push(`/projects/${getProjectSlug(project)}`)
-                    }
-                    className="text-left text-xl font-inter font-bold tracking-tight text-white transition-colors duration-300 hover:text-[#DEB887] md:text-2xl"
-                  >
+                  <h3 className="text-xl font-inter font-bold tracking-tight text-white md:text-2xl">
                     {project.title}
-                  </button>
+                  </h3>
 
                   {project.description && (
                     <div
@@ -182,15 +173,6 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                         <ExternalLink size={18} />
                       </a>
                     )}
-                    <button
-                      onClick={() =>
-                        router.push(`/projects/${getProjectSlug(project)}`)
-                      }
-                      className="ml-auto inline-flex items-center gap-1.5 text-[10px] font-inter font-semibold uppercase tracking-[0.2em] text-gray-300 transition-colors duration-300 hover:text-white"
-                    >
-                      Details
-                      <ArrowRight size={12} />
-                    </button>
                   </div>
                 </div>
               </article>

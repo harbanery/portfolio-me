@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { logoMap } from "@/models/icons";
 import { masterDataMap } from "@/models/master-data";
@@ -34,6 +35,8 @@ const HomeContactSection = ({
   contacts,
   availability,
 }: HomeContactSectionProps) => {
+  const router = useRouter();
+
   const contactList: Contact[] = Array.isArray(contacts)
     ? contacts.filter(
         (contact) => isContact(contact) && !!logoMap[contact.type],
@@ -107,16 +110,18 @@ const HomeContactSection = ({
 
           {isReachable && (
             <div data-aos="fade-up" data-aos-delay="250" className="mt-10">
-              <Link
-                href="/contacts"
-                className="group inline-flex items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-inter font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] transition-colors duration-300"
+              {/* Programmatic navigation — renders as a plain button, no
+                  link URL exposed in the markup. */}
+              <button
+                onClick={() => router.push("/contacts")}
+                className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-inter font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] transition-colors duration-300"
               >
                 LET&apos;S TOUCH
                 <ArrowRight
                   size={16}
                   className="transition-transform duration-300 group-hover:translate-x-1"
                 />
-              </Link>
+              </button>
             </div>
           )}
         </div>

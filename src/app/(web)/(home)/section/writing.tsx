@@ -9,12 +9,51 @@ interface WritingSectionProps {
 const capitalize = (value: string) =>
   value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
 
+/** Authors listed by name before the count badge kicks in. */
+const NAMED_AUTHORS = 3;
+
+/** Shared card surface — matches the capabilities and about cards. */
+const CARD_CLASS =
+  "group flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-[border-color,background-color] duration-500 ease-out hover:border-[#DEB887]/60 hover:bg-[#DEB887]/[0.04]";
+
+/** Co-author line: "with A, B, C +N" — the +N badge pops the remaining
+ *  names on hover (pure CSS, no JS needed). Nothing renders without
+ *  co-authors. */
+const AuthorLine = ({ authors }: { authors: string[] }) => {
+  if (authors.length === 0) return null;
+
+  const named = authors.slice(0, NAMED_AUTHORS);
+  const rest = authors.slice(NAMED_AUTHORS);
+
+  return (
+    <p className="mt-2 text-xs text-gray-500 font-neue-haas font-light">
+      {"with "}
+      {named.map((author, index) => (
+        <span key={author}>
+          {index > 0 && ", "}
+          {author}
+        </span>
+      ))}
+      {rest.length > 0 && (
+        // Named group: the badge and its popover react to hovering THIS
+        // badge only, not the whole card.
+        <span className="group/badge relative inline-block">
+          <span className="ml-1.5 cursor-pointer rounded-full border border-white/13 px-2 py-0.5 text-[10px] text-gray-400 transition-colors duration-300 group-hover/badge:border-[#DEB887]/60 group-hover/badge:text-[#DEB887]">
+            +{rest.length}
+          </span>
+          {/* Popover — the remaining author names, revealed on badge hover. */}
+          <span className="pointer-events-none invisible absolute bottom-full left-1/2 z-20 mb-2 w-max max-w-[16rem] -translate-x-1/2 rounded-lg border border-white/13 bg-[#0a0a0a] px-3 py-2 text-left text-[11px] leading-relaxed text-gray-300 opacity-0 shadow-[0_10px_35px_-15px_rgba(0,0,0,0.9)] transition-[opacity,visibility] duration-300 group-hover/badge:visible group-hover/badge:opacity-100">
+            {rest.join(", ")}
+          </span>
+        </span>
+      )}
+    </p>
+  );
+};
+
 /** Writing section backed by the Publication table. */
 const WritingSection = ({ items }: WritingSectionProps) => (
-  <section
-    id="writing"
-    className="relative bg-black py-24 md:py-32"
-  >
+  <section id="writing" className="relative bg-black py-24 md:py-32">
     <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
       <SectionHeading
         label="Writing"
@@ -35,11 +74,12 @@ const WritingSection = ({ items }: WritingSectionProps) => (
                   {post.year}
                 </span>
               </div>
-              <h3 className="text-lg font-inter font-semibold text-white leading-snug mb-3">
+              <h3 className="text-lg font-inter font-semibold text-white leading-snug mb-1">
                 {post.title}
               </h3>
+              <AuthorLine authors={post.authors} />
               {post.excerpt && (
-                <p className="text-sm text-gray-400 font-neue-haas font-light leading-relaxed flex-1 line-clamp-3">
+                <p className="mt-3 text-sm text-gray-400 font-neue-haas font-light leading-relaxed flex-1 line-clamp-3">
                   {post.excerpt}
                 </p>
               )}
@@ -61,7 +101,7 @@ const WritingSection = ({ items }: WritingSectionProps) => (
               rel="noopener noreferrer"
               data-aos="fade-up"
               data-aos-delay={`${(index + 1) * 100}`}
-              className="group flex flex-col border border-white/10 rounded-2xl p-6 hover:border-white/25 transition-colors duration-300"
+              className={CARD_CLASS}
             >
               {card}
             </a>
@@ -70,7 +110,7 @@ const WritingSection = ({ items }: WritingSectionProps) => (
               key={post.title}
               data-aos="fade-up"
               data-aos-delay={`${(index + 1) * 100}`}
-              className="group flex flex-col border border-white/10 rounded-2xl p-6 hover:border-white/25 transition-colors duration-300"
+              className={CARD_CLASS}
             >
               {card}
             </article>

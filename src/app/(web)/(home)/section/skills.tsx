@@ -127,9 +127,9 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
           to production or to a client deliverable.
         </p>
 
-        {/* One card per category — fixed three-column grid at every
+        {/* One card per category — fixed two-column grid at every
             breakpoint; the border warms up smoothly on hover. */}
-        <div className="grid grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6">
           {groups.map((group, index) => (
             <div
               key={group.title}

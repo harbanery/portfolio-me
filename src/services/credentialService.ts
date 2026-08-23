@@ -21,6 +21,8 @@ export interface WritingItem {
   title: string;
   excerpt: string;
   url: string | null;
+  /** Co-author names, excluding the profile owner. */
+  authors: string[];
 }
 
 export interface EducationItem {
@@ -89,6 +91,7 @@ const dummyWriting: WritingItem[] = [
     excerpt:
       "Combining Vigenere cipher with Myszkowski transposition to strengthen video data confidentiality.",
     url: null,
+    authors: ["Dian Novita", "Ahmad Fauzi", "Siti Rahma", "Budi Santoso"],
   },
   {
     kind: "OTHER",
@@ -98,6 +101,7 @@ const dummyWriting: WritingItem[] = [
     excerpt:
       "A community tourism website built to promote a local village and grow visitor numbers.",
     url: null,
+    authors: ["Clara Wijaya"],
   },
 ];
 
@@ -238,6 +242,7 @@ export async function getPublications(): Promise<WritingItem[]> {
         publishDate: true,
         abstract: true,
         url: true,
+        authors: true,
       },
     });
 
@@ -248,6 +253,7 @@ export async function getPublications(): Promise<WritingItem[]> {
         title: row.title,
         excerpt: row.abstract ?? "",
         url: row.url,
+        authors: row.authors ?? [],
       }));
     }
   } catch (error) {

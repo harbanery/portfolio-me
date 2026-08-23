@@ -17,6 +17,7 @@ const BaseLayout = ({
   locationLabel,
   availability,
   cvUrl,
+  name,
 }: {
   navbar?: boolean;
   children: React.ReactNode;
@@ -25,6 +26,8 @@ const BaseLayout = ({
   availability?: AvailabilityStatus | null;
   /** Primary CV from the database — navbar download button. */
   cvUrl?: string | null;
+  /** Profile name for the navbar brand on non-home pages. */
+  name?: string | null;
 }) => {
   const pathname = usePathname();
 
@@ -50,6 +53,7 @@ const BaseLayout = ({
           locationLabel={locationLabel}
           availability={availability}
           cvUrl={cvUrl}
+          name={name}
         />
       )}
       {/* Vertical section menu on the right edge — renders itself only on

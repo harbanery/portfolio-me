@@ -22,7 +22,13 @@ const ContactsPage = async () => {
   if (availability === "NOT_AVAILABLE") notFound();
 
   return (
-    <BaseLayout navbar={true} footer={true} cvUrl={data?.cv?.url}>
+    <BaseLayout
+      navbar={true}
+      footer={true}
+      cvUrl={data?.cv?.url}
+      name={data?.personal?.name}
+      availability={availability}
+    >
       {/* Viewport-height shell: navbar overlays (no flow height), the slim
           footer (~4.5rem) is subtracted so the page itself does not scroll
           on desktop. Content centers vertically; very short viewports fall

@@ -22,6 +22,10 @@ export interface Project {
   webLink?: string | null;
   /** Manual showcase position — smallest `order` renders first. */
   order?: number;
+  /** Completion date — drives the archive year; null while ongoing. */
+  endDate?: string | Date | null;
+  /** Record creation — archive year fallback (no start date column). */
+  createdAt?: string | Date | null;
 }
 
 /** Minimal project shape used by cards & carousels. */
