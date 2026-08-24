@@ -2,6 +2,8 @@
 
 import { StarsBackground } from "@/components/effects/bg-stars";
 import { ShootingStars } from "@/components/effects/shooting-stars";
+import { ArrowLeft, RotateCcw } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const RootError = ({
@@ -11,6 +13,8 @@ const RootError = ({
   error: Error & { digest?: string };
   reset: () => void;
 }) => {
+  const router = useRouter();
+
   useEffect(() => {
     if (error) {
       console.error({
@@ -23,28 +27,40 @@ const RootError = ({
   }, [error]);
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-linear-to-b from-slate-950 via-blue-950 to-indigo-950">
+    <div className="relative min-h-screen w-full overflow-hidden bg-black select-none">
       <div className="absolute inset-0 z-10">
         <StarsBackground className="pointer-events-none" />
         <ShootingStars className="pointer-events-none" />
       </div>
 
-      {/* Error Message — Tailwind keyframe animations (see index.css). */}
+      {/* Error message — same editorial heading + pill button language as
+          the rest of the site. Animations run on Tailwind keyframes (see
+          index.css). The raw error text stays in the console; the page only
+          surfaces the digest as a short reference. */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-50 text-center px-4 animate-[rise-in_2s_ease-out_1s_both]">
-        <h2 className="text-2xl md:text-4xl font-medium capitalize font-neue-haas text-white mb-6 animate-[pop-in_1s_cubic-bezier(0.34,1.56,0.64,1)_2s_both]">
-          Something Went Wrong
-        </h2>
-
-        <p className="text-lg md:text-xl font-neue-haas text-white/60 mb-8 max-w-md animate-[soft-fade_1s_ease-out_2.5s_both]">
-          {error?.message ?? "An unexpected error occurred"}. Please try again
-          later.
+        <p className="mb-6 font-martian-mono text-xs uppercase tracking-[0.25em] text-gray-500">
+          Error{error?.digest ? ` · ${error.digest}` : ""}
         </p>
 
-        <div className="animate-[soft-fade_1s_ease-out_3s_both] transition-transform duration-200 ease-out hover:scale-105 active:scale-95">
+        <h2 className="mb-6 font-inter font-extrabold text-white leading-[1.02] tracking-tight text-[clamp(2.25rem,6vw,3.25rem)] animate-[pop-in_1s_cubic-bezier(0.34,1.56,0.64,1)_2s_both]">
+          Something went wrong.
+        </h2>
+
+        <p className="mb-10 max-w-xl text-lg md:text-xl font-neue-haas font-light tracking-wider leading-relaxed text-gray-400 animate-[soft-fade_1s_ease-out_2.5s_both]">
+          An unexpected error occurred while loading this page. Please try again
+          — if the problem persists, come back later.
+        </p>
+
+        <div className="flex flex-wrap items-center justify-center gap-4 animate-[soft-fade_1s_ease-out_3s_both]">
           <button
             onClick={reset}
-            className="cursor-pointer bg-white text-black px-12 py-4 rounded-none font-neue-haas text-sm font-medium tracking-wider hover:bg-gray-200 transition-colors duration-300"
+            className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-martian-mono font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] hover:shadow-[0_8px_24px_-8px_rgba(222,184,135,0.55)] transition-[background-color,box-shadow] duration-300"
           >
+            <RotateCcw
+              size={16}
+              strokeWidth={3}
+              className="transition-transform duration-300 group-hover:-rotate-180"
+            />
             TRY AGAIN
           </button>
         </div>

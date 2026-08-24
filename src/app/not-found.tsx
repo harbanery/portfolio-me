@@ -3,12 +3,23 @@
 import { StarsBackground } from "@/components/effects/bg-stars";
 import { ShootingStars } from "@/components/effects/shooting-stars";
 import { NightOceanSimple } from "@/components/effects/night-ocean";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 const RootNotFound = () => {
   const router = useRouter();
+
+  /** Prefer the browser history; fall back home on a fresh tab. */
+  const goBack = () => {
+    if (globalThis.history.length > 2) {
+      router.back();
+    } else {
+      router.replace("/");
+    }
+  };
+
   return (
-    <div className="relative min-h-screen w-full overflow-hidden">
+    <div className="relative min-h-screen w-full overflow-hidden select-none">
       {/* Layer 1: Night Ocean Background */}
       <div className="absolute inset-0 z-0">
         <NightOceanSimple />
@@ -20,32 +31,36 @@ const RootNotFound = () => {
         <ShootingStars className="pointer-events-none" />
       </div>
 
-      {/* Layer 5: 404 Message — Tailwind keyframe animations (see
+      {/* 404 message — same editorial heading + pill button language as
+          the rest of the site. Animations run on Tailwind keyframes (see
           index.css). */}
       <div className="absolute inset-0 flex flex-col items-center justify-center z-50 text-center px-4 animate-[rise-in_2s_ease-out_1s_both]">
-        <h1 className="text-9xl md:text-8xl font-bold font-neue-haas text-white mb-4 animate-[pop-in_1s_cubic-bezier(0.34,1.56,0.64,1)_1.5s_both]">
-          404
-        </h1>
-
-        <h2 className="text-4xl font-light font-neue-haas text-white/80 mb-6 animate-[soft-fade_1s_ease-out_2s_both]">
-          Lost at Ocean
-        </h2>
-
-        <p className="text-lg md:text-xl font-neue-haas text-white/60 mb-8 max-w-md animate-[soft-fade_1s_ease-out_2.5s_both]">
-          The page you&apos;re looking for seems to have drifted away in the night.
+        <p className="mb-6 font-martian-mono text-xs uppercase tracking-[0.25em] text-gray-500">
+          Error 404
         </p>
 
-        <div className="animate-[soft-fade_1s_ease-out_3s_both] transition-transform duration-200 ease-out hover:scale-105 active:scale-95">
+        <h1 className="mb-6 font-inter font-extrabold text-white leading-[1.02] tracking-tight text-[clamp(2.75rem,7vw,4.5rem)] animate-[pop-in_1s_cubic-bezier(0.34,1.56,0.64,1)_1.5s_both]">
+          Lost in{" "}
+          <span className="bg-gradient-to-r from-cyan-700 via-blue-400 to-cyan-900 bg-[length:200%_auto] bg-clip-text text-transparent animate-ocean-text">
+            Ocean
+          </span>
+          .
+        </h1>
+
+        <p className="mb-10 max-w-xl text-lg md:text-xl font-neue-haas font-light tracking-wider leading-relaxed text-white/60 animate-[soft-fade_1s_ease-out_2.5s_both]">
+          The page you&apos;re looking for doesn&apos;t exist or may have
+          drifted elsewhere. Head back home and keep exploring from there.
+        </p>
+
+        <div className="flex flex-wrap items-center justify-center gap-4 animate-[soft-fade_1s_ease-out_3s_both]">
           <button
-            onClick={() => {
-              if (globalThis.history.length > 2) {
-                router.back();
-              } else {
-                router.replace("/");
-              }
-            }}
-            className="cursor-pointer bg-white text-black px-12 py-4 rounded-none font-neue-haas text-sm font-medium tracking-wider hover:bg-gray-200 transition-colors duration-300"
+            onClick={goBack}
+            className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full border border-white/20 px-8 py-4 text-sm font-martian-mono tracking-wider text-white hover:border-white/50 transition-colors duration-300"
           >
+            <ArrowLeft
+              size={16}
+              className="transition-transform duration-300 group-hover:-translate-x-1"
+            />
             GO BACK
           </button>
         </div>
