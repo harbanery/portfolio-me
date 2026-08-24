@@ -68,7 +68,7 @@ const HomeContactSection = ({
           <p
             data-aos="fade-up"
             data-aos-delay="150"
-            className="mt-6 text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed"
+            className="mt-6 text-base md:text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed"
           >
             I&apos;m always interested in hearing about new projects and
             opportunities. Whether you have a question or just want to say hi,
@@ -114,7 +114,7 @@ const HomeContactSection = ({
                   link URL exposed in the markup. */}
               <button
                 onClick={() => router.push("/contacts")}
-                className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-martian-mono font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] hover:shadow-[0_8px_24px_-8px_rgba(222,184,135,0.55)] transition-[background-color,box-shadow] duration-500"
+                className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-6 py-3 text-xs sm:px-7 sm:py-3.5 sm:text-sm md:px-8 md:py-4 font-martian-mono font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] hover:shadow-[0_8px_24px_-8px_rgba(222,184,135,0.55)] transition-[background-color,box-shadow] duration-500"
               >
                 LET&apos;S TALK
                 <ArrowRight

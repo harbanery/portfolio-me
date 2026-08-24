@@ -22,10 +22,15 @@ const ScrollToTop = () => {
 
     const sync = () => {
       const about = document.getElementById("about");
-      setVisible(
-        !!about &&
-          about.getBoundingClientRect().top <= window.innerHeight * 0.5,
-      );
+      if (about) {
+        // Home: appears once the About section (first after the hero) is
+        // in view, hides again on the hero itself.
+        setVisible(about.getBoundingClientRect().top <= window.innerHeight * 0.5);
+      } else {
+        // Every other page (projects, contacts, …) has no #about anchor —
+        // fall back to pure scroll depth so the button shows up there too.
+        setVisible(window.scrollY > 480);
+      }
     };
 
     const reveal = requestAnimationFrame(() => sync());

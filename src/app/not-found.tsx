@@ -48,7 +48,7 @@ const RootNotFound = () => {
         <div className="flex flex-wrap items-center justify-center gap-4 animate-[soft-fade_0.5s_ease-in-out_3s_both]">
           <button
             onClick={goBack}
-            className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full border border-white/20 px-8 py-4 text-sm font-martian-mono tracking-wider text-white hover:border-white/50 transition-colors duration-500"
+            className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full border border-white/20 px-6 py-3 text-xs sm:px-7 sm:py-3.5 sm:text-sm md:px-8 md:py-4 font-martian-mono tracking-wider text-white hover:border-white/50 transition-colors duration-500"
           >
             <ArrowLeft
               size={16}

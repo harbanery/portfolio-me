@@ -27,14 +27,24 @@ export type AvailabilityStatus =
   | "ONLY_FREELANCE"
   | "NOT_AVAILABLE";
 
-/** Badge text + color per availability value from the database. */
+/** Badge text + color per availability value from the database. `short`
+ *  is the phone-width label — the navbar pill is too narrow there for the
+ *  full sentence. */
 const AVAILABILITY_BADGE: Record<
   AvailabilityStatus,
-  { label: string; color: string }
+  { label: string; short: string; color: string }
 > = {
-  AVAILABLE: { label: "Available for work", color: "#2DD4BF" },
-  ONLY_FREELANCE: { label: "Available for freelance", color: "#DEB887" },
-  NOT_AVAILABLE: { label: "Busy", color: "#EF4444" },
+  AVAILABLE: {
+    label: "Available for work",
+    short: "Available",
+    color: "#2DD4BF",
+  },
+  ONLY_FREELANCE: {
+    label: "Available for freelance",
+    short: "Freelance",
+    color: "#DEB887",
+  },
+  NOT_AVAILABLE: { label: "Busy", short: "Busy", color: "#EF4444" },
 };
 
 /** City shown alternating with the primary one in the navbar location. */
@@ -158,7 +168,9 @@ const Navbar = ({
   }, []);
 
   const badge = AVAILABILITY_BADGE[availability ?? "AVAILABLE"];
-  const isHireable = (availability ?? "AVAILABLE") !== "NOT_AVAILABLE";
+  const isHireable =
+    (availability ?? "AVAILABLE") !== "NOT_AVAILABLE" &&
+    pathname !== "/contacts";
 
   // locationLabel looks like "Bogor, Indonesia" — the city swaps, the
   // country stays put.
@@ -219,9 +231,7 @@ const Navbar = ({
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = filename.endsWith(".pdf")
-        ? filename
-        : `${filename}.pdf`;
+      link.download = filename.endsWith(".pdf") ? filename : `${filename}.pdf`;
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -256,161 +266,202 @@ const Navbar = ({
           <div
             className={`flex items-center justify-between gap-4 h-14 md:h-16 my-3 md:my-4 rounded-full border px-4 md:px-6 transition-colors duration-500 ${barStyle}`}
           >
-          {/* Desktop: section links on other routes; on the home route the
+            {/* Desktop: section links on other routes; on the home route the
                 links live in the right-side vertical menu instead, and the
                 full hero status row (availability, location, local time)
                 moves in here. */}
-          <div className="hidden lg:flex items-center gap-6 xl:gap-8">
-            {isHome ? (
-              <>
-                <span className="flex items-center gap-2.5">
-                  <span className="relative flex h-2 w-2">
+            <div className="hidden lg:flex items-center gap-6 xl:gap-8">
+              {isHome ? (
+                <>
+                  <span className="flex items-center gap-2.5">
+                    <span className="relative flex h-2 w-2">
+                      <span
+                        className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
+                        style={{ backgroundColor: badge.color }}
+                      />
+                      <span
+                        className="relative inline-flex h-2 w-2 rounded-full"
+                        style={{ backgroundColor: badge.color }}
+                      />
+                    </span>
                     <span
-                      className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
-                      style={{ backgroundColor: badge.color }}
-                    />
-                    <span
-                      className="relative inline-flex h-2 w-2 rounded-full"
-                      style={{ backgroundColor: badge.color }}
-                    />
+                      className="text-[11px] uppercase tracking-[0.2em] font-martian-mono font-medium"
+                      style={{ color: badge.color }}
+                    >
+                      {badge.label}
+                    </span>
                   </span>
-                  <span
-                    className="text-[11px] uppercase tracking-[0.2em] font-martian-mono font-medium"
-                    style={{ color: badge.color }}
-                  >
-                    {badge.label}
-                  </span>
-                </span>
-                {locationLabel && (
-                  <>
-                    <span className="h-3 w-px bg-white/15" />
-                    <span className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] font-martian-mono font-medium text-gray-400">
-                      <MapPin size={12} className="text-[#DEB887]" />
-                      <div className="flex items-center gap-0">
-                        {/* Both cities share one grid cell: the container
+                  {locationLabel && (
+                    <>
+                      <span className="h-3 w-px bg-white/15" />
+                      <span className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] font-martian-mono font-medium text-gray-400">
+                        <MapPin size={12} className="text-[#DEB887]" />
+                        <div className="flex items-center gap-0">
+                          {/* Both cities share one grid cell: the container
                             keeps the widest city's width (no layout shift)
                             while the active one crossfades in with a slide.
                             Index 0 parks below, index 1 above, so each swap
                             moves as one coherent strip (ping-pong loop). */}
 
-                        <span className="relative inline-grid overflow-hidden">
-                          {cities.map((city, index) => {
-                            const isActive =
-                              cityIndex % cities.length === index;
-                            return (
-                              <span
-                                key={city}
-                                aria-hidden={!isActive}
-                                className="[grid-area:1/1] motion-safe:transition-[opacity,transform] motion-safe:duration-500 motion-safe:ease-in-out text-right"
-                                style={{
-                                  opacity: isActive ? 1 : 0,
-                                  transform: isActive
-                                    ? "translateY(0)"
-                                    : `translateY(${index === 0 ? 70 : -70}%)`,
-                                }}
-                              >
-                                {city}
-                              </span>
-                            );
-                          })}
-                        </span>
-                        {countryLabel && `, ${countryLabel}`}
-                      </div>
+                          <span className="relative inline-grid overflow-hidden">
+                            {cities.map((city, index) => {
+                              const isActive =
+                                cityIndex % cities.length === index;
+                              return (
+                                <span
+                                  key={city}
+                                  aria-hidden={!isActive}
+                                  className="[grid-area:1/1] motion-safe:transition-[opacity,transform] motion-safe:duration-500 motion-safe:ease-in-out text-right"
+                                  style={{
+                                    opacity: isActive ? 1 : 0,
+                                    transform: isActive
+                                      ? "translateY(0)"
+                                      : `translateY(${index === 0 ? 70 : -70}%)`,
+                                  }}
+                                >
+                                  {city}
+                                </span>
+                              );
+                            })}
+                          </span>
+                          {countryLabel && `, ${countryLabel}`}
+                        </div>
+                      </span>
+                    </>
+                  )}
+                  <span className="h-3 w-px bg-white/15" />
+                  <span
+                    className="text-[11px] uppercase tracking-[0.2em] font-martian-mono font-medium text-gray-400 tabular-nums"
+                    suppressHydrationWarning
+                  >
+                    {clock ?? "--:--:-- GMT+7"}
+                  </span>
+                </>
+              ) : (
+                <>
+                  {/* Brand — name with an availability dot, back to home. */}
+                  <button
+                    onClick={() => router.push("/")}
+                    className="group flex items-center gap-2.5"
+                  >
+                    <span className="relative flex h-2 w-2">
+                      <span
+                        className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
+                        style={{ backgroundColor: badge.color }}
+                      />
+                      <span
+                        className="relative inline-flex h-2 w-2 rounded-full"
+                        style={{ backgroundColor: badge.color }}
+                      />
                     </span>
-                  </>
-                )}
-                <span className="h-3 w-px bg-white/15" />
+                    <span className="text-[11px] cursor-pointer uppercase tracking-[0.2em] font-inter font-semibold text-white group-hover:text-[#DEB887] transition-colors duration-500">
+                      {name ?? "Raihan Yusuf"}
+                    </span>
+                  </button>
+                  <span className="h-3 w-px bg-white/15" />
+                  <span
+                    className="text-[11px] uppercase tracking-[0.2em] font-martian-mono font-medium text-gray-400 tabular-nums"
+                    suppressHydrationWarning
+                  >
+                    {clock ?? "--:--:-- GMT+7"}
+                  </span>
+                </>
+              )}
+            </div>
+
+            {/* Mobile/tablet status — replaces the old "Menu" spacer. Home
+              route: availability indicator (short label on phones, full
+              sentence on tablets, which also add the location). Other
+              routes: the profile name, clicking straight home. */}
+            <div className="flex min-w-0 items-center gap-2.5 lg:hidden">
+              <span className="relative flex h-2 w-2 shrink-0">
                 <span
-                  className="text-[11px] uppercase tracking-[0.2em] font-martian-mono font-medium text-gray-400 tabular-nums"
-                  suppressHydrationWarning
+                  className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
+                  style={{ backgroundColor: badge.color }}
+                />
+                <span
+                  className="relative inline-flex h-2 w-2 rounded-full"
+                  style={{ backgroundColor: badge.color }}
+                />
+              </span>
+              {isHome ? (
+                <span
+                  className="truncate font-martian-mono text-[10px] font-medium uppercase tracking-[0.18em]"
+                  style={{ color: badge.color }}
                 >
-                  {clock ?? "--:--:-- GMT+7"}
+                  <span className="md:hidden">{badge.short}</span>
+                  <span className="hidden md:inline">{badge.label}</span>
                 </span>
-              </>
-            ) : (
-              <>
-                {/* Brand — name with an availability dot, back to home. */}
+              ) : (
                 <button
                   onClick={() => router.push("/")}
-                  className="group flex items-center gap-2.5"
+                  className="cursor-pointer truncate font-martian-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-white transition-colors duration-500 hover:text-[#DEB887]"
                 >
-                  <span className="relative flex h-2 w-2">
-                    <span
-                      className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
-                      style={{ backgroundColor: badge.color }}
-                    />
-                    <span
-                      className="relative inline-flex h-2 w-2 rounded-full"
-                      style={{ backgroundColor: badge.color }}
-                    />
-                  </span>
-                  <span className="text-[11px] cursor-pointer uppercase tracking-[0.2em] font-inter font-semibold text-white group-hover:text-[#DEB887] transition-colors duration-500">
-                    {name ?? "Raihan Yusuf"}
-                  </span>
+                  {name ?? "Raihan Yusuf"}
                 </button>
-                <span className="h-3 w-px bg-white/15" />
-                <span
-                  className="text-[11px] uppercase tracking-[0.2em] font-martian-mono font-medium text-gray-400 tabular-nums"
-                  suppressHydrationWarning
-                >
-                  {clock ?? "--:--:-- GMT+7"}
+              )}
+              {/* Location — tablets only; the phone pill stays minimal. */}
+              {locationLabel && (
+                <span className="hidden min-w-0 items-center gap-1.5 font-martian-mono text-[10px] font-medium uppercase tracking-[0.18em] text-gray-400 md:flex">
+                  <span className="h-3 w-px bg-white/15" />
+                  <MapPin size={12} className="shrink-0 text-[#DEB887]" />
+                  <span className="truncate">
+                    {primaryCity}
+                    {countryLabel && `, ${countryLabel}`}
+                  </span>
                 </span>
-              </>
-            )}
-          </div>
+              )}
+            </div>
 
-          {/* Mobile title / spacer */}
-          <span className="lg:hidden text-[11px] uppercase tracking-[0.2em] font-martian-mono font-semibold text-white">
-            {isHome ? "Menu" : ""}
-          </span>
+            {/* Desktop actions */}
+            <div className="hidden lg:flex items-center gap-3 shrink-0">
+              {cvUrl && (
+                <button
+                  onClick={downloadCv}
+                  disabled={isDownloadingCv}
+                  className={`inline-flex items-center gap-1.5 rounded-full bg-[#DEB887]/15 border border-transparent px-4 py-2 text-[11px] uppercase tracking-[0.2em] font-martian-mono text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-500 ${
+                    isDownloadingCv
+                      ? "cursor-not-allowed opacity-70"
+                      : "cursor-pointer"
+                  }`}
+                >
+                  {isDownloadingCv ? "Loading" : "Resume"}
+                  {isDownloadingCv ? (
+                    <Loader2 size={13} className="animate-spin" />
+                  ) : (
+                    <Download size={13} />
+                  )}
+                </button>
+              )}
+              {isHireable && (
+                <button
+                  onClick={goToContacts}
+                  className="cursor-pointer rounded-full bg-white px-5 py-2 text-[11px] uppercase tracking-[0.2em] font-martian-mono font-semibold text-black hover:bg-gray-200 transition-colors duration-500"
+                >
+                  Hire Me
+                </button>
+              )}
+            </div>
 
-          {/* Desktop actions */}
-          <div className="hidden lg:flex items-center gap-3 shrink-0">
-            {cvUrl && (
+            {/* Mobile actions */}
+            <div className="lg:hidden flex items-center gap-2 shrink-0">
+              {isHireable && (
+                <button
+                  onClick={goToContacts}
+                  className="cursor-pointer rounded-full bg-white px-3.5 py-1.5 text-[9px] uppercase tracking-[0.2em] font-martian-mono font-semibold text-black"
+                >
+                  Hire Me
+                </button>
+              )}
               <button
-                onClick={downloadCv}
-                disabled={isDownloadingCv}
-                className={`inline-flex items-center gap-1.5 rounded-full bg-[#DEB887]/15 border border-transparent px-4 py-2 text-[11px] uppercase tracking-[0.2em] font-martian-mono text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-500 ${
-                  isDownloadingCv ? "cursor-not-allowed opacity-70" : "cursor-pointer"
-                }`}
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                aria-label="Toggle navigation menu"
+                aria-expanded={isMenuOpen}
+                className="text-white hover:text-gray-300 transition-colors"
               >
-                {isDownloadingCv ? "Loading" : "Resume"}
-                {isDownloadingCv ? (
-                  <Loader2 size={13} className="animate-spin" />
-                ) : (
-                  <Download size={13} />
-                )}
+                {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
               </button>
-            )}
-            {isHireable && (
-              <button
-                onClick={goToContacts}
-                className="cursor-pointer rounded-full bg-white px-5 py-2 text-[11px] uppercase tracking-[0.2em] font-martian-mono font-semibold text-black hover:bg-gray-200 transition-colors duration-500"
-              >
-                Hire Me
-              </button>
-            )}
-          </div>
-
-          {/* Mobile actions */}
-          <div className="lg:hidden flex items-center gap-2 shrink-0">
-            {isHireable && (
-              <button
-                onClick={goToContacts}
-                className="cursor-pointer rounded-full bg-white px-4 py-1.5 text-[10px] uppercase tracking-[0.2em] font-inter font-semibold text-black"
-              >
-                Hire Me
-              </button>
-            )}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              aria-label="Toggle navigation menu"
-              aria-expanded={isMenuOpen}
-              className="text-white hover:text-gray-300 transition-colors"
-            >
-              {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
-            </button>
-          </div>
+            </div>
           </div>
         </div>
       </div>
@@ -433,11 +484,13 @@ const Navbar = ({
             <button
               onClick={downloadCv}
               disabled={isDownloadingCv}
-              className={`mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#DEB887]/15 border border-transparent px-6 py-3 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-500 ${
-                isDownloadingCv ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+              className={`mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#DEB887]/15 border border-transparent px-6 py-3 text-[11px] uppercase tracking-[0.2em] font-martian-mono font-semibold text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-500 ${
+                isDownloadingCv
+                  ? "cursor-not-allowed opacity-70"
+                  : "cursor-pointer"
               }`}
             >
-              {isDownloadingCv ? "Loading" : "Download CV"}
+              {isDownloadingCv ? "Loading" : "Resume"}
               {isDownloadingCv ? (
                 <Loader2 size={14} className="animate-spin" />
               ) : (

@@ -50,7 +50,7 @@ const ProjectSection = ({ projects, totalCount }: ProjectSectionProps) => {
 
         <p
           data-aos="fade-up"
-          className="max-w-[60ch] text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed mb-16 md:mb-24"
+          className="max-w-[60ch] text-base md:text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed mb-16 md:mb-24"
         >
           Selected work, front to back. Each one shipped, measured, and still
           standing.
@@ -134,22 +134,23 @@ const ProjectSection = ({ projects, totalCount }: ProjectSectionProps) => {
 
                   {project.description && (
                     <div
-                      className="mt-3 text-sm text-gray-400 text-justify font-neue-haas font-light tracking-wider leading-relaxed line-clamp-3 paragraph-wrapper wrap-anywhere"
+                      className="mt-3 text-sm text-gray-400 text-justify font-neue-haas font-light tracking-wider leading-relaxed paragraph-wrapper wrap-anywhere lg:line-clamp-3"
                       dangerouslySetInnerHTML={{
                         __html: normalizeHtmlBody(project.description),
                       }}
                     />
                   )}
 
-                  {/* Skill tags — the site's pill component with icons. */}
-                  <div className="mt-5 flex flex-wrap gap-2">
+                  {/* Skill tags — the site's pill component with icons,
+                      sized like the capabilities grid pills. */}
+                  <div className="mt-5 flex flex-wrap gap-1.5 md:gap-2">
                     {project.skills.map((tech) => {
                       const Icon = logoMap[tech.toLowerCase()];
                       const techData = masterDataMap[tech.toLowerCase()];
                       return (
                         <span
                           key={tech}
-                          className="inline-flex items-center gap-2 rounded-full border border-white/13 px-3 py-1 text-xs text-gray-300 font-neue-haas"
+                          className="inline-flex items-center gap-1.5 md:gap-2 rounded-full border border-white/13 px-2 py-0.5 text-[10px] md:px-3 md:py-1 md:text-xs text-gray-300 font-neue-haas"
                         >
                           {Icon && <Icon className="h-3.5 w-3.5" />}
                           {techData?.name || tech}
@@ -206,7 +207,7 @@ const ProjectSection = ({ projects, totalCount }: ProjectSectionProps) => {
           <div data-aos="fade-up" className="mt-16 flex justify-center">
             <button
               onClick={() => router.push("/projects")}
-              className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 px-8 py-4 text-sm font-martian-mono tracking-wider text-white hover:border-white/50 transition-colors duration-500"
+              className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-xs sm:px-7 sm:py-3.5 sm:text-sm md:px-8 md:py-4 font-martian-mono tracking-wider text-white hover:border-white/50 transition-colors duration-500"
             >
               CLICK FOR ALL PROJECTS
               <ArrowRight

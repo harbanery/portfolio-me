@@ -110,7 +110,7 @@ const HeroSection = ({
                   No paragraph-wrapper here on purpose: it underlines spans. */}
               <div data-aos="fade-up" data-aos-delay="300" className="mt-8">
                 <p
-                  className="text-lg md:text-xl text-gray-400 font-neue-haas text-balance tracking-wide leading-relaxed [&_span]:font-medium [&_span]:italic [&_span]:text-[#DEB887] [&_strong]:font-medium [&_strong]:text-white"
+                  className="text-base sm:text-lg md:text-xl text-gray-400 font-neue-haas text-balance tracking-wide leading-relaxed [&_span]:font-medium [&_span]:italic [&_span]:text-[#DEB887] [&_strong]:font-medium [&_strong]:text-white"
                   dangerouslySetInnerHTML={{ __html: lead ?? DEFAULT_LEAD }}
                 />
               </div>
@@ -133,10 +133,10 @@ const HeroSection = ({
               >
                 <button
                   onClick={() => scrollTo("contact")}
-                  className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-martian-mono font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] hover:shadow-[0_8px_24px_-8px_rgba(222,184,135,0.55)] transition-[background-color,box-shadow] duration-500"
+                  className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-6 py-3 text-xs sm:px-7 sm:py-3.5 sm:text-sm md:px-8 md:py-4 font-martian-mono font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] hover:shadow-[0_8px_24px_-8px_rgba(222,184,135,0.55)] transition-[background-color,box-shadow] duration-500"
                 >
                   <MessageSquare
-                    size={16}
+                    size={15}
                     strokeWidth={3}
                     className="transition-transform duration-500 group-hover:-translate-x-1 group-hover:-translate-y-1 group-hover:-rotate-45"
                   />
@@ -144,11 +144,11 @@ const HeroSection = ({
                 </button>
                 <button
                   onClick={() => scrollTo("projects")}
-                  className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full border border-white/20 px-8 py-4 text-sm font-martian-mono tracking-wider text-white hover:border-white/50 transition-colors duration-500"
+                  className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full border border-white/20 px-6 py-3 text-xs sm:px-7 sm:py-3.5 sm:text-sm md:px-8 md:py-4 font-martian-mono tracking-wider text-white hover:border-white/50 transition-colors duration-500"
                 >
                   VIEW PROJECTS
                   <ArrowRight
-                    size={16}
+                    size={15}
                     className="transition-transform duration-500 group-hover:translate-x-1"
                   />
                 </button>

@@ -94,7 +94,7 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
 
         <p
           data-aos="fade-up"
-          className="max-w-[60ch] text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed mb-10"
+          className="max-w-[60ch] text-base md:text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed mb-10"
         >
           Training, competencies, and certifications behind the practice.
         </p>
@@ -159,7 +159,7 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
               "data-aos": "fade-up",
               "data-aos-delay": `${((index % 3) + 1) * 75}`,
               className:
-                "group grid md:grid-cols-[10rem_1fr_auto] gap-3 md:gap-8 items-baseline border-t border-white/10 py-6 first:border-t-0 first:pt-0",
+                "group grid md:grid-cols-[10rem_1fr_auto] gap-3 md:gap-8 items-baseline border-t border-white/10 py-6 first:border-t-0 first:pt-0 transition-colors duration-500 hover:bg-white/[0.02] max-lg:active:bg-white/[0.04] max-lg:focus-visible:bg-white/[0.04]",
             } as const;
 
             return credential.url ? (

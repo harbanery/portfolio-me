@@ -150,9 +150,9 @@ const ContactsDetailSection = ({
               transition lives on the card itself. On hover the border
               lights up gold with a soft matching glow. */}
           <div data-aos="fade-up">
-            <div className="space-y-5 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7 transition-[border-color,box-shadow] duration-500 ease-in-out hover:border-[#DEB887] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]">
+            <div className="space-y-5 rounded-2xl border border-white/10 bg-white/[0.02] p-5 md:p-7 transition-[border-color,box-shadow] duration-500 ease-in-out hover:border-[#DEB887] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)] max-lg:active:border-[#DEB887] max-lg:active:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]">
             {availabilityLine(availability) && (
-              <p className="flex items-center gap-2 text-sm font-martian-mono uppercase tracking-[0.2em] text-[#2DD4BF]">
+              <p className="flex items-center gap-2 text-xs md:text-sm font-martian-mono uppercase tracking-[0.2em] text-[#2DD4BF]">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#2DD4BF] opacity-60" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-[#2DD4BF]" />
@@ -161,7 +161,7 @@ const ContactsDetailSection = ({
               </p>
             )}
 
-            <p className="max-w-[46ch] text-base md:text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed">
+            <p className="max-w-[46ch] text-sm md:text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed">
               I&apos;m open to opportunities anywhere, remote or on-site. I
               reply during working hours (9–6 GMT+7), and promptly outside them
               for anything urgent.
@@ -258,7 +258,7 @@ const ContactsDetailSection = ({
                 <button
                   type="button"
                   disabled
-                  className="inline-flex cursor-not-allowed items-center gap-2 rounded-full bg-green-600 px-8 py-3 text-sm font-martian-mono font-semibold tracking-wider text-white"
+                  className="inline-flex cursor-not-allowed items-center gap-2 rounded-full bg-green-600 px-6 py-2.5 text-xs md:px-8 md:py-3 md:text-sm font-martian-mono font-semibold tracking-wider text-white"
                 >
                   SENT
                   <Check
@@ -271,7 +271,7 @@ const ContactsDetailSection = ({
                 <button
                   type="submit"
                   disabled={status === "loading"}
-                  className={`group inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-martian-mono font-semibold tracking-wider transition-colors duration-500 ${
+                  className={`group inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-xs md:px-8 md:py-3 md:text-sm font-martian-mono font-semibold tracking-wider transition-colors duration-500 ${
                     status === "loading"
                       ? "cursor-not-allowed bg-gray-300 text-gray-600"
                       : "cursor-pointer bg-white text-black hover:bg-gray-200"

@@ -122,7 +122,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
 
         <p
           data-aos="fade-up"
-          className="max-w-[60ch] text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed mb-14 md:mb-20"
+          className="max-w-[60ch] text-base md:text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed mb-14 md:mb-20"
         >
           Grouped by what it is actually used for. Everything here has shipped
           to production or to a client deliverable.
@@ -130,7 +130,8 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
 
         {/* One card per category — single column on phones, the fixed
             two-column grid from sm up; on hover the border lights up gold
-            with a soft matching glow. */}
+            with a soft matching glow (pressed/focused too on touch
+            devices, where hover is unreliable). */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-6">
           {groups.map((group, index) => (
             <div
@@ -138,7 +139,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
               data-aos="fade-up"
               data-aos-delay={`${(index + 1) * 100}`}
             >
-              <div className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-4 md:p-6 transition-[border-color,background-color,box-shadow] duration-500 ease-in-out hover:border-[#DEB887] hover:bg-[#DEB887]/[0.04] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]">
+              <div className="flex h-full flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-4 md:p-6 transition-[border-color,background-color,box-shadow] duration-500 ease-in-out hover:border-[#DEB887] hover:bg-[#DEB887]/[0.04] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)] max-lg:active:border-[#DEB887] max-lg:active:bg-[#DEB887]/[0.04] max-lg:active:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)] max-lg:focus-visible:border-[#DEB887]">
               <h3 className="text-sm md:text-lg font-inter font-semibold text-white mb-0.5 md:mb-1">
                 {group.title}
               </h3>

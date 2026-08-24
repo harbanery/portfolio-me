@@ -51,7 +51,7 @@ const RootError = ({
         <div className="flex flex-wrap items-center justify-center gap-4 animate-[soft-fade_0.5s_ease-in-out_3s_both]">
           <button
             onClick={reset}
-            className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-martian-mono font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] hover:shadow-[0_8px_24px_-8px_rgba(222,184,135,0.55)] transition-[background-color,box-shadow] duration-500"
+            className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-6 py-3 text-xs sm:px-7 sm:py-3.5 sm:text-sm md:px-8 md:py-4 font-martian-mono font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] hover:shadow-[0_8px_24px_-8px_rgba(222,184,135,0.55)] transition-[background-color,box-shadow] duration-500"
           >
             <RotateCcw
               size={16}
