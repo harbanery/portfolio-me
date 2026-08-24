@@ -59,11 +59,10 @@ const ProjectSection = ({ projects, totalCount }: ProjectSectionProps) => {
             const repoUrl = project.repoLinks[0];
 
             return (
-              <article
-                key={project.id}
-                data-aos={flipped ? "fade-left" : "fade-right"}
-                className="group grid items-center gap-6 md:grid-cols-12 md:gap-0"
-              >
+              <article key={project.id} data-aos={flipped ? "fade-left" : "fade-right"}>
+                {/* AOS animates the article; the Tailwind group/hover
+                    lives on the inner grid so transitions keep working. */}
+                <div className="group grid items-center gap-6 md:grid-cols-12 md:gap-0">
                 {/* Screenshot — under the content panel, gradient washing
                     toward the panel side on desktop. Rests in black &
                     white, coloring up on hover. Presentation only: no
@@ -181,6 +180,7 @@ const ProjectSection = ({ projects, totalCount }: ProjectSectionProps) => {
                       </a>
                     )}
                   </div>
+                </div>
                 </div>
               </article>
             );

@@ -155,7 +155,9 @@ const HeroSection = ({
               </div>
             </div>
 
-            {/* Right: stats */}
+            {/* Right: stats — the count starts after this block's AOS
+                reveal finishes (delay 450 + duration 500), plus the intro
+                splash time so the numbers are never counted behind it. */}
             <div
               data-aos="fade-left"
               data-aos-delay="450"
@@ -168,7 +170,11 @@ const HeroSection = ({
                     className="group py-6 first:pt-7 last:pb-7 transition-colors"
                   >
                     <dt className="font-inter text-3xl font-bold tracking-tight text-white transition-colors group-hover:text-[#DEB887]">
-                      <CountUp to={Number(stat.value)} fallback={stat.value} />
+                      <CountUp
+                        to={Number(stat.value)}
+                        fallback={stat.value}
+                        delay={showIntro ? 5 : 0}
+                      />
                     </dt>
                     <dd className="mt-2 text-[10px] font-martian-mono uppercase tracking-[0.25em] text-gray-500">
                       {stat.label}

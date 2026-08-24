@@ -200,10 +200,12 @@ const Navbar = ({
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ease-in-out ${animShowNavbar}`}
     >
       <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
-        <div
-          data-aos={mounted && isFixed ? "fade-down" : "fade-zoom-in"}
-          className={`flex items-center justify-between gap-4 h-14 md:h-16 my-3 md:my-4 rounded-full border px-4 md:px-6 transition-colors duration-500 ${barStyle}`}
-        >
+        {/* AOS animates the wrapper; the Tailwind bar transition lives on
+            the inner pill so the two never conflict. */}
+        <div data-aos={mounted && isFixed ? "fade-down" : "fade-zoom-in"}>
+          <div
+            className={`flex items-center justify-between gap-4 h-14 md:h-16 my-3 md:my-4 rounded-full border px-4 md:px-6 transition-colors duration-500 ${barStyle}`}
+          >
           {/* Desktop: section links on other routes; on the home route the
                 links live in the right-side vertical menu instead, and the
                 full hero status row (availability, location, local time)
@@ -352,6 +354,7 @@ const Navbar = ({
             >
               {isMenuOpen ? <X size={22} /> : <Menu size={22} />}
             </button>
+          </div>
           </div>
         </div>
       </div>

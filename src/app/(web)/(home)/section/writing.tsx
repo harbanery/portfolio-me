@@ -95,27 +95,25 @@ const WritingSection = ({ items }: WritingSectionProps) => (
             </>
           );
 
-          return post.url ? (
-            <a
-              key={post.title}
-              href={post.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-aos="fade-up"
-              data-aos-delay={`${(index + 1) * 100}`}
-              className={CARD_CLASS}
-            >
-              {card}
-            </a>
-          ) : (
-            <article
+          return (
+            <div
               key={post.title}
               data-aos="fade-up"
               data-aos-delay={`${(index + 1) * 100}`}
-              className={CARD_CLASS}
             >
-              {card}
-            </article>
+              {post.url ? (
+                <a
+                  href={post.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`${CARD_CLASS} h-full`}
+                >
+                  {card}
+                </a>
+              ) : (
+                <article className={`${CARD_CLASS} h-full`}>{card}</article>
+              )}
+            </div>
           );
         })}
       </div>

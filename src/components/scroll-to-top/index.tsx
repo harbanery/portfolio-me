@@ -67,7 +67,7 @@ const ScrollToTop = () => {
       />
       {/* Always-visible label — hidden only on the smallest screens so the
           pill stays compact. */}
-      <span className="hidden text-[10px] tracking-[0.2em] font-martian-mono text-nowrap sm:inline">
+      <span className="hidden uppercase text-[10px] tracking-[0.2em] font-martian-mono text-nowrap sm:inline">
         scroll to top
       </span>
     </button>
