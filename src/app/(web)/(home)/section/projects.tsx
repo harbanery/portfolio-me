@@ -10,6 +10,8 @@ import type { Project } from "@/models/project";
 
 interface ProjectSectionProps {
   projects: Project[];
+  /** Total ACTIVE projects from the database — drives the heading count. */
+  totalCount?: number;
 }
 
 /** Featured projects shown on the home page. */
@@ -22,19 +24,22 @@ const FEATURED_COUNT = 4;
  * links (repo / live site). The skill list keeps the site's tag pills
  * with icons.
  */
-const ProjectSection = ({ projects }: ProjectSectionProps) => {
+const ProjectSection = ({ projects, totalCount }: ProjectSectionProps) => {
   const router = useRouter();
 
   if (projects.length === 0) return null;
 
   const featured = projects.slice(0, FEATURED_COUNT);
+  // The heading count reflects every ACTIVE project in the database, not
+  // just the showcaseable/featured subset rendered below.
+  const count = totalCount ?? projects.length;
 
   return (
     <section id="projects" className="relative bg-black py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
         <SectionHeading
           label="Work"
-          meta={`${projects.length} PROJECTS`}
+          meta={`${count} PROJECTS`}
           lineOne="What shipped,"
           lineTwo="and what it moved."
         />
@@ -91,9 +96,10 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
                   />
                 </div>
 
-                {/* Content panel — overlaps the screenshot, elevated. */}
+                {/* Content panel — overlaps the screenshot, elevated. On
+                    hover the border lights up gold with a soft glow. */}
                 <div
-                  className={`relative z-10 rounded-lg border border-white/10 bg-[#0a0a0a] p-6 shadow-[0_10px_35px_-15px_rgba(0,0,0,0.9)] transition-colors duration-500 group-hover:border-[#DEB887]/40 md:col-span-7 md:p-7 ${
+                  className={`relative z-10 rounded-lg border border-white/10 bg-[#0a0a0a] p-6 shadow-[0_10px_35px_-15px_rgba(0,0,0,0.9)] transition-[border-color,box-shadow] duration-500 group-hover:border-[#DEB887] group-hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)] md:col-span-7 md:p-7 ${
                     flipped
                       ? "md:col-start-1 md:row-start-1 md:mr-8"
                       : "md:col-start-6 md:row-start-1 md:ml-8"
@@ -180,7 +186,7 @@ const ProjectSection = ({ projects }: ProjectSectionProps) => {
           })}
         </div>
 
-        {projects.length > FEATURED_COUNT && (
+        {count > FEATURED_COUNT && (
           <div data-aos="fade-up" className="mt-16 flex justify-center">
             <button
               onClick={() => router.push("/projects")}

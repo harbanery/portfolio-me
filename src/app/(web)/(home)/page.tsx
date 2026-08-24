@@ -68,7 +68,12 @@ const HomePage = async () => {
           education={data?.education || []}
         />
         <ExperienceSection experiences={data?.experiences || []} />
-        <ProjectSection projects={data?.projects || []} />
+        {/* The heading count covers every ACTIVE project; the grid still
+            renders the showcaseable subset. */}
+        <ProjectSection
+          projects={data?.projects || []}
+          totalCount={data?.allProjects.length ?? 0}
+        />
         <SkillsSection skills={data?.skills || []} />
         {/* Hidden for now — kept in the tree to be re-enabled later. */}
         {/* <OpenSourceSection /> */}

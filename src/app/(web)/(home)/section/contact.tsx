@@ -16,7 +16,7 @@ interface Contact {
 interface HomeContactSectionProps {
   /** Raw `contacts` JSON column from Prisma. */
   contacts?: unknown;
-  /** Drives the "Let's Touch" button visibility. */
+  /** Drives the "Let's Talk" button visibility. */
   availability?: AvailabilityStatus | null;
 }
 
@@ -28,7 +28,7 @@ const isContact = (value: unknown): value is Contact =>
 
 /**
  * Home contact teaser: "Get In Touch" title, a short subtitle, the contact
- * channel icons, and a "Let's Touch" button into the dedicated /contacts
+ * channel icons, and a "Let's Talk" button into the dedicated /contacts
  * page (hidden while the profile is not available).
  */
 const HomeContactSection = ({
@@ -114,9 +114,9 @@ const HomeContactSection = ({
                   link URL exposed in the markup. */}
               <button
                 onClick={() => router.push("/contacts")}
-                className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-martian-mono font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] transition-colors duration-300"
+                className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-martian-mono font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] hover:shadow-[0_8px_24px_-8px_rgba(222,184,135,0.55)] transition-[background-color,box-shadow] duration-300"
               >
-                LET&apos;S TOUCH
+                LET&apos;S TALK
                 <ArrowRight
                   size={16}
                   strokeWidth={3}

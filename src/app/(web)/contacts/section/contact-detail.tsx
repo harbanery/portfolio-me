@@ -2,7 +2,6 @@
 
 import { useState, type FormEvent } from "react";
 import {
-  ArrowRight,
   Check,
   Loader2,
   MapPin,
@@ -147,10 +146,11 @@ const ContactsDetailSection = ({
         />
 
         <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
-          {/* Profile card — availability, description, channels, location */}
+          {/* Profile card — availability, description, channels, location.
+              On hover the border lights up gold with a soft matching glow. */}
           <div
             data-aos="fade-up"
-            className="space-y-5 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7 transition-[border-color] duration-500 ease-out hover:border-[#DEB887]/60"
+            className="space-y-5 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7 transition-[border-color,box-shadow] duration-500 ease-out hover:border-[#DEB887] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]"
           >
             {availabilityLine(availability) && (
               <p className="flex items-center gap-2 text-sm font-martian-mono uppercase tracking-[0.2em] text-[#2DD4BF]">

@@ -1,9 +1,14 @@
-"use client";
-
-import { motion } from "framer-motion";
+/**
+ * Night ocean backdrop — layered SVG waves drifting sideways, animated
+ * with plain CSS keyframes (`wave-drift` / `wave-fade-in` in the global
+ * stylesheet) instead of a motion library. No hooks, no client bundle:
+ * safe to render from server or client components.
+ */
 
 interface WaveProps {
+  /** Seconds for one full drift across the viewport. */
   duration: number;
+  /** Final layer opacity once the fade-in settles. */
   opacity: number;
   color: string;
   scale: number;
@@ -18,24 +23,18 @@ const Wave: React.FC<WaveProps> = ({
   delay = 0,
 }) => {
   return (
-    <motion.div
-      className="absolute bottom-0 left-0 w-full h-full"
-      initial={{ opacity: 0 }}
-      animate={{ opacity }}
-      transition={{ duration: 2, delay }}
+    <div
+      className="absolute bottom-0 left-0 w-full h-full animate-[wave-fade-in_2s_ease-out_both]"
+      style={
+        {
+          "--wave-opacity": opacity,
+          animationDelay: `${delay}s`,
+        } as React.CSSProperties
+      }
     >
-      <motion.div
-        className="absolute bottom-0 left-0 w-[200%] h-full"
-        animate={{
-          x: ["0%", "-50%"],
-        }}
-        transition={{
-          duration,
-          ease: "linear",
-          repeat: Infinity,
-          delay,
-        }}
-        style={{ transformOrigin: "center" }}
+      <div
+        className="absolute bottom-0 left-0 w-[200%] h-full animate-[wave-drift_linear_infinite]"
+        style={{ animationDuration: `${duration}s`, animationDelay: `${delay}s` }}
       >
         <svg
           viewBox="0 0 1920 1080"
@@ -68,8 +67,8 @@ const Wave: React.FC<WaveProps> = ({
             transform="translate(1920, 0)"
           />
         </svg>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -100,16 +99,17 @@ export const NightOceanSimple: React.FC = () => {
       <Wave duration={7} opacity={0.6} color="#075985" scale={1} delay={1} />
 
       {/* Subtle fog layer */}
-      <motion.div
-        className="absolute bottom-0 left-0 right-0 h-64 pointer-events-none"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 0.05 }}
-        transition={{ duration: 4, delay: 1 }}
-        style={{
-          background:
-            "linear-gradient(to top, rgba(255, 255, 255, 0.1), transparent)",
-          filter: "blur(40px)",
-        }}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-64 pointer-events-none animate-[wave-fade-in_4s_ease-out_both]"
+        style={
+          {
+            "--wave-opacity": 0.05,
+            animationDelay: "1s",
+            background:
+              "linear-gradient(to top, rgba(255, 255, 255, 0.1), transparent)",
+            filter: "blur(40px)",
+          } as React.CSSProperties
+        }
       />
     </div>
   );

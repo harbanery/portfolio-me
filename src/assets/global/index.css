@@ -199,6 +199,73 @@ body {
 }
 
 /*
+ * Tailwind-only animations (replacing framer-motion). Used via arbitrary
+ * values, e.g. `animate-[rise-in_2s_ease-out_1s_both]`.
+ */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Spring-ish entrance — slight overshoot via the cubic-bezier. */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Plain opacity fade for delayed reveals. */
+@keyframes soft-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Black cover dissolving once a page settles (error / 404). */
+@keyframes fade-out-overlay {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Night-ocean waves drifting sideways forever. */
+@keyframes wave-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Night-ocean layers easing in to their final opacity. */
+@keyframes wave-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: var(--wave-opacity, 1);
+  }
+}
+
+/*
  * Rich-text body styling for About & Experience HTML columns.
  * - each paragraph gets vertical spacing
  * - strong/em emphasis renders truly bold against the light body weight

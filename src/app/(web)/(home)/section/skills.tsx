@@ -128,14 +128,15 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
         </p>
 
         {/* One card per category — fixed two-column grid at every
-            breakpoint; the border warms up smoothly on hover. */}
+            breakpoint; on hover the border lights up gold with a soft
+            matching glow. */}
         <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6">
           {groups.map((group, index) => (
             <div
               key={group.title}
               data-aos="fade-up"
               data-aos-delay={`${(index + 1) * 100}`}
-              className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-4 md:p-6 transition-[border-color,background-color] duration-500 ease-out hover:border-[#DEB887]/60 hover:bg-[#DEB887]/[0.04]"
+              className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-4 md:p-6 transition-[border-color,background-color,box-shadow] duration-500 ease-out hover:border-[#DEB887] hover:bg-[#DEB887]/[0.04] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]"
             >
               <h3 className="text-sm md:text-lg font-inter font-semibold text-white mb-0.5 md:mb-1">
                 {group.title}

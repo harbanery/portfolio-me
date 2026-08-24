@@ -12,9 +12,10 @@ const capitalize = (value: string) =>
 /** Authors listed by name before the count badge kicks in. */
 const NAMED_AUTHORS = 3;
 
-/** Shared card surface — matches the capabilities and about cards. */
+/** Shared card surface — matches the capabilities and about cards. On
+ *  hover the border lights up gold with a soft matching glow. */
 const CARD_CLASS =
-  "group flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-[border-color,background-color] duration-500 ease-out hover:border-[#DEB887]/60 hover:bg-[#DEB887]/[0.04]";
+  "group flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-[border-color,background-color,box-shadow] duration-500 ease-out hover:border-[#DEB887] hover:bg-[#DEB887]/[0.04] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]";
 
 /** Co-author line: "with A, B, C +N" — the +N badge pops the remaining
  *  names on hover (pure CSS, no JS needed). Nothing renders without

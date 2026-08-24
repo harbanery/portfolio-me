@@ -132,7 +132,7 @@ const HeroSection = ({
               >
                 <button
                   onClick={() => scrollTo("contact")}
-                  className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-martian-mono font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] transition-colors duration-300"
+                  className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-martian-mono font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] hover:shadow-[0_8px_24px_-8px_rgba(222,184,135,0.55)] transition-[background-color,box-shadow] duration-300"
                 >
                   <MessageSquare
                     size={16}

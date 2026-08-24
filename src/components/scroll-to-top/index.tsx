@@ -7,7 +7,8 @@ import { ArrowUp } from "lucide-react";
 /**
  * Scroll-to-top button pinned to the left edge of the viewport.
  * Appears once the About section (the first section after the hero) is in
- * view, and hides again on the hero itself.
+ * view, and hides again on the hero itself. The "scroll to top" label is
+ * always shown — no hover needed to reveal it.
  */
 
 const ScrollToTop = () => {
@@ -64,10 +65,10 @@ const ScrollToTop = () => {
         size={18}
         className="transition-transform duration-300 group-hover:-translate-y-0.5"
       />
-      {/* Short label — expands out on hover, hidden on the smallest
-          screens so the pill stays compact. */}
-      <span className="hidden max-w-0 overflow-hidden text-[10px] uppercase tracking-[0.2em] font-martian-mono text-nowrap opacity-0 transition-[max-width,opacity] duration-300 group-hover:max-w-[8rem] group-hover:opacity-100 sm:inline">
-        Back to top
+      {/* Always-visible label — hidden only on the smallest screens so the
+          pill stays compact. */}
+      <span className="hidden text-[10px] tracking-[0.2em] font-martian-mono text-nowrap sm:inline">
+        scroll to top
       </span>
     </button>
   );

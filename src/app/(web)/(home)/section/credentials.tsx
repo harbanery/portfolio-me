@@ -95,7 +95,7 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
           data-aos="fade-up"
           className="max-w-[60ch] text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed mb-10"
         >
-          Trainings, competencies, and certifications behind the practice.
+          Training, competencies, and certifications behind the practice.
         </p>
 
         {/* Filters */}

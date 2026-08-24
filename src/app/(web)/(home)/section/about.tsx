@@ -111,16 +111,17 @@ const AboutSection = ({
             ) : (
               <p className="max-w-[60ch] text-lg text-gray-400 font-neue-haas font-light leading-relaxed">
                 A longer profile is on its way. In the meantime: I take systems
-                nobody had modelled and make them answerable.
+                nobody had modeled and make them answerable.
               </p>
             )}
           </div>
 
-          {/* Info card */}
+          {/* Info card — on hover the border lights up gold with a soft
+              matching glow. */}
           <aside
             data-aos="fade-left"
             data-aos-delay="150"
-            className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7 transition-[border-color] duration-500 ease-out hover:border-[#DEB887]/60"
+            className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7 transition-[border-color,box-shadow] duration-500 ease-out hover:border-[#DEB887] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]"
           >
             {/* Focusing on — priority skills from the database. Icon-only
                 pills with a transparent border; hovering a pill expands

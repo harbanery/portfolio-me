@@ -8,6 +8,7 @@ import {
   NODE_ENV,
 } from "@/config/variables";
 import { VercelCompatibleComponents } from "@/components/vercel";
+import DevelopmentBanner from "@/components/development-banner";
 import { inter, martianMono } from "@/utils/fonts/next-google";
 import { neueHaasDisplay } from "@/utils/fonts/next-local";
 
@@ -115,11 +116,7 @@ export default function RootLayout({
       <body
         className={`${neueHaasDisplay.variable} ${inter.variable} ${martianMono.variable} antialiased ${NODE_ENV === "development" ? "relative" : ""}`}
       >
-        {NODE_ENV === "development" && (
-          <div className="font-inter fixed top-10 -left-12 z-99999 text-white px-10! py-1 bg-red-600 -rotate-45">
-            DEVELOPMENT
-          </div>
-        )}
+        <DevelopmentBanner />
         {children}
         <VercelCompatibleComponents.Analytics />
         <VercelCompatibleComponents.SpeedInsights />
