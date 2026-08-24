@@ -4,6 +4,12 @@ import BaseLayout from "@/components/layout";
 import ContactsDetailSection from "./section/contact-detail";
 import { getContactsData } from "@/server/actions";
 
+/**
+ * ISR (see the home page for details) — 60-second background
+ * revalidation keeps availability/contact data in sync with the database.
+ */
+export const revalidate = 60;
+
 export const metadata: Metadata = {
   title: "Contacts",
   description:

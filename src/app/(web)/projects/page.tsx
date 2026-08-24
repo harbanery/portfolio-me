@@ -2,6 +2,12 @@ import BaseLayout from "@/components/layout";
 import ListProjectSection from "./section/list";
 import { getProjectsData } from "@/server/actions";
 
+/**
+ * ISR (see the home page for details) — 60-second background
+ * revalidation keeps the archive in sync with the database.
+ */
+export const revalidate = 60;
+
 const ProjectsPage = async () => {
   // Fetch projects from database
   const { data } = await getProjectsData();

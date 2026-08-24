@@ -14,6 +14,13 @@ import WritingSection from "./section/writing";
 import HomeContactSection from "./section/contact";
 import SkillsMarqueeSection from "./section/skills-marquee";
 
+/**
+ * ISR: pages are prerendered statically and revalidated in the background
+ * at most every 60 seconds, so database edits appear on the site within a
+ * minute — no redeploy and no external webhook needed (DB-only refresh).
+ */
+export const revalidate = 60;
+
 const HomePage = async () => {
   const [{ data }, hero, credentials, publications] = await Promise.all([
     getHomeData(),
