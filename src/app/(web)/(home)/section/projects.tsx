@@ -209,7 +209,7 @@ const ProjectSection = ({ projects, totalCount }: ProjectSectionProps) => {
               onClick={() => router.push("/projects")}
               className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-xs sm:px-7 sm:py-3.5 sm:text-sm md:px-8 md:py-4 font-martian-mono tracking-wider text-white hover:border-white/50 transition-colors duration-500"
             >
-              CLICK FOR ALL PROJECTS
+              VIEW ALL PROJECTS
               <ArrowRight
                 size={16}
                 className="transition-transform duration-500 group-hover:translate-x-1"

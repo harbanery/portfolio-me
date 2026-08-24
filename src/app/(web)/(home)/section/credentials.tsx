@@ -155,7 +155,6 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
             );
 
             const shared = {
-              key: `${credential.title}-${credential.year}`,
               "data-aos": "fade-up",
               "data-aos-delay": `${((index % 3) + 1) * 75}`,
               className:
@@ -164,6 +163,7 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
 
             return credential.url ? (
               <a
+                key={`${credential.title}-${credential.year}`}
                 {...shared}
                 href={credential.url}
                 target="_blank"
@@ -172,7 +172,9 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
                 {content}
               </a>
             ) : (
-              <article {...shared}>{content}</article>
+              <article key={`${credential.title}-${credential.year}`} {...shared}>
+                {content}
+              </article>
             );
           })}
         </div>

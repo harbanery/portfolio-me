@@ -26,7 +26,7 @@ const REPOS = [
   {
     name: "shift-schedule",
     description:
-      "Automated shift schedule generation using a genetic algorithm for optimisation.",
+      "Automated shift schedule generation using a genetic algorithm for optimization.",
     language: "Python",
     year: "2024",
     stars: 1,
