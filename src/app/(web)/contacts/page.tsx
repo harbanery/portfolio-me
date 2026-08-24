@@ -30,11 +30,12 @@ const ContactsPage = async () => {
       name={data?.personal?.name}
       availability={availability}
     >
-      {/* Viewport-height shell: navbar overlays (no flow height), the slim
-          footer (~4.5rem) is subtracted so the page itself does not scroll
-          on desktop. Content centers vertically; very short viewports fall
-          back to internal scrolling via min-h. */}
-      <div className="relative flex h-[calc(100dvh-4.5rem)] min-h-[36rem] w-full flex-col bg-black">
+      {/* Viewport-height shell from lg up, where the card and form sit
+          side by side: navbar overlays (no flow height), the slim footer
+          (~4.5rem) is subtracted so the page itself does not scroll.
+          Below lg the content stacks taller than one viewport, so the
+          page scrolls naturally instead of overflowing the shell. */}
+      <div className="relative flex min-h-[36rem] w-full flex-col bg-black lg:h-[calc(100dvh-4.5rem)]">
         <ContactsDetailSection
           contacts={data?.personal?.contacts}
           availability={availability}

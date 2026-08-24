@@ -19,9 +19,11 @@ const roleLabelOf = (role: string): string =>
 
 /** Desktop column template with EVEN fr-based tracks so the gaps between
  *  columns stay consistent no matter the content: year fixed, made-at
- *  fixed-ish, project/built-with share the flexible space. */
+ *  fixed-ish, project/built-with share the flexible space. Tablets (md)
+ *  get tighter minimums so the five tracks never overflow the container;
+ *  laptops (lg+) keep the roomier tracks. */
 const TABLE_COLS =
-  "md:grid-cols-[4rem_minmax(10rem,1.3fr)_minmax(9rem,1fr)_minmax(12rem,1.7fr)_minmax(8rem,1fr)]";
+  "md:grid-cols-[3.5rem_minmax(7rem,1.3fr)_minmax(6rem,1fr)_minmax(8rem,1.7fr)_minmax(6rem,1fr)] lg:grid-cols-[4rem_minmax(10rem,1.3fr)_minmax(9rem,1fr)_minmax(12rem,1.7fr)_minmax(8rem,1fr)]";
 
 /** Link host without protocol — "vercel.com" from the full URL. */
 const hostOf = (url: string): string => {

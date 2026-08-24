@@ -153,6 +153,31 @@ const HeroSection = ({
                   />
                 </button>
               </div>
+
+              {/* Stats — compact row for tablet/mobile (the desktop
+                  sidebar column below takes over from lg). Same count-up
+                  behavior and delay as the desktop block. */}
+              <dl
+                data-aos="fade-up"
+                data-aos-delay="450"
+                data-aos-offset="0"
+                className="mt-12 grid grid-cols-3 gap-x-4 gap-y-5 border-t border-white/10 pt-8 sm:gap-x-6 lg:hidden"
+              >
+                {stats.map((stat) => (
+                  <div key={stat.label} className="min-w-0">
+                    <dt className="font-inter text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                      <CountUp
+                        to={Number(stat.value)}
+                        fallback={stat.value}
+                        delay={showIntro ? 5 : 0}
+                      />
+                    </dt>
+                    <dd className="mt-1.5 text-[9px] sm:text-[10px] font-martian-mono uppercase leading-relaxed tracking-[0.2em] text-gray-500">
+                      {stat.label}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             </div>
 
             {/* Right: stats — the count starts after this block's AOS

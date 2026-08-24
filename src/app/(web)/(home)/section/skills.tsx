@@ -128,10 +128,10 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
           to production or to a client deliverable.
         </p>
 
-        {/* One card per category — fixed two-column grid at every
-            breakpoint; on hover the border lights up gold with a soft
-            matching glow. */}
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-6">
+        {/* One card per category — single column on phones, the fixed
+            two-column grid from sm up; on hover the border lights up gold
+            with a soft matching glow. */}
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 md:gap-6">
           {groups.map((group, index) => (
             <div
               key={group.title}
