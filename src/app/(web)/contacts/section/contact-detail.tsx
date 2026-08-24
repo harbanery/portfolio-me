@@ -1,12 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import {
-  Check,
-  Loader2,
-  MapPin,
-  SendHorizonal,
-} from "lucide-react";
+import { Check, Loader2, MapPin, SendHorizonal } from "lucide-react";
 import SectionHeading from "@/components/section-heading";
 import RotatingText from "@/components/rotating-text";
 import { logoMap } from "@/models/icons";
@@ -31,16 +26,26 @@ const isContact = (value: unknown): value is Contact =>
   typeof (value as Contact).type === "string" &&
   typeof (value as Contact).value === "string";
 
-/** Availability line shown above the description. */
-const availabilityLine = (availability?: string | null): string | null => {
-  switch (availability) {
-    case "NOT_AVAILABLE":
-      return null;
-    case "ONLY_FREELANCE":
-      return "Currently available for freelance work.";
-    default:
-      return "Currently available for work.";
-  }
+/** Availability indicator shown above the description — line + dot
+ *  colors mirror the navbar badge (teal for full availability, tan for
+ *  freelance-only, hidden when not available). */
+const AVAILABILITY_INDICATOR: Record<string, { line: string; color: string }> =
+  {
+    AVAILABLE: { line: "Currently available for work.", color: "#2DD4BF" },
+    ONLY_FREELANCE: {
+      line: "Currently available for freelance work.",
+      color: "#DEB887",
+    },
+  };
+
+const availabilityIndicator = (
+  availability?: string | null,
+): { line: string; color: string } | null => {
+  if (availability === "NOT_AVAILABLE") return null;
+  return (
+    AVAILABILITY_INDICATOR[availability ?? "AVAILABLE"] ??
+    AVAILABILITY_INDICATOR.AVAILABLE
+  );
 };
 
 /** Cities ping-ponging in the location line — same motion as the navbar. */
@@ -61,6 +66,9 @@ const ContactsDetailSection = ({
         (contact) => isContact(contact) && !!logoMap[contact.type],
       )
     : [];
+
+  // Line + dot color for the availability indicator (navbar palette).
+  const indicator = availabilityIndicator(availability);
 
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [invalid, setInvalid] = useState<Record<string, boolean>>({});
@@ -151,51 +159,62 @@ const ContactsDetailSection = ({
               lights up gold with a soft matching glow. */}
           <div data-aos="fade-up">
             <div className="space-y-5 rounded-2xl border border-white/10 bg-white/[0.02] p-5 md:p-7 transition-[border-color,box-shadow] duration-500 ease-in-out hover:border-[#DEB887] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)] max-lg:active:border-[#DEB887] max-lg:active:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]">
-            {availabilityLine(availability) && (
-              <p className="flex items-center gap-2 text-xs md:text-sm font-martian-mono uppercase tracking-[0.2em] text-[#2DD4BF]">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#2DD4BF] opacity-60" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-[#2DD4BF]" />
-                </span>
-                {availabilityLine(availability)}
+              {indicator && (
+                <p
+                  className="flex items-center gap-2 text-[10px] md:text-xs leading-0 font-martian-mono uppercase tracking-[0.2em]"
+                  style={{ color: indicator.color }}
+                >
+                  <span className="relative flex h-2 w-2">
+                    <span
+                      className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
+                      style={{ backgroundColor: indicator.color }}
+                    />
+                    <span
+                      className="relative inline-flex h-2 w-2 rounded-full"
+                      style={{ backgroundColor: indicator.color }}
+                    />
+                  </span>
+                  {indicator.line}
+                </p>
+              )}
+
+              <p className="max-w-[46ch] text-sm md:text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed">
+                I&apos;m open to opportunities anywhere, remote or on-site. I
+                reply during working hours (9–6 GMT+7), and promptly outside
+                them for anything urgent.
               </p>
-            )}
 
-            <p className="max-w-[46ch] text-sm md:text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed">
-              I&apos;m open to opportunities anywhere, remote or on-site. I
-              reply during working hours (9–6 GMT+7), and promptly outside them
-              for anything urgent.
-            </p>
+              <div className="flex items-center gap-2 flex-wrap">
+                {contactList.map((contact) => {
+                  const Icon = logoMap[contact.type];
+                  if (!Icon) return null;
+                  return (
+                    <Link
+                      key={`${contact.type}-${contact.value}`}
+                      href={
+                        formatURLContact(contact.value, contact.type) || "#"
+                      }
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-gray-400 hover:text-white transition-colors duration-500"
+                    >
+                      <Icon size={26} />
+                    </Link>
+                  );
+                })}
+              </div>
 
-            <div className="flex items-center gap-2 flex-wrap">
-              {contactList.map((contact) => {
-                const Icon = logoMap[contact.type];
-                if (!Icon) return null;
-                return (
-                  <Link
-                    key={`${contact.type}-${contact.value}`}
-                    href={formatURLContact(contact.value, contact.type) || "#"}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-white transition-colors duration-500"
-                  >
-                    <Icon size={26} />
-                  </Link>
-                );
-              })}
-            </div>
-
-            <p className="flex items-center gap-1.5 font-martian-mono text-xs uppercase tracking-[0.25em] text-gray-600">
-              <MapPin size={12} className="text-[#DEB887]" />
-              <span className="flex items-center">
-                <RotatingText
-                  items={CITIES}
-                  className="uppercase"
-                  align="right"
-                />
-                , Indonesia
-              </span>
-            </p>
+              <p className="flex items-center gap-1.5 font-martian-mono text-xs uppercase tracking-[0.25em] text-gray-600">
+                <MapPin size={12} className="text-[#DEB887]" />
+                <span className="flex items-center">
+                  <RotatingText
+                    items={CITIES}
+                    className="uppercase"
+                    align="right"
+                  />
+                  , Indonesia
+                </span>
+              </p>
             </div>
           </div>
 

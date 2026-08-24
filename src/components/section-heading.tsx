@@ -27,7 +27,8 @@ const MetaLabel = ({ text, count }: { text: string; count: number }) => {
   if (!match) return <>{text}</>;
   return (
     <>
-      <CountUp to={count} fallback={match[1]} />{match[2]}
+      <CountUp to={count} fallback={match[1]} />
+      {match[2]}
     </>
   );
 };
@@ -51,7 +52,7 @@ const SectionHeading = ({
       </span>
       {meta && (
         <>
-          <span className="hidden h-3 w-px bg-white/15 sm:block" />
+          <span className="h-3 w-px bg-white/15 block" />
           <span className="font-martian-mono text-xs uppercase tracking-[0.25em] text-gray-600">
             {metaCount !== undefined ? (
               <MetaLabel text={meta} count={metaCount} />
