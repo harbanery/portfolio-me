@@ -80,6 +80,7 @@ import {
   SiXampp,
   SiXcode,
   SiZoom,
+  SiPm2,
 } from "react-icons/si";
 
 /**
@@ -144,7 +145,7 @@ export const logoMap: Record<string, IconType> = {
   sonarqube: SiSonarqube,
   docker: SiDocker,
   kubernetes: SiKubernetes,
-  pm2: SiNodedotjs, // no PM2 icon in simple-icons; Node.js runtime stands in
+  pm2: SiPm2,
   xampp: SiXampp,
   phpmyadmin: SiPhpmyadmin,
   minio: SiMinio,

@@ -109,9 +109,14 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                 </span>
 
                 {/* Project — left aligned, information only */}
-                <span className="min-w-0 font-inter font-semibold text-white transition-colors duration-500 group-hover:text-[#DEB887]">
-                  {project.title}
-                </span>
+                <div className="min-w-0 flex flex-col gap-1.5">
+                  <span className="font-inter font-semibold text-white transition-colors duration-500 group-hover:text-[#DEB887]">
+                    {project.title}
+                  </span>
+                  <span className="font-martian-mono text-[10px] text-gray-400/70">
+                    {project.role}
+                  </span>
+                </div>
 
                 {/* Made at — centered */}
                 <span

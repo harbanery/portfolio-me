@@ -26,6 +26,7 @@ const ContactsPage = async () => {
       navbar={true}
       footer={true}
       cvUrl={data?.cv?.url}
+      cvName={data?.cv?.name}
       name={data?.personal?.name}
       availability={availability}
     >

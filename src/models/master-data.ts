@@ -349,7 +349,7 @@ export const masterDataMap: Record<string, MasterData> = {
     color: "#000000",
   },
   factorydroid: {
-    name: "Factory Droid",
+    name: "Factory",
     category: ["ai-tool", "coding", "agent"],
     color: "#635BFF",
   },
@@ -520,7 +520,7 @@ export const masterDataMap: Record<string, MasterData> = {
     color: "#4ECDC4",
   },
   pwa: {
-    name: "Progressive Web Applications (PWAs)",
+    name: "PWAs",
     category: ["methodology", "web"],
     color: "#5D6D7E",
   },

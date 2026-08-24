@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, MapPin, Menu, X } from "lucide-react";
+import { Download, Loader2, MapPin, Menu, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { menuSections } from "@/models/menu";
@@ -47,12 +47,15 @@ const Navbar = ({
   locationLabel,
   availability,
   cvUrl,
+  cvName,
   name,
 }: {
   locationLabel?: string;
   availability?: AvailabilityStatus | null;
   /** Primary CV from the database — direct download, no viewer. */
   cvUrl?: string | null;
+  /** Display name of the CV file (e.g. "Raihan Yusuf — CV"). */
+  cvName?: string | null;
   /** Profile name for the non-home brand button. */
   name?: string | null;
 }) => {
@@ -67,6 +70,7 @@ const Navbar = ({
   );
   const [shouldShowNavbar, setShouldShowNavbar] = useState(true);
   const [isFixed, setIsFixed] = useState(false);
+  const [isDownloadingCv, setIsDownloadingCv] = useState(false);
 
   const isHome = pathname === "/";
 
@@ -181,6 +185,52 @@ const Navbar = ({
   const goToContacts = () => {
     setIsMenuOpen(false);
     router.push("/contacts");
+  };
+
+  /**
+   * Programmatic CV download — fetches the file as a blob and hands it to
+   * the browser, so no `<a href>` (and therefore no visible download URL)
+   * ever reaches the markup. Shows a spinner while fetching, mirroring
+   * the "SEND MESSAGE" button on the contacts page.
+   *
+   * The file is fetched through the `/api/file` proxy: Cloudinary stores
+   * the admin-uploaded PDF with a disguised .docx extension, and the
+   * proxy detects the real `%PDF-` magic bytes and re-labels the response
+   * as `application/pdf` — so the downloaded file is always a PDF, never
+   * a bogus MS Word document.
+   */
+  const downloadCv = async () => {
+    if (!cvUrl || isDownloadingCv) return;
+    setIsDownloadingCv(true);
+
+    try {
+      const proxyUrl = `/api/file?url=${encodeURIComponent(cvUrl)}&download=1${
+        cvName ? `&name=${encodeURIComponent(cvName)}` : ""
+      }`;
+      const response = await fetch(proxyUrl);
+      if (!response.ok) throw new Error(`Download failed (${response.status})`);
+
+      const blob = await response.blob();
+      // Prefer a clean name from the database; fall back to the one the
+      // proxy computed (always .pdf for PDF content).
+      const header = response.headers.get("Content-Disposition") ?? "";
+      const headerName = /filename="?([^";]+)"?/i.exec(header)?.[1];
+      const filename = headerName || `${cvName || "CV"}.pdf`;
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = filename.endsWith(".pdf")
+        ? filename
+        : `${filename}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("CV download failed:", error);
+    } finally {
+      setIsDownloadingCv(false);
+    }
   };
 
   // Transform-only show/hide: animating opacity on the ancestor breaks
@@ -317,14 +367,20 @@ const Navbar = ({
           {/* Desktop actions */}
           <div className="hidden lg:flex items-center gap-3 shrink-0">
             {cvUrl && (
-              <a
-                href={cvUrl}
-                download
-                className="inline-flex items-center gap-1.5 rounded-full bg-[#DEB887]/15 border border-transparent px-4 py-2 text-[11px] uppercase tracking-[0.2em] font-martian-mono text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-500"
+              <button
+                onClick={downloadCv}
+                disabled={isDownloadingCv}
+                className={`inline-flex items-center gap-1.5 rounded-full bg-[#DEB887]/15 border border-transparent px-4 py-2 text-[11px] uppercase tracking-[0.2em] font-martian-mono text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-500 ${
+                  isDownloadingCv ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+                }`}
               >
-                Resume
-                <Download size={13} />
-              </a>
+                {isDownloadingCv ? "Loading" : "Resume"}
+                {isDownloadingCv ? (
+                  <Loader2 size={13} className="animate-spin" />
+                ) : (
+                  <Download size={13} />
+                )}
+              </button>
             )}
             {isHireable && (
               <button
@@ -374,14 +430,20 @@ const Navbar = ({
             ))}
           </div>
           {cvUrl && (
-            <a
-              href={cvUrl}
-              download
-              className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[#DEB887]/15 border border-transparent px-6 py-3 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-500"
+            <button
+              onClick={downloadCv}
+              disabled={isDownloadingCv}
+              className={`mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#DEB887]/15 border border-transparent px-6 py-3 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-500 ${
+                isDownloadingCv ? "cursor-not-allowed opacity-70" : "cursor-pointer"
+              }`}
             >
-              Download CV
-              <Download size={14} />
-            </a>
+              {isDownloadingCv ? "Loading" : "Download CV"}
+              {isDownloadingCv ? (
+                <Loader2 size={14} className="animate-spin" />
+              ) : (
+                <Download size={14} />
+              )}
+            </button>
           )}
         </div>
       )}

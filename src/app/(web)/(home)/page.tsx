@@ -51,6 +51,7 @@ const HomePage = async () => {
       locationLabel={hero?.locationLabel}
       availability={data?.personal?.availability}
       cvUrl={data?.cv?.url}
+      cvName={data?.cv?.name}
     >
       <div className="w-full bg-black">
         <HeroSection

@@ -11,6 +11,7 @@ const ProjectsPage = async () => {
       navbar={true}
       footer={true}
       cvUrl={data?.cv?.url}
+      cvName={data?.cv?.name}
       name={data?.personal?.name}
       availability={data?.personal?.availability}
     >

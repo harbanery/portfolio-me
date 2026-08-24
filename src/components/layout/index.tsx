@@ -17,6 +17,7 @@ const BaseLayout = ({
   locationLabel,
   availability,
   cvUrl,
+  cvName,
   name,
 }: {
   navbar?: boolean;
@@ -26,6 +27,8 @@ const BaseLayout = ({
   availability?: AvailabilityStatus | null;
   /** Primary CV from the database — navbar download button. */
   cvUrl?: string | null;
+  /** Display name of the CV file — navbar download button. */
+  cvName?: string | null;
   /** Profile name for the navbar brand on non-home pages. */
   name?: string | null;
 }) => {
@@ -54,6 +57,7 @@ const BaseLayout = ({
           locationLabel={locationLabel}
           availability={availability}
           cvUrl={cvUrl}
+          cvName={cvName}
           name={name}
         />
       )}

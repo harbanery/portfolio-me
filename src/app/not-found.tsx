@@ -1,7 +1,5 @@
 "use client";
 
-import { StarsBackground } from "@/components/effects/bg-stars";
-import { ShootingStars } from "@/components/effects/shooting-stars";
 import { NightOceanSimple } from "@/components/effects/night-ocean";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -20,15 +18,10 @@ const RootNotFound = () => {
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden select-none">
-      {/* Layer 1: Night Ocean Background */}
+      {/* Night Ocean backdrop only — no starfield layers on top, so the
+          ocean stays fully visible. */}
       <div className="absolute inset-0 z-0">
         <NightOceanSimple />
-      </div>
-
-      {/* Layer 2: Background stars & shooting stars */}
-      <div className="absolute inset-0 z-10">
-        <StarsBackground className="pointer-events-none" />
-        <ShootingStars className="pointer-events-none" />
       </div>
 
       {/* 404 message — same editorial heading + pill button language as
