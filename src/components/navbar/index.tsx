@@ -453,14 +453,16 @@ const Navbar = ({
                   Hire Me
                 </button>
               )}
-              <button
-                onClick={() => setIsMenuOpen(!isMenuOpen)}
-                aria-label="Toggle navigation menu"
-                aria-expanded={isMenuOpen}
-                className="text-white hover:text-gray-300 transition-colors"
-              >
-                {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
+              {(cvUrl || isHome) && (
+                <button
+                  onClick={() => setIsMenuOpen(!isMenuOpen)}
+                  aria-label="Toggle navigation menu"
+                  aria-expanded={isMenuOpen}
+                  className="text-white hover:text-gray-300 transition-colors"
+                >
+                  {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -469,17 +471,19 @@ const Navbar = ({
       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="lg:hidden mx-4 md:mx-6 mb-4 rounded-2xl border border-white/10 bg-black/90 backdrop-blur-md p-6">
-          <div className="flex flex-col gap-1">
-            {menuSections.map((section) => (
-              <button
-                key={section.id}
-                onClick={() => goToSection(section.id)}
-                className="text-left py-2.5 text-sm uppercase tracking-[0.2em] font-inter font-medium text-gray-400 hover:text-white border-b border-white/5 last:border-b-0 transition-colors"
-              >
-                {section.name}
-              </button>
-            ))}
-          </div>
+          {isHome && (
+            <div className="flex flex-col gap-1">
+              {menuSections.map((section) => (
+                <button
+                  key={section.id}
+                  onClick={() => goToSection(section.id)}
+                  className="text-left py-2.5 text-xs uppercase tracking-[0.2em] font-martian-mono font-medium text-gray-400 hover:text-white border-b border-white/5 last:border-b-0 transition-colors"
+                >
+                  {section.name}
+                </button>
+              ))}
+            </div>
+          )}
           {cvUrl && (
             <button
               onClick={downloadCv}

@@ -18,11 +18,13 @@ interface ProjectSectionProps {
 const roleLabelOf = (role: string): string =>
   menuRole.find((entry) => entry.value === role)?.label ?? role;
 
-/** Column templates — phones/tablets (<lg) render four tracks because the
- *  year moves into the group heading; laptops (lg+) keep the original
- *  five-track layout with its dedicated Year column, gaps included. */
+/** Laptop column template with EVEN fr-based tracks so the gaps between
+ *  columns stay consistent no matter the content: year fixed, made-at
+ *  fixed-ish, project/built-with share the flexible space. Phones AND
+ *  tablets render the mobile stack instead (single column) — the table
+ *  exists only from lg up. */
 const TABLE_COLS =
-  "md:grid-cols-[minmax(8rem,1.4fr)_minmax(7rem,1fr)_minmax(9rem,1.8fr)_minmax(7rem,1fr)] lg:grid-cols-[4rem_minmax(10rem,1.3fr)_minmax(9rem,1fr)_minmax(12rem,1.7fr)_minmax(8rem,1fr)]";
+  "lg:grid-cols-[4rem_minmax(10rem,1.3fr)_minmax(9rem,1fr)_minmax(12rem,1.7fr)_minmax(8rem,1fr)]";
 
 /** Link host without protocol — "vercel.com" from the full URL. */
 const hostOf = (url: string): string => {
@@ -165,14 +167,14 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
           Things I&apos;ve built.
         </h2>
 
-        {/* Table header — mirrors the row alignment: everything reads from
-            the left below lg (the year lives in the group heading there);
-            laptops restore the centered year/made-at columns. */}
+        {/* Table header — laptops only. Below lg every field stacks in one
+            left-aligned column (the year lives in the group heading), so
+            there is no header row to mirror. */}
         <div
           data-aos="fade-up"
-          className={`hidden gap-x-6 border-b border-white/10 pb-3 font-martian-mono text-[10px] uppercase tracking-[0.25em] text-gray-600 md:grid lg:gap-x-8 ${TABLE_COLS}`}
+          className={`hidden gap-x-6 border-b border-white/10 pb-3 font-martian-mono text-[10px] uppercase tracking-[0.25em] text-gray-600 lg:grid lg:gap-x-8 ${TABLE_COLS}`}
         >
-          <span className="hidden text-center lg:block">Year</span>
+          <span className="text-center">Year</span>
           <span>Project</span>
           <span className="text-center">Made at</span>
           <span>Built with</span>
@@ -213,11 +215,12 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                     key={project.id}
                     data-aos="fade-up"
                     data-aos-delay={`${((index % 3) + 1) * 75}`}
-                    className={`group grid grid-cols-1 gap-x-6 gap-y-2 border-b border-white/10 py-5 transition-colors duration-500 hover:bg-white/[0.02] max-lg:active:bg-white/[0.04] md:items-baseline md:py-6 lg:gap-x-8 ${TABLE_COLS}`}
+                    className={`group grid grid-cols-1 gap-x-6 gap-y-2 border-b border-white/10 py-5 transition-colors duration-500 hover:bg-white/[0.02] max-lg:active:bg-white/[0.04] lg:items-baseline lg:gap-x-8 lg:py-6 ${TABLE_COLS}`}
                   >
-                    {/* Year — laptop column only (group heading covers it
-                        below lg). Centered, as on the original table. */}
-                    <span className="hidden font-martian-mono text-center text-xs text-[#DEB887] tabular-nums md:text-sm lg:block">
+                    {/* Year — laptop column only (the group heading covers
+                        it on phones and tablets). Centered, as on the
+                        original table. */}
+                    <span className="hidden text-center font-martian-mono text-sm text-[#DEB887] tabular-nums lg:block">
                       {yearOf(project)}
                     </span>
 
@@ -236,7 +239,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                     {/* Made at — left aligned below lg, centered on
                         laptops. */}
                     <span
-                      className="min-w-0 truncate text-left text-sm text-gray-400 font-neue-haas tracking-wider font-light lg:text-center"
+                      className="min-w-0 truncate text-left text-xs md:text-sm text-gray-400 font-neue-haas tracking-wider font-light lg:text-center"
                       title={madeAt}
                     >
                       {madeAt || <span className="text-gray-700">—</span>}
