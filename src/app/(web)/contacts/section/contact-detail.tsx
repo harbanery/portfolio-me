@@ -150,7 +150,7 @@ const ContactsDetailSection = ({
               On hover the border lights up gold with a soft matching glow. */}
           <div
             data-aos="fade-up"
-            className="space-y-5 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7 transition-[border-color,box-shadow] duration-500 ease-out hover:border-[#DEB887] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]"
+            className="space-y-5 rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7 transition-[border-color,box-shadow] duration-500 ease-in-out hover:border-[#DEB887] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]"
           >
             {availabilityLine(availability) && (
               <p className="flex items-center gap-2 text-sm font-martian-mono uppercase tracking-[0.2em] text-[#2DD4BF]">
@@ -178,7 +178,7 @@ const ContactsDetailSection = ({
                     href={formatURLContact(contact.value, contact.type) || "#"}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-gray-400 hover:text-white transition-colors duration-300"
+                    className="text-gray-400 hover:text-white transition-colors duration-500"
                   >
                     <Icon size={26} />
                   </Link>
@@ -264,14 +264,14 @@ const ContactsDetailSection = ({
                   <Check
                     size={16}
                     strokeWidth={2}
-                    className="animate-[scale-in_0.4s_ease-out_both]"
+                    className="animate-[scale-in_0.5s_ease-in-out_both]"
                   />
                 </button>
               ) : (
                 <button
                   type="submit"
                   disabled={status === "loading"}
-                  className={`group inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-martian-mono font-semibold tracking-wider transition-colors duration-300 ${
+                  className={`group inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-martian-mono font-semibold tracking-wider transition-colors duration-500 ${
                     status === "loading"
                       ? "cursor-not-allowed bg-gray-300 text-gray-600"
                       : "cursor-pointer bg-white text-black hover:bg-gray-200"
@@ -292,7 +292,7 @@ const ContactsDetailSection = ({
                       <SendHorizonal
                         size={16}
                         strokeWidth={2}
-                        className="transition-transform duration-300 group-hover:translate-x-1"
+                        className="transition-transform duration-500 group-hover:translate-x-1"
                       />
                     </>
                   )}

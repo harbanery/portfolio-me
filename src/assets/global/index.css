@@ -23,9 +23,9 @@
 @theme {
   /* Constant, somewhat slow marquee speed — no scroll-time acceleration. */
   --animate-scroll: scroll 45s linear infinite;
-  --animate-fade-in: fade-in 1.2s ease-out both;
+  --animate-fade-in: fade-in 0.5s ease-in-out both;
   /* Check icon popping in on the contact success button. */
-  --animate-scale-in: scale-in 0.4s ease-out both;
+  --animate-scale-in: scale-in 0.5s ease-in-out both;
   --animate-ocean-text: ocean-text 6s ease-in-out infinite;
 
   @keyframes scroll {
@@ -62,13 +62,13 @@
 
   @keyframes ocean-text {
     0% {
-      background-position: "0% 50%";
+      background-position: 0% 50%;
     }
     50% {
-      background-position: "100% 50%";
+      background-position: 100% 50%;
     }
     100% {
-      background-position: "0% 50%";
+      background-position: 0% 50%;
     }
   }
 }
@@ -121,7 +121,7 @@ body {
 
 .fill-horizontal {
   @apply relative inline-block text-gray-300 font-normal;
-  transition: color 0.3s ease;
+  transition: color 0.5s ease-in-out;
 }
 
 .fill-horizontal::after {
@@ -130,7 +130,7 @@ body {
 
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.3s ease;
+  transition: transform 0.5s ease-in-out;
   z-index: -1;
 }
 
@@ -153,7 +153,7 @@ body {
 
   transform: scaleX(0);
   transform-origin: right;
-  transition: transform 0.3s ease;
+  transition: transform 0.5s ease-in-out;
 }
 
 .underline-custom:hover::after {
@@ -213,7 +213,7 @@ body {
 
 /*
  * Tailwind-only animations (replacing framer-motion). Used via arbitrary
- * values, e.g. `animate-[rise-in_2s_ease-out_1s_both]`.
+ * values, e.g. `animate-[rise-in_0.5s_ease-in-out_1s_both]`.
  */
 @keyframes rise-in {
   from {
@@ -310,7 +310,7 @@ body {
   left: 0;
   background-color: currentColor;
   transform-origin: bottom right;
-  transition: transform 0.25s ease-out;
+  transition: transform 0.5s ease-in-out;
 }
 
 .paragraph-wrapper a:hover::after {
@@ -332,7 +332,7 @@ body {
   left: 0;
   background-color: currentColor;
   transform-origin: bottom right;
-  transition: transform 0.25s ease-out;
+  transition: transform 0.5s ease-in-out;
 }
 
 .paragraph-wrapper span:hover::after {

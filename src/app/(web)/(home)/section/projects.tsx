@@ -40,6 +40,7 @@ const ProjectSection = ({ projects, totalCount }: ProjectSectionProps) => {
         <SectionHeading
           label="Work"
           meta={`${count} PROJECTS`}
+          metaCount={count}
           lineOne="What shipped,"
           lineTwo="and what it moved."
         />
@@ -79,7 +80,7 @@ const ProjectSection = ({ projects, totalCount }: ProjectSectionProps) => {
                       <img
                         src={project.image}
                         alt={project.title}
-                        className="h-full w-full object-cover grayscale transition-[filter] duration-500 ease-out group-hover:grayscale-0"
+                        className="h-full w-full object-cover grayscale transition-[filter] duration-500 ease-in-out group-hover:grayscale-0"
                         loading={index === 0 ? "eager" : "lazy"}
                         fetchPriority={index === 0 ? "high" : "auto"}
                       />
@@ -163,7 +164,7 @@ const ProjectSection = ({ projects, totalCount }: ProjectSectionProps) => {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`${project.title} repository`}
-                        className="transition-colors duration-300 hover:text-[#DEB887]"
+                        className="transition-colors duration-500 hover:text-[#DEB887]"
                       >
                         <Github size={18} />
                       </a>
@@ -174,7 +175,7 @@ const ProjectSection = ({ projects, totalCount }: ProjectSectionProps) => {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`${project.title} live site`}
-                        className="transition-colors duration-300 hover:text-[#DEB887]"
+                        className="transition-colors duration-500 hover:text-[#DEB887]"
                       >
                         <ExternalLink size={18} />
                       </a>
@@ -190,12 +191,12 @@ const ProjectSection = ({ projects, totalCount }: ProjectSectionProps) => {
           <div data-aos="fade-up" className="mt-16 flex justify-center">
             <button
               onClick={() => router.push("/projects")}
-              className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 px-8 py-4 text-sm font-martian-mono tracking-wider text-white hover:border-white/50 transition-colors duration-300"
+              className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 px-8 py-4 text-sm font-martian-mono tracking-wider text-white hover:border-white/50 transition-colors duration-500"
             >
               CLICK FOR ALL PROJECTS
               <ArrowRight
                 size={16}
-                className="transition-transform duration-300 group-hover:translate-x-1"
+                className="transition-transform duration-500 group-hover:translate-x-1"
               />
             </button>
           </div>

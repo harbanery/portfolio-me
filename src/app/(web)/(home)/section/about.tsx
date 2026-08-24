@@ -121,7 +121,7 @@ const AboutSection = ({
           <aside
             data-aos="fade-left"
             data-aos-delay="150"
-            className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7 transition-[border-color,box-shadow] duration-500 ease-out hover:border-[#DEB887] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]"
+            className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7 transition-[border-color,box-shadow] duration-500 ease-in-out hover:border-[#DEB887] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]"
           >
             {/* Focusing on — priority skills from the database. Icon-only
                 pills with a transparent border; hovering a pill expands
@@ -136,14 +136,14 @@ const AboutSection = ({
                       <span
                         key={key}
                         title={masterDataMap[key]?.name || key}
-                        className="group/pill inline-flex cursor-pointer items-center rounded-full border border-transparent px-2.5 py-1 text-xs text-gray-300 font-neue-haas transition-[border-color] duration-300 hover:border-white/13"
+                        className="group/pill inline-flex cursor-pointer items-center rounded-full border border-transparent px-2.5 py-1 text-xs text-gray-300 font-neue-haas transition-[border-color] duration-500 hover:border-white/13"
                       >
                         {Icon ? (
                           <Icon className="h-3.5 w-3.5 shrink-0" />
                         ) : (
                           <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gray-500" />
                         )}
-                        <span className="max-w-0 overflow-hidden text-nowrap opacity-0 transition-[max-width,opacity,margin] duration-300 group-hover/pill:max-w-[12rem] group-hover/pill:opacity-100 group-hover/pill:ml-2">
+                        <span className="max-w-0 overflow-hidden text-nowrap opacity-0 transition-[max-width,opacity,margin] duration-500 group-hover/pill:max-w-[12rem] group-hover/pill:opacity-100 group-hover/pill:ml-2">
                           {masterDataMap[key]?.name || key}
                         </span>
                       </span>

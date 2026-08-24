@@ -1,8 +1,16 @@
+"use client";
+
+import CountUp from "@/components/count-up";
+
 interface SectionHeadingProps {
   /** Section label, e.g. "ABOUT". */
   label: string;
   /** Optional right-aligned meta, e.g. "3 PROJECTS". */
   meta?: string;
+  /** Numeric count to animate inside the meta label (extracts the
+   *  leading number and renders it with CountUp). Ignored when `meta`
+   *  is absent. */
+  metaCount?: number;
   /** Two-line headline (rendered on separate lines). */
   lineOne: string;
   lineTwo?: string;
@@ -10,10 +18,25 @@ interface SectionHeadingProps {
   compact?: boolean;
 }
 
+/**
+ * Extract the leading number from a meta string like "3 PROJECTS"
+ * and replace it with a CountUp-animated number.
+ */
+const MetaLabel = ({ text, count }: { text: string; count: number }) => {
+  const match = text.match(/^(\d+)(.*)/s);
+  if (!match) return <>{text}</>;
+  return (
+    <>
+      <CountUp to={count} fallback={match[1]} />{match[2]}
+    </>
+  );
+};
+
 /** Editorial section header following the reference portfolio design. */
 const SectionHeading = ({
   label,
   meta,
+  metaCount,
   lineOne,
   lineTwo,
   compact = false,
@@ -30,7 +53,11 @@ const SectionHeading = ({
         <>
           <span className="hidden h-3 w-px bg-white/15 sm:block" />
           <span className="font-martian-mono text-xs uppercase tracking-[0.25em] text-gray-600">
-            {meta}
+            {metaCount !== undefined ? (
+              <MetaLabel text={meta} count={metaCount} />
+            ) : (
+              meta
+            )}
           </span>
         </>
       )}

@@ -68,7 +68,7 @@ const RotatingText = ({
           <span
             key={item}
             aria-hidden={!isActive}
-            className="[grid-area:1/1] motion-safe:transition-[opacity,transform] motion-safe:duration-[800ms] motion-safe:ease-[cubic-bezier(0.65,0,0.35,1)]"
+            className="[grid-area:1/1] motion-safe:transition-[opacity,transform] motion-safe:duration-500 motion-safe:ease-in-out"
             style={{
               textAlign: align,
               opacity: isActive ? 1 : 0,

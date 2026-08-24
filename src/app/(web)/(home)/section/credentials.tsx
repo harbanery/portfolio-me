@@ -87,6 +87,7 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
         <SectionHeading
           label="Credentials"
           meta={`${credentials.length} VERIFIED`}
+          metaCount={credentials.length}
           lineOne="Verified,"
           lineTwo="not asserted."
         />
@@ -104,7 +105,7 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
             <button
               key={filter}
               onClick={() => selectFilter(filter)}
-              className={`cursor-pointer rounded-full border px-4 py-1.5 text-xs uppercase tracking-[0.15em] font-martian-mono font-semibold transition-colors duration-300 ${
+              className={`cursor-pointer rounded-full border px-4 py-1.5 text-xs uppercase tracking-[0.15em] font-martian-mono font-semibold transition-colors duration-500 ${
                 active === filter
                   ? "border-white/60 text-white bg-white/10"
                   : "border-white/13 text-gray-500 hover:text-gray-300 hover:border-white/30"
@@ -146,7 +147,7 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
                     View
                     <ArrowRight
                       size={12}
-                      className="transition-transform duration-200 group-hover:translate-x-0.5"
+                      className="transition-transform duration-500 group-hover:translate-x-0.5"
                     />
                   </span>
                 </div>
@@ -180,12 +181,12 @@ const CredentialsSection = ({ items }: CredentialsSectionProps) => {
         {hasMore && (
           <button
             onClick={() => setVisibleCount((count) => count + PAGE_SIZE)}
-            className="group mt-10 inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/15 px-5 py-2 text-xs uppercase tracking-[0.15em] font-martian-mono font-semibold text-gray-400 transition-colors duration-300 hover:border-white/40 hover:text-white"
+            className="group mt-10 inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/15 px-5 py-2 text-xs uppercase tracking-[0.15em] font-martian-mono font-semibold text-gray-400 transition-colors duration-500 hover:border-white/40 hover:text-white"
           >
             <Plus
               size={12}
               strokeWidth={3}
-              className="transition-transform duration-300 group-hover:-rotate-90"
+              className="transition-transform duration-500 group-hover:-rotate-90"
             />
             Show {Math.min(PAGE_SIZE, list.length - visibleCount)} more
           </button>

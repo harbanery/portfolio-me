@@ -197,12 +197,12 @@ const Navbar = ({
 
   return (
     <nav
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-700 ease-in-out ${animShowNavbar}`}
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ease-in-out ${animShowNavbar}`}
     >
       <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
         <div
           data-aos={mounted && isFixed ? "fade-down" : "fade-zoom-in"}
-          className={`flex items-center justify-between gap-4 h-14 md:h-16 my-3 md:my-4 rounded-full border px-4 md:px-6 transition-colors duration-300 ${barStyle}`}
+          className={`flex items-center justify-between gap-4 h-14 md:h-16 my-3 md:my-4 rounded-full border px-4 md:px-6 transition-colors duration-500 ${barStyle}`}
         >
           {/* Desktop: section links on other routes; on the home route the
                 links live in the right-side vertical menu instead, and the
@@ -249,7 +249,7 @@ const Navbar = ({
                               <span
                                 key={city}
                                 aria-hidden={!isActive}
-                                className="[grid-area:1/1] motion-safe:transition-[opacity,transform] motion-safe:duration-[800ms] motion-safe:ease-[cubic-bezier(0.65,0,0.35,1)] text-right"
+                                className="[grid-area:1/1] motion-safe:transition-[opacity,transform] motion-safe:duration-500 motion-safe:ease-in-out text-right"
                                 style={{
                                   opacity: isActive ? 1 : 0,
                                   transform: isActive
@@ -292,7 +292,7 @@ const Navbar = ({
                       style={{ backgroundColor: badge.color }}
                     />
                   </span>
-                  <span className="text-[11px] cursor-pointer uppercase tracking-[0.2em] font-inter font-semibold text-white group-hover:text-[#DEB887] transition-colors duration-300">
+                  <span className="text-[11px] cursor-pointer uppercase tracking-[0.2em] font-inter font-semibold text-white group-hover:text-[#DEB887] transition-colors duration-500">
                     {name ?? "Raihan Yusuf"}
                   </span>
                 </button>
@@ -318,7 +318,7 @@ const Navbar = ({
               <a
                 href={cvUrl}
                 download
-                className="inline-flex items-center gap-1.5 rounded-full bg-[#DEB887]/15 border border-transparent px-4 py-2 text-[11px] uppercase tracking-[0.2em] font-martian-mono text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-300"
+                className="inline-flex items-center gap-1.5 rounded-full bg-[#DEB887]/15 border border-transparent px-4 py-2 text-[11px] uppercase tracking-[0.2em] font-martian-mono text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-500"
               >
                 Resume
                 <Download size={13} />
@@ -327,7 +327,7 @@ const Navbar = ({
             {isHireable && (
               <button
                 onClick={goToContacts}
-                className="cursor-pointer rounded-full bg-white px-5 py-2 text-[11px] uppercase tracking-[0.2em] font-martian-mono font-semibold text-black hover:bg-gray-200 transition-colors duration-300"
+                className="cursor-pointer rounded-full bg-white px-5 py-2 text-[11px] uppercase tracking-[0.2em] font-martian-mono font-semibold text-black hover:bg-gray-200 transition-colors duration-500"
               >
                 Hire Me
               </button>
@@ -374,7 +374,7 @@ const Navbar = ({
             <a
               href={cvUrl}
               download
-              className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[#DEB887]/15 border border-transparent px-6 py-3 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-300"
+              className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-[#DEB887]/15 border border-transparent px-6 py-3 text-[11px] uppercase tracking-[0.2em] font-inter font-semibold text-[#DEB887] hover:bg-[#DEB887]/25 transition-colors duration-500"
             >
               Download CV
               <Download size={14} />

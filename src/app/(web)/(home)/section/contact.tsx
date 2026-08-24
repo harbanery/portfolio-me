@@ -97,10 +97,10 @@ const HomeContactSection = ({
                   target="_blank"
                   rel="noopener noreferrer"
                   title={name}
-                  className="group/pill inline-flex items-center rounded-full border border-transparent px-2.5 py-1 text-xs text-gray-400 font-neue-haas transition-[border-color] duration-300 hover:border-white/13 hover:text-gray-200"
+                  className="group/pill inline-flex items-center rounded-full border border-transparent px-2.5 py-1 text-xs text-gray-400 font-neue-haas transition-[border-color] duration-500 hover:border-white/13 hover:text-gray-200"
                 >
                   <Icon className="h-4 w-4 shrink-0" />
-                  <span className="max-w-0 overflow-hidden text-nowrap opacity-0 transition-[max-width,opacity,margin] duration-300 group-hover/pill:max-w-[12rem] group-hover/pill:opacity-100 group-hover/pill:ml-2">
+                  <span className="max-w-0 overflow-hidden text-nowrap opacity-0 transition-[max-width,opacity,margin] duration-500 group-hover/pill:max-w-[12rem] group-hover/pill:opacity-100 group-hover/pill:ml-2">
                     {name}
                   </span>
                 </Link>
@@ -114,13 +114,13 @@ const HomeContactSection = ({
                   link URL exposed in the markup. */}
               <button
                 onClick={() => router.push("/contacts")}
-                className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-martian-mono font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] hover:shadow-[0_8px_24px_-8px_rgba(222,184,135,0.55)] transition-[background-color,box-shadow] duration-300"
+                className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-8 py-4 text-sm font-martian-mono font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] hover:shadow-[0_8px_24px_-8px_rgba(222,184,135,0.55)] transition-[background-color,box-shadow] duration-500"
               >
                 LET&apos;S TALK
                 <ArrowRight
                   size={16}
                   strokeWidth={3}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
+                  className="transition-transform duration-500 group-hover:translate-x-1"
                 />
               </button>
             </div>

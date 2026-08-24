@@ -37,7 +37,8 @@ const BaseLayout = ({
     pathname.includes("/projects/");
 
   useEffect(() => {
-    Aos.init();
+    // Global AOS: 0.5s ease-in-out, matching every other animation.
+    Aos.init({ duration: 500, easing: 'ease-in-out' });
 
     // Scroll to top when on home page — "instant" opts out of the global
     // CSS smooth scrolling so route changes never animate the jump.

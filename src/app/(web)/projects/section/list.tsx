@@ -101,7 +101,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                 key={project.id}
                 data-aos="fade-up"
                 data-aos-delay={`${((index % 3) + 1) * 75}`}
-                className={`group grid grid-cols-1 gap-x-6 gap-y-2 border-b border-white/10 py-5 transition-colors duration-300 hover:bg-white/[0.02] md:items-baseline md:py-6 lg:gap-x-8 ${TABLE_COLS}`}
+                className={`group grid grid-cols-1 gap-x-6 gap-y-2 border-b border-white/10 py-5 transition-colors duration-500 hover:bg-white/[0.02] md:items-baseline md:py-6 lg:gap-x-8 ${TABLE_COLS}`}
               >
                 {/* Year — centered */}
                 <span className="font-martian-mono text-center text-xs text-[#DEB887] tabular-nums md:text-sm">
@@ -109,7 +109,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                 </span>
 
                 {/* Project — left aligned, information only */}
-                <span className="min-w-0 font-inter font-semibold text-white transition-colors duration-300 group-hover:text-[#DEB887]">
+                <span className="min-w-0 font-inter font-semibold text-white transition-colors duration-500 group-hover:text-[#DEB887]">
                   {project.title}
                 </span>
 
@@ -156,7 +156,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`${project.title} repository`}
-                        className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap text-sm text-gray-400 font-neue-haas tracking-wider font-light transition-colors duration-300 hover:text-[#DEB887]"
+                        className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap text-sm text-gray-400 font-neue-haas tracking-wider font-light transition-colors duration-500 hover:text-[#DEB887]"
                       >
                         <Github size={15} className="shrink-0" />
                         github
@@ -167,7 +167,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`${project.title} website`}
-                        className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap text-sm text-gray-400 font-neue-haas tracking-wider font-light transition-colors duration-300 hover:text-[#DEB887]"
+                        className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap text-sm text-gray-400 font-neue-haas tracking-wider font-light transition-colors duration-500 hover:text-[#DEB887]"
                       >
                         {hostOf(href)}
                         <ExternalLink size={15} className="shrink-0" />

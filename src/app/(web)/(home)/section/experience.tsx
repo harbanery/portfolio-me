@@ -17,6 +17,7 @@ const ExperienceSection = ({ experiences }: ExperienceSectionProps) => (
       <SectionHeading
         label="Experience"
         meta={`${experiences.length} ROLES`}
+        metaCount={experiences.length}
         lineOne="From bootcamp"
         lineTwo="to enterprise."
       />

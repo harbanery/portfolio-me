@@ -75,7 +75,7 @@ const SideMenu = () => {
   return (
     <nav
       aria-label="Section navigation"
-      className={`fixed right-5 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col items-end gap-4 transition-all duration-1000 ease-out ${
+      className={`fixed right-5 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col items-end gap-4 transition-all duration-500 ease-in-out ${
         visible ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0"
       }`}
     >
@@ -86,12 +86,12 @@ const SideMenu = () => {
             key={section.id}
             onClick={() => goToSection(section.id)}
             aria-current={isActive ? "true" : undefined}
-            className={`group flex cursor-pointer items-center gap-2 text-[10px] uppercase tracking-[0.25em] font-martian-mono font-medium transition-colors duration-300 ${
+            className={`group flex cursor-pointer items-center gap-2 text-[10px] uppercase tracking-[0.25em] font-martian-mono font-medium transition-colors duration-500 ${
               isActive ? "text-[#DEB887]" : "text-gray-600 hover:text-white"
             }`}
           >
             <span
-              className={`h-px transition-all duration-300 ${
+              className={`h-px transition-all duration-500 ${
                 isActive
                   ? "w-5 bg-[#DEB887]"
                   : "w-0 bg-[#DEB887] group-hover:w-4"

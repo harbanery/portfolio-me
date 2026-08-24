@@ -15,7 +15,7 @@ const NAMED_AUTHORS = 3;
 /** Shared card surface — matches the capabilities and about cards. On
  *  hover the border lights up gold with a soft matching glow. */
 const CARD_CLASS =
-  "group flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-[border-color,background-color,box-shadow] duration-500 ease-out hover:border-[#DEB887] hover:bg-[#DEB887]/[0.04] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]";
+  "group flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-[border-color,background-color,box-shadow] duration-500 ease-in-out hover:border-[#DEB887] hover:bg-[#DEB887]/[0.04] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]";
 
 /** Co-author line: "with A, B, C +N" — the +N badge pops the remaining
  *  names on hover (pure CSS, no JS needed). Nothing renders without
@@ -39,11 +39,11 @@ const AuthorLine = ({ authors }: { authors: string[] }) => {
         // Named group: the badge and its popover react to hovering THIS
         // badge only, not the whole card.
         <span className="group/badge relative inline-block">
-          <span className="ml-1.5 cursor-pointer rounded-full border border-white/13 px-2 py-0.5 text-[10px] text-gray-400 transition-colors duration-300 group-hover/badge:border-[#DEB887]/60 group-hover/badge:text-[#DEB887]">
+          <span className="ml-1.5 cursor-pointer rounded-full border border-white/13 px-2 py-0.5 text-[10px] text-gray-400 transition-colors duration-500 group-hover/badge:border-[#DEB887]/60 group-hover/badge:text-[#DEB887]">
             +{rest.length}
           </span>
           {/* Popover — the remaining author names, revealed on badge hover. */}
-          <span className="pointer-events-none invisible absolute bottom-full left-1/2 z-20 mb-2 w-max max-w-[16rem] -translate-x-1/2 rounded-lg border border-white/13 bg-[#0a0a0a] px-3 py-2 text-left text-[11px] leading-relaxed text-gray-300 opacity-0 shadow-[0_10px_35px_-15px_rgba(0,0,0,0.9)] transition-[opacity,visibility] duration-300 group-hover/badge:visible group-hover/badge:opacity-100">
+          <span className="pointer-events-none invisible absolute bottom-full left-1/2 z-20 mb-2 w-max max-w-[16rem] -translate-x-1/2 rounded-lg border border-white/13 bg-[#0a0a0a] px-3 py-2 text-left text-[11px] leading-relaxed text-gray-300 opacity-0 shadow-[0_10px_35px_-15px_rgba(0,0,0,0.9)] transition-[opacity,visibility] duration-500 group-hover/badge:visible group-hover/badge:opacity-100">
             {rest.join(", ")}
           </span>
         </span>
@@ -59,6 +59,7 @@ const WritingSection = ({ items }: WritingSectionProps) => (
       <SectionHeading
         label="Writing"
         meta={`${items.length} ${items.length === 1 ? "PUBLICATION" : "PUBLICATIONS"}`}
+        metaCount={items.length}
         lineOne="Notes from"
         lineTwo="the build."
       />
@@ -88,7 +89,7 @@ const WritingSection = ({ items }: WritingSectionProps) => (
                 Read
                 <ArrowRight
                   size={12}
-                  className="transition-transform duration-200 group-hover:translate-x-0.5"
+                  className="transition-transform duration-500 group-hover:translate-x-0.5"
                 />
               </span>
             </>

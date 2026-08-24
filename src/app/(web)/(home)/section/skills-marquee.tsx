@@ -37,7 +37,7 @@ const SkillsMarqueeSection = ({ skills = [] }: SkillsMarqueeSectionProps) => {
           {[...skillList, ...skillList].map((item, index) => (
             <span
               key={`${item.key}-${index + 1}`}
-              className="flex items-center gap-16 md:gap-24 text-gray-500 hover:text-white cursor-pointer transition-colors duration-300 whitespace-nowrap"
+              className="flex items-center gap-16 md:gap-24 text-gray-500 hover:text-white cursor-pointer transition-colors duration-500 whitespace-nowrap"
             >
               <item.icon size={36} className="shrink-0" />
               <span className="h-1 w-1 rounded-full bg-gray-700" />

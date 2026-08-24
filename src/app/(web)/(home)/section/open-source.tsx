@@ -63,7 +63,7 @@ const OpenSourceSection = () => (
           href={GITHUB_PROFILE}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-sm font-inter font-semibold tracking-wider text-white hover:border-white/50 transition-colors duration-300"
+          className="inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-sm font-inter font-semibold tracking-wider text-white hover:border-white/50 transition-colors duration-500"
         >
           VIEW PROFILE
           <ArrowRight size={16} />
@@ -79,7 +79,7 @@ const OpenSourceSection = () => (
             rel="noopener noreferrer"
             data-aos="fade-up"
             data-aos-delay={`${(index % 2 + 1) * 100}`}
-            className="group border border-white/10 rounded-2xl p-6 hover:border-white/25 transition-colors duration-300"
+            className="group border border-white/10 rounded-2xl p-6 hover:border-white/25 transition-colors duration-500"
           >
             <div className="flex items-center justify-between gap-4 mb-3">
               <span className="font-mono text-sm text-[#DEB887] group-hover:text-[#f0d5ae] transition-colors">

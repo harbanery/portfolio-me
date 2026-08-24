@@ -24,7 +24,7 @@ const Wave: React.FC<WaveProps> = ({
 }) => {
   return (
     <div
-      className="absolute bottom-0 left-0 w-full h-full animate-[wave-fade-in_2s_ease-out_both]"
+      className="absolute bottom-0 left-0 w-full h-full animate-[wave-fade-in_0.5s_ease-in-out_both]"
       style={
         {
           "--wave-opacity": opacity,
@@ -100,7 +100,7 @@ export const NightOceanSimple: React.FC = () => {
 
       {/* Subtle fog layer */}
       <div
-        className="absolute bottom-0 left-0 right-0 h-64 pointer-events-none animate-[wave-fade-in_4s_ease-out_both]"
+        className="absolute bottom-0 left-0 right-0 h-64 pointer-events-none animate-[wave-fade-in_0.5s_ease-in-out_both]"
         style={
           {
             "--wave-opacity": 0.05,

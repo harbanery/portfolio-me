@@ -43,7 +43,7 @@ const SmoothSticky = ({ children }: { children: ReactNode }) => {
   return (
     <div
       ref={ref}
-      className={`min-w-0 md:sticky md:top-28 md:self-start md:pb-1.5 motion-safe:md:transition-transform motion-safe:md:duration-500 motion-safe:md:ease-out ${
+      className={`min-w-0 md:sticky md:top-28 md:self-start md:pb-1.5 motion-safe:md:transition-transform motion-safe:md:duration-500 motion-safe:md:ease-in-out ${
         stuck ? "md:-translate-y-3" : "md:translate-y-0"
       }`}
     >

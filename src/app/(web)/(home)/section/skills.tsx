@@ -115,6 +115,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
         <SectionHeading
           label="Capabilities"
           meta={`${tracked} TRACKED`}
+          metaCount={tracked}
           lineOne="The stack,"
           lineTwo="end to end."
         />
@@ -136,7 +137,7 @@ const SkillsSection = ({ skills }: SkillsSectionProps) => {
               key={group.title}
               data-aos="fade-up"
               data-aos-delay={`${(index + 1) * 100}`}
-              className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-4 md:p-6 transition-[border-color,background-color,box-shadow] duration-500 ease-out hover:border-[#DEB887] hover:bg-[#DEB887]/[0.04] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]"
+              className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.02] p-4 md:p-6 transition-[border-color,background-color,box-shadow] duration-500 ease-in-out hover:border-[#DEB887] hover:bg-[#DEB887]/[0.04] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]"
             >
               <h3 className="text-sm md:text-lg font-inter font-semibold text-white mb-0.5 md:mb-1">
                 {group.title}

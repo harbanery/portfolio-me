@@ -63,7 +63,7 @@ const ScrollToTop = () => {
     >
       <ArrowUp
         size={18}
-        className="transition-transform duration-300 group-hover:-translate-y-0.5"
+        className="transition-transform duration-500 group-hover:-translate-y-0.5"
       />
       {/* Always-visible label — hidden only on the smallest screens so the
           pill stays compact. */}
