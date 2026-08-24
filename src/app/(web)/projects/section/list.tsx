@@ -1,13 +1,21 @@
 "use client";
 
 import { ExternalLink, Github } from "lucide-react";
-import { logoMap } from "@/models/icons";
+import { menuRole } from "@/models/menu";
 import { masterDataMap } from "@/models/master-data";
 import type { Project } from "@/models/project";
 
 interface ProjectSectionProps {
   projects: Project[];
 }
+
+/**
+ * Role value (stored by the admin, e.g. "frontend") → display label from
+ * menuRole ("Frontend Developer"). Unknown values fall back to the raw
+ * string so nothing ever renders blank.
+ */
+const roleLabelOf = (role: string): string =>
+  menuRole.find((entry) => entry.value === role)?.label ?? role;
 
 /** Desktop column template with EVEN fr-based tracks so the gaps between
  *  columns stay consistent no matter the content: year fixed, made-at
@@ -59,7 +67,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
           data-aos="fade-up"
           className="mb-2 font-martian-mono text-xs uppercase tracking-[0.25em] text-gray-500"
         >
-          Archive
+          Project Archives
         </p>
         <h2
           data-aos="fade-up"
@@ -108,13 +116,14 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                   {yearOf(project)}
                 </span>
 
-                {/* Project — left aligned, information only */}
+                {/* Project — left aligned, information only. Role renders
+                    its menuRole label ("frontend" → "Frontend Developer"). */}
                 <div className="min-w-0 flex flex-col gap-1.5">
                   <span className="font-inter font-semibold text-white transition-colors duration-500 group-hover:text-[#DEB887]">
                     {project.title}
                   </span>
-                  <span className="font-martian-mono text-[10px] text-gray-400/70">
-                    {project.role}
+                  <span className="font-martian-mono text-[10px] uppercase tracking-[0.15em] text-gray-400/70">
+                    {roleLabelOf(project.role)}
                   </span>
                 </div>
 
@@ -126,24 +135,21 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                   {madeAt || <span className="text-gray-700">—</span>}
                 </span>
 
-                {/* Built with — left aligned; every skill, icon + name;
-                    pills wrap within the column. */}
-                <span className="flex min-w-0 flex-wrap items-center gap-1.5">
-                  {project.skills.map((tech) => {
-                    const Icon = logoMap[tech.toLowerCase()];
-                    const name =
-                      masterDataMap[tech.toLowerCase()]?.name || tech;
+                {/* Built with — left aligned; plain text skill names
+                    (master-data display names) separated by middle dots,
+                    no icons or tag pills. The dot TRAILS each skill (except
+                    the last) so a wrapped line never starts with a stray
+                    separator, and `break-words` only splits names that are
+                    genuinely too long for the column. */}
+                <span className="flex min-w-0 flex-wrap items-baseline gap-y-1 text-xs leading-relaxed font-martian-mono text-gray-300">
+                  {project.skills.map((tech, skillIndex) => {
+                    const isLast = skillIndex === project.skills.length - 1;
                     return (
-                      <span
-                        key={tech}
-                        className="inline-flex items-center gap-1.5 rounded-full border border-white/13 px-2.5 py-0.5 text-xs text-gray-300 font-neue-haas"
-                      >
-                        {Icon ? (
-                          <Icon className="h-3 w-3 shrink-0" />
-                        ) : (
-                          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gray-500" />
+                      <span key={tech} className="max-w-full break-words">
+                        {masterDataMap[tech.toLowerCase()]?.name || tech}
+                        {!isLast && (
+                          <span className="mx-1.5 text-[#DEB887]">·</span>
                         )}
-                        {name}
                       </span>
                     );
                   })}
@@ -164,7 +170,7 @@ const ListProjectSection = ({ projects }: ProjectSectionProps) => {
                         className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap text-sm text-gray-400 font-neue-haas tracking-wider font-light transition-colors duration-500 hover:text-[#DEB887]"
                       >
                         <Github size={15} className="shrink-0" />
-                        github
+                        Github
                       </a>
                     ) : (
                       <a

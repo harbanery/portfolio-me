@@ -8,6 +8,9 @@ import { masterDataMap } from "@/models/master-data";
 import { normalizeHtmlBody } from "@/helpers";
 import type { Project } from "@/models/project";
 
+/** Postman icon from the shared icon registry (SiPostman). */
+const PostmanIcon = logoMap.postman;
+
 interface ProjectSectionProps {
   projects: Project[];
   /** Total ACTIVE projects from the database — drives the heading count. */
@@ -177,6 +180,18 @@ const ProjectSection = ({ projects, totalCount }: ProjectSectionProps) => {
                         className="transition-colors duration-500 hover:text-[#DEB887]"
                       >
                         <ExternalLink size={18} />
+                      </a>
+                    )}
+                    {project.apiDocumentation && (
+                      <a
+                        href={project.apiDocumentation}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`${project.title} API documentation`}
+                        title="API documentation (Postman)"
+                        className="transition-colors duration-500 hover:text-[#DEB887]"
+                      >
+                        <PostmanIcon size={18} />
                       </a>
                     )}
                   </div>

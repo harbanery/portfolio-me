@@ -53,6 +53,30 @@ const projectOrdering = [{ order: "asc" as const }, { createdAt: "desc" as const
 const isShowcaseable = (project: Project): boolean =>
   !!project.image && !!project.webLink;
 
+/**
+ * Effective archive date as a timestamp: the completion date (endDate) when
+ * set, else the record's creation date — the same date that drives the
+ * archive year column. Dateless records sink to the bottom (0).
+ */
+const archiveTimestampOf = (project: Project): number => {
+  const raw = project.endDate || project.createdAt;
+  if (!raw) return 0;
+  const time = new Date(raw).getTime();
+  return Number.isNaN(time) ? 0 : time;
+};
+
+const createdTimestampOf = (project: Project): number =>
+  project.createdAt ? new Date(project.createdAt).getTime() || 0 : 0;
+
+/**
+ * Archive ordering: latest year first, then latest month — the effective
+ * archive date descending. Records sharing a date fall back to newest
+ * created first; dateless records (dummy data) keep their original order.
+ */
+const byArchiveDateDesc = (a: Project, b: Project): number =>
+  archiveTimestampOf(b) - archiveTimestampOf(a) ||
+  createdTimestampOf(b) - createdTimestampOf(a);
+
 /** Projects are "real" once the database holds at least one ACTIVE row. */
 export async function getProjects(): Promise<Project[]> {
   try {
@@ -112,7 +136,9 @@ export async function getOtherProjects(
 
 /**
  * Every ACTIVE project for the archive page — no showcase filter, so work
- * without a cover image or live link still counts.
+ * without a cover image or live link still counts. Sorted by the effective
+ * archive date (endDate, falling back to createdAt) descending: latest
+ * year first, then latest month.
  */
 export async function getAllProjects(): Promise<Project[]> {
   try {
@@ -123,7 +149,7 @@ export async function getAllProjects(): Promise<Project[]> {
     });
 
     if (projects.length === 0) return dummyProjects;
-    return projects as Project[];
+    return (projects as Project[]).sort(byArchiveDateDesc);
   } catch (error) {
     console.error("Error fetching all projects, falling back to dummy data:", error);
     return dummyProjects;
