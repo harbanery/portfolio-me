@@ -1,169 +1,259 @@
-"use client";
-
-import { masterDataMap } from "@/utils/helpers/category";
-import { logoMap } from "@/utils/helpers/icon";
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import SectionHeading from "@/components/section-heading";
+import RotatingText from "@/components/rotating-text";
+import { normalizeHtmlBody } from "@/helpers";
+import { logoMap } from "@/models/icons";
+import { masterDataMap } from "@/models/master-data";
+import type { EducationItem } from "@/services/credentialService";
+import type { PersonalLanguage } from "@/services/personalService";
 
 interface AboutSectionProps {
   about?: string | null;
-  skills?: string[];
-  images?: string | string[];
+  /** Mirrors the Prisma `PersonalAvailability` enum. */
+  availability?: string | null;
+  /** Role labels from the Personal row ("open_to" column). */
+  openTo?: string[];
+  /** Languages from the Personal row ("languages" JSON column). */
+  languages?: PersonalLanguage[];
+  /** Priority skill keys from the Personal row ("priority_skills"). */
+  prioritySkills?: string[];
+  education: EducationItem[];
 }
 
-const AboutSection = ({ about, skills = [], images }: AboutSectionProps) => {
-  if (!about) return null;
+/** Display label per language level stored in the database. */
+const LANGUAGE_LEVEL_LABEL: Record<string, string> = {
+  NATIVE: "Native",
+  PROFESSIONAL: "Professional",
+  LIMITED: "Limited",
+};
 
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const profileImages = Array.isArray(images) ? images : [];
+/** Used while the profile row has no languages stored yet — hides the
+ *  Languages row instead of inventing data. */
+const FALLBACK_LANGUAGES: PersonalLanguage[] = [];
 
-  const skillList = skills
-    .filter((skill) => logoMap[skill])
-    .map((skill) => ({
-      key: skill,
-      icon: logoMap[skill],
-      name: masterDataMap[skill].name,
-    }));
+/** What the profile is open to, derived from availability when the
+ *  database list is empty. Returns null when availability is unknown
+ *  (no personal data at all) — and for a busy profile, where advertising
+ *  roles would contradict the status — so the row disappears entirely. */
+const fallbackOpenToOf = (
+  availability?: string | null,
+): { label: string; active: boolean }[] | null => {
+  switch (availability) {
+    case "AVAILABLE":
+      return [
+        { label: "Full-time roles", active: true },
+        { label: "Freelance projects", active: true },
+      ];
+    case "ONLY_FREELANCE":
+      return [
+        { label: "Full-time roles", active: false },
+        { label: "Freelance projects", active: true },
+      ];
+    default:
+      // NOT_AVAILABLE and unknown availability: no open-to row at all.
+      return null;
+  }
+};
 
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track || !skillList.length) return;
+/** Row label styling shared by every info row. */
+const rowLabelClass =
+  "font-martian-mono text-[10px] uppercase tracking-[0.25em] text-gray-600 mb-2.5";
 
-    // Use requestAnimationFrame untuk smooth scrolling dan performance
-    const animateSkills = () => {
-      // Clone the skills for infinite scrolling
-      const skills = Array.from(track.children);
-      skills.forEach((skill) => {
-        const clone = skill.cloneNode(true);
-        track.appendChild(clone);
-      });
-    };
+/**
+ * About section: rich-text body on the left, compact profile card on the
+ * right (focusing on, open to, languages, education). No portrait image
+ * by design.
+ */
+const AboutSection = ({
+  about,
+  availability,
+  openTo,
+  languages,
+  prioritySkills,
+  education,
+}: AboutSectionProps) => {
+  // "Open to" hides entirely while the profile is busy (NOT_AVAILABLE):
+  // advertising roles would contradict the status. Otherwise the DB list
+  // wins, with availability-derived fallbacks for the other statuses.
+  const openToItems =
+    availability === "NOT_AVAILABLE"
+      ? null
+      : openTo && openTo.length > 0
+        ? openTo.map((label) => ({ label, active: true }))
+        : fallbackOpenToOf(availability);
 
-    // Defer animation untuk tidak blocking main thread
-    const rafId = requestAnimationFrame(() => {
-      animateSkills();
-    });
+  const languageItems =
+    languages && languages.length > 0 ? languages : FALLBACK_LANGUAGES;
 
-    return () => {
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
-    };
-  }, [skillList.length]);
+  const focusingOn = (prioritySkills ?? []).filter((key) => masterDataMap[key]);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex(
-        (prevIndex) => (prevIndex + 1) % profileImages.length,
-      );
-    }, 3000); // Change image every 3 seconds
+  // Each card block renders only with data; the card itself disappears
+  // when every block is empty.
+  const hasFocusing = focusingOn.length > 0;
+  const hasEducation = education.length > 0;
+  const hasOpenTo = !!openToItems && openToItems.length > 0;
+  const hasLanguages = languageItems.length > 0;
+  const hasCard = hasFocusing || hasEducation || hasOpenTo || hasLanguages;
 
-    return () => clearInterval(interval);
-  }, [profileImages.length]);
+  /** First rendered block drops its top border/divider. */
+  const noTopBorder = (
+    block: "focus" | "education" | "openTo" | "languages",
+  ): string => {
+    const isFirst =
+      (block === "focus" && hasFocusing) ||
+      (block === "education" && !hasFocusing && hasEducation) ||
+      (block === "openTo" && !hasFocusing && !hasEducation && hasOpenTo) ||
+      (block === "languages" &&
+        !hasFocusing &&
+        !hasEducation &&
+        !hasOpenTo &&
+        hasLanguages);
+    return isFirst ? "border-t-0 pt-0" : "";
+  };
 
   return (
-    <section
-      id="about"
-      className="h-full bg-black flex items-center justify-center px-4 py-20"
-    >
-      <div className="max-w-6xl mx-auto w-full">
-        <div className="grid lg:grid-cols-2 gap-8 md:gap-12 lg:gap-16 items-center">
-          <div>
-            <h2
-              data-aos="fade-right"
-              data-aos-delay="200"
-              className="text-5xl lg:text-7xl font-neue-haas text-white font-light mb-0 lg:mb-12"
-            >
-              About
-            </h2>
-            <div
-              data-aos="fade-right"
-              data-aos-delay="250"
-              className="hidden lg:block text-base text-gray-300 font-neue-haas leading-relaxed space-y-3 paragraph-wrapper"
-              dangerouslySetInnerHTML={{ __html: about }}
-            />
-          </div>
-          <div data-aos="fade-left" data-aos-delay="200" className="relative">
-            <div className="aspect-square rounded-2xl bg-gray-800 flex items-center justify-center grayscale hover:grayscale-0 transition-all duration-300 overflow-hidden">
-              {profileImages?.length > 0 ? (
-                profileImages.map((image, index) => (
-                  <img
-                    key={index + 1}
-                    src={image}
-                    alt={`RY ${index + 1}`}
-                    className={`absolute w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${
-                      index === currentImageIndex ? "opacity-100" : "opacity-0"
-                    }`}
-                    loading={index === 0 ? "eager" : "lazy"}
-                  />
-                ))
-              ) : (
-                <div className="text-center">
-                  <div className="w-32 h-32 mx-auto mb-8 rounded-full border-2 border-gray-600 flex items-center justify-center">
-                    {/* <span className="text-4xl font-neue-haas font-light text-white">
-                      RY
-                    </span> */}
-                    <Image
-                      className="mix-blend-screen"
-                      src="/logo.png"
-                      width={72}
-                      height={72}
-                      alt=""
-                      priority={true}
-                      sizes="72px"
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-            {profileImages?.length > 1 && (
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
-                {profileImages.map((_, index) => (
-                  <button
-                    key={index + 1}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      index === currentImageIndex
-                        ? "bg-white w-8"
-                        : "bg-white/50 hover:bg-white/75"
-                    }`}
-                    aria-label={`Go to image ${index + 1}`}
-                  />
-                ))}
-              </div>
+    <section id="about" className="relative bg-black py-24 md:py-32">
+      <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
+        {/* Heading summarizes the body: a curiosity-driven journey into
+            building digital products (see the about data). */}
+        <SectionHeading
+          label="About"
+          meta="Profile"
+          lineOne="Curiosity, crafted"
+          lineTwo="into code."
+        />
+
+        <div
+          className={`mt-14 grid items-start gap-12 lg:gap-16 ${
+            hasCard ? "lg:grid-cols-[1fr_20rem]" : ""
+          }`}
+        >
+          {/* Body column */}
+          <div
+            data-aos="fade-right"
+            className="min-w-0 wrap-break-word lg:pt-2"
+          >
+            {about ? (
+              <div
+                className="html-body text-base md:text-lg text-gray-300 text-justify font-neue-haas font-light tracking-wider leading-relaxed paragraph-wrapper wrap-anywhere"
+                dangerouslySetInnerHTML={{ __html: normalizeHtmlBody(about) }}
+              />
+            ) : (
+              <p className="max-w-[60ch] text-lg text-gray-400 font-neue-haas font-light leading-relaxed">
+                This profile is still being prepared. The full story will be
+                here soon.
+              </p>
             )}
           </div>
-        </div>
-        <div
-          data-aos="fade-right"
-          data-aos-delay="250"
-          className="lg:hidden text-base text-gray-300 font-neue-haas leading-relaxed space-y-3 paragraph-wrapper mt-12 lg:mt-0"
-          dangerouslySetInnerHTML={{ __html: about }}
-        />
-        <div
-          data-aos="fade-up"
-          data-aos-delay="100"
-          className="overflow-hidden w-full relative py-16"
-        >
-          <div className="bg-gradient-to-r from-black from-0% to-transparent to-100% absolute left-0 z-10 w-4/12 h-full pointer-events-none" />
-          <div className="bg-gradient-to-l from-black from-0% to-transparent to-100% absolute right-0 z-10 w-4/12 h-full pointer-events-none" />
-          <div
-            ref={trackRef}
-            className="flex w-max animate-scroll items-center gap-8 md:gap-12 lg:gap-16"
-          >
-            {skillList.map((item) => (
-              <div
-                key={item.key}
-                className="group relative flex flex-col items-center cursor-pointer transition-transform duration-300 hover:scale-110"
-                title={item.name}
-              >
-                <div className="w-10 h-16 flex items-center justify-center">
-                  <item.icon size={40} className="text-white" />
-                </div>
-              </div>
-            ))}
-          </div>
+
+          {/* Info card — AOS animates the wrapper while the Tailwind
+              hover transition lives on the card itself, so the two never
+              fight over `transition-property`. On hover the border lights
+              up gold with a soft matching glow. Rendered only while at
+              least one block has data. */}
+          {hasCard && (
+            <div data-aos="fade-left" data-aos-delay="150">
+              <aside className="h-full rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7 transition-[border-color,box-shadow] duration-500 ease-in-out hover:border-[#DEB887] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)] max-lg:active:border-[#DEB887] max-lg:active:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]">
+                {/* Focusing on — priority skills from the database. Icon-only
+                    pills with a transparent border; hovering a pill expands
+                    its label and brings back the usual pill border. */}
+                {hasFocusing && (
+                  <div className="pb-6">
+                    <h3 className={rowLabelClass}>Focusing on</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {focusingOn.map((key) => {
+                        const Icon = logoMap[key];
+                        return (
+                          <span
+                            key={key}
+                            title={masterDataMap[key]?.name || key}
+                            className="group/pill inline-flex cursor-pointer items-center rounded-full border border-transparent px-2.5 py-1 text-xs text-gray-300 font-neue-haas transition-[border-color] duration-500 hover:border-white/13"
+                          >
+                            {Icon ? (
+                              <Icon className="h-3.5 w-3.5 shrink-0" />
+                            ) : (
+                              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gray-500" />
+                            )}
+                            <span className="max-w-0 overflow-hidden text-nowrap opacity-0 transition-[max-width,opacity,margin] duration-500 group-hover/pill:max-w-[12rem] group-hover/pill:opacity-100 group-hover/pill:ml-2">
+                              {masterDataMap[key]?.name || key}
+                            </span>
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {/* Education */}
+                {hasEducation && (
+                  <div
+                    className={`border-t border-white/10 py-6 ${noTopBorder("education")}`}
+                  >
+                    <h3 className={rowLabelClass}>Education</h3>
+                    <ul className="space-y-4">
+                      {education.map((item) => (
+                        <li key={`${item.school}-${item.year}`}>
+                          <p className="text-sm font-neue-haas font-light tracking-widest text-gray-200">
+                            {item.school}
+                          </p>
+                          <p className="mt-0.5 text-xs text-gray-500 font-neue-haas tracking-wider font-light">
+                            {[item.degree, item.field]
+                              .filter(Boolean)
+                              .join(" · ")}
+                          </p>
+                          <p className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 font-martian-mono text-[10px] uppercase text-gray-600 tabular-nums">
+                            {item.kind} · {item.year} ·{" "}
+                            {item.grade && (
+                              <span className="normal-case tracking-normal text-[#DEB887]">
+                                {item.grade}
+                              </span>
+                            )}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Open to — roles rotate one at a time with the same crossfade
+                    loop as the Bogor/Jakarta city swap in the navbar. */}
+                {hasOpenTo && openToItems && (
+                  <div
+                    className={`border-t border-white/10 py-6 ${noTopBorder("openTo")}`}
+                  >
+                    <h3 className={rowLabelClass}>Open to</h3>
+                    <p className="text-sm text-gray-200 font-neue-haas font-light tracking-widest leading-relaxed">
+                      <RotatingText
+                        items={openToItems.map((option) => option.label)}
+                      />
+                    </p>
+                  </div>
+                )}
+
+                {/* Languages */}
+                {hasLanguages && (
+                  <div
+                    className={`border-t border-white/10 pt-6 ${noTopBorder("languages")}`}
+                  >
+                    <h3 className={rowLabelClass}>Languages</h3>
+                    <ul className="space-y-2">
+                      {languageItems.map((language) => (
+                        <li
+                          key={language.name}
+                          className="flex items-baseline justify-between gap-3 text-sm font-neue-haas font-light tracking-widest text-gray-200"
+                        >
+                          {language.name}
+                          <span className="text-xs text-gray-500">
+                            {LANGUAGE_LEVEL_LABEL[language.level] ??
+                              language.level}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </aside>
+            </div>
+          )}
         </div>
       </div>
     </section>

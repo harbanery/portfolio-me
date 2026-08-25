@@ -1,8 +1,8 @@
 "use client";
 
-import { StarsBackground } from "@/components/aceternity/ui/bg-stars";
-import { ShootingStars } from "@/components/aceternity/ui/shooting-stars";
-import { motion } from "framer-motion";
+import { StarsBackground } from "@/components/effects/bg-stars";
+import { ShootingStars } from "@/components/effects/shooting-stars";
+import { RotateCcw } from "lucide-react";
 import { useEffect } from "react";
 
 const RootError = ({
@@ -13,85 +13,58 @@ const RootError = ({
   reset: () => void;
 }) => {
   useEffect(() => {
-    error &&
+    if (error) {
       console.error({
         name: error.name,
         message: error.message,
         stack: error.stack,
         cause: error.cause,
       });
+    }
   }, [error]);
 
   return (
-    <div className="relative min-h-screen w-full overflow-hidden bg-gradient-to-b from-slate-950 via-blue-950 to-indigo-950">
+    <div className="relative min-h-screen w-full overflow-hidden bg-black">
       <div className="absolute inset-0 z-10">
         <StarsBackground className="pointer-events-none" />
         <ShootingStars className="pointer-events-none" />
       </div>
 
-      {/* Error Message */}
-      <motion.div
-        className="absolute inset-0 flex flex-col items-center justify-center z-50 text-center px-4"
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 2, delay: 1, ease: "easeOut" }}
-      >
-        <motion.h2
-          className="text-2xl md:text-4xl font-medium capitalize font-neue-haas text-white mb-6"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 1, delay: 2, type: "spring" }}
-        >
-          Something Went Wrong
-        </motion.h2>
+      {/* Error message — same editorial heading + pill button language as
+          the rest of the site. Animations run on Tailwind keyframes (see
+          index.css). The raw error text stays in the console; the page only
+          surfaces the digest as a short reference. */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center z-50 text-center px-4 animate-[rise-in_0.5s_ease-in-out_1s_both]">
+        <p className="mb-6 font-martian-mono text-xs uppercase tracking-[0.25em] text-gray-500">
+          Error{error?.digest ? ` · ${error.digest}` : ""}
+        </p>
 
-        <motion.p
-          className="text-lg md:text-xl font-neue-haas text-white/60 mb-8 max-w-md"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 2.5 }}
-        >
-          {error?.message ?? "An unexpected error occurred"}. Please try again
-          later.
-        </motion.p>
+        <h2 className="mb-6 font-inter font-extrabold text-white leading-[1.02] tracking-tight text-[clamp(2.25rem,6vw,3.25rem)] animate-[pop-in_0.5s_ease-in-out_2s_both]">
+          Something went wrong.
+        </h2>
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 3 }}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
+        <p className="mb-10 max-w-xl text-lg md:text-xl font-neue-haas font-light tracking-wider leading-relaxed text-gray-400 animate-[soft-fade_0.5s_ease-in-out_2.5s_both]">
+          An unexpected error occurred while loading this page. Please try again
+          — if the problem persists, come back later.
+        </p>
+
+        <div className="flex flex-wrap items-center justify-center gap-4 animate-[soft-fade_0.5s_ease-in-out_3s_both]">
           <button
             onClick={reset}
-            className="bg-white text-black px-12 py-4 rounded-none font-neue-haas text-sm font-medium tracking-wider hover:bg-gray-200 transition-colors duration-300"
+            className="group inline-flex cursor-pointer items-center gap-2.5 rounded-full bg-[#DEB887] px-6 py-3 text-xs sm:px-7 sm:py-3.5 sm:text-sm md:px-8 md:py-4 font-martian-mono font-semibold tracking-wider text-[#241B0E] hover:bg-[#E6CC9E] hover:shadow-[0_8px_24px_-8px_rgba(222,184,135,0.55)] transition-[background-color,box-shadow] duration-500"
           >
+            <RotateCcw
+              size={16}
+              strokeWidth={3}
+              className="transition-transform duration-500 group-hover:-rotate-180"
+            />
             TRY AGAIN
           </button>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
 
       {/* Fade-in overlay */}
-      <motion.div
-        className="absolute inset-0 bg-black pointer-events-none z-60"
-        initial={{ opacity: 1 }}
-        animate={{ opacity: 0 }}
-        transition={{ duration: 2, ease: "easeOut" }}
-      />
-
-      <style jsx>{`
-        @keyframes mistDrift {
-          0%,
-          100% {
-            opacity: 0.1;
-            transform: translateX(0);
-          }
-          50% {
-            opacity: 0.2;
-            transform: translateX(20px);
-          }
-        }
-      `}</style>
+      <div className="absolute inset-0 bg-black pointer-events-none z-60 animate-[fade-out-overlay_0.5s_ease-in-out_both]" />
 
       {/* Atmospheric effects */}
       <div className="absolute inset-0 z-50 pointer-events-none">

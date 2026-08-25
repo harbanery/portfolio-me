@@ -2,6 +2,7 @@
 public/performances/
 
 # Exclude development files
+.env.production
 .env.development
 .env.local
 .vscode/

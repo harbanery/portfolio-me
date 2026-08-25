@@ -1,0 +1,84 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { ArrowUp } from "lucide-react";
+
+/**
+ * Scroll-to-top button pinned to the left edge of the viewport.
+ * Appears once the About section (the first section after the hero) is in
+ * view, and hides again on the hero itself. The "scroll to top" label is
+ * always shown — no hover needed to reveal it.
+ */
+
+const ScrollToTop = () => {
+  const pathname = usePathname();
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    // Deferred into a frame to avoid synchronous state updates in the
+    // effect body.
+    let frame: number | null = null;
+
+    const sync = () => {
+      const about = document.getElementById("about");
+      if (about) {
+        // Home: appears once the About section (first after the hero) is
+        // in view, hides again on the hero itself.
+        setVisible(
+          about.getBoundingClientRect().top <= window.innerHeight * 0.5,
+        );
+      } else {
+        // Every other page (projects, contacts, …) has no #about anchor —
+        // fall back to pure scroll depth so the button shows up there too.
+        setVisible(window.scrollY > 480);
+      }
+    };
+
+    const reveal = requestAnimationFrame(() => sync());
+
+    const handleScroll = () => {
+      if (frame !== null) return;
+      frame = requestAnimationFrame(() => {
+        sync();
+        frame = null;
+      });
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      cancelAnimationFrame(reveal);
+      window.removeEventListener("scroll", handleScroll);
+      if (frame !== null) cancelAnimationFrame(frame);
+    };
+  }, [pathname]);
+
+  const scrollTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return (
+    <button
+      onClick={scrollTop}
+      aria-label="Scroll back to top"
+      className={`group fixed bottom-4 left-5 z-40 flex cursor-pointer items-center gap-2 rounded-full border border-white/15 bg-black/60 py-2 pl-3 pr-3 text-gray-400 backdrop-blur-md transition-all duration-500 hover:border-white/40 hover:text-white ${
+        visible
+          ? "translate-y-0 opacity-100"
+          : "pointer-events-none translate-y-4 opacity-0"
+      }`}
+    >
+      <ArrowUp
+        size={18}
+        className="transition-transform duration-500 group-hover:-translate-y-0.5"
+      />
+      {/* Always-visible label — hidden only on the smallest screens so the
+          pill stays compact. */}
+      <span className="hidden uppercase text-[10px] tracking-[0.2em] font-martian-mono text-nowrap sm:inline">
+        scroll to top
+      </span>
+    </button>
+  );
+};
+
+export default ScrollToTop;

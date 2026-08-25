@@ -1,40 +1,111 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+/* Dark mode berbasis class (.dark pada <html>) */
+@custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --foreground: 222 184 135;
-  --background: 0 0 0;
-  --card: 0 0 0;
-  --card-foreground: 222 184 135;
-  --popover: 0 0 0;
-  --popover-foreground: 222 184 135;
-  --primary: 222 184 135;
-  --primary-foreground: 0 0 0;
-  --secondary: 240 240 240;
-  --secondary-foreground: 0 0 0;
-  --muted: 240 240 240;
-  --muted-foreground: 0 0 0;
-  --accent: 240 240 240;
-  --accent-foreground: 0 0 0;
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 0 0 0;
-  --border: 240 240 240;
-  --input: 240 240 240;
-  --ring: 222 184 135;
-  --chart-1: 12 76 171;
-  --chart-2: 173 96 60;
-  --chart-3: 197 134 192;
-  --chart-4: 43 108 176;
-  --chart-5: 46 213 115;
+  --background: #000000;
+  --foreground: #deb887;
 }
 
-* {
-  @apply p-0 m-0 hide-scrollbar;
+/*
+ * Font families dimapping dari CSS variable next/font.
+ * `@theme inline` agar nilai di-inline ke utility, bukan di-emit ulang
+ * sebagai CSS variable (next/font sudah mendefinisikannya di <body>).
+ */
+@theme inline {
+  --font-inter: var(--font-inter), sans-serif;
+  --font-bebas: var(--font-bebas), sans-serif;
+  --font-neue-haas: var(--font-neue-haas-display), sans-serif;
+  --font-martian-mono: var(--font-martian-mono), monospace;
+  --font-cookie: var(--font-cookie), cursive;
+}
+
+@theme {
+  /* Constant, somewhat slow marquee speed — no scroll-time acceleration. */
+  --animate-scroll: scroll 45s linear infinite;
+  --animate-fade-in: fade-in 0.5s ease-in-out both;
+  /* Check icon popping in on the contact success button. */
+  --animate-scale-in: scale-in 0.5s ease-in-out both;
+  --animate-ocean-text: ocean-text 6s ease-in-out infinite;
+
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  @keyframes fade-in {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes scale-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+    60% {
+      transform: scale(1.15);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes ocean-text {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+}
+
+/*
+ * NOTE: do not add an unlayered `* { margin: 0; padding: 0 }` reset here.
+ * In Tailwind v4, unlayered CSS overrides ALL layered utilities, which
+ * silently breaks `mx-auto`, `px-*`, `py-*`, etc. Preflight already
+ * normalizes margins/padding inside `@layer base`.
+ */
+
+/*
+ * Safety net against horizontal overflow (marquees, reveal animations,
+ * oversized headlines). `clip` does not create a scroll container, so
+ * `position: sticky` keeps working.
+ */
+html,
+body {
+  @apply hide-scrollbar;
+  overflow-x: clip;
+}
+
+/*
+ * Smooth anchor/programmatic scrolling, scoped to users without a
+ * reduced-motion preference. Route-change jump-to-top opts out via
+ * behavior "instant" (see BaseLayout).
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {
-  @apply bg-background text-foreground;
+  background: var(--background);
+  color: var(--foreground);
 }
 
 .image-wrapper::after {
@@ -51,7 +122,7 @@ body {
 
 .fill-horizontal {
   @apply relative inline-block text-gray-300 font-normal;
-  transition: color 0.3s ease;
+  transition: color 0.5s ease-in-out;
 }
 
 .fill-horizontal::after {
@@ -60,7 +131,7 @@ body {
 
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.3s ease;
+  transition: transform 0.5s ease-in-out;
   z-index: -1;
 }
 
@@ -83,7 +154,7 @@ body {
 
   transform: scaleX(0);
   transform-origin: right;
-  transition: transform 0.3s ease;
+  transition: transform 0.5s ease-in-out;
 }
 
 .underline-custom:hover::after {
@@ -98,11 +169,132 @@ body {
 @keyframes blinkColor {
   0%,
   100% {
-    color: inherit; /* warna awal */
+    color: inherit; /* initial color */
   }
   50% {
     color: white;
   }
+}
+
+/* Intro logo reveal */
+@keyframes zoomIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes zoomOut {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.1);
+    opacity: 0;
+  }
+}
+
+/* Loading logo pulse */
+@keyframes logoPulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(0.9);
+    opacity: 0.7;
+  }
+}
+
+/*
+ * Tailwind-only animations (replacing framer-motion). Used via arbitrary
+ * values, e.g. `animate-[rise-in_0.5s_ease-in-out_1s_both]`.
+ */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Spring-ish entrance — slight overshoot via the cubic-bezier. */
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Plain opacity fade for delayed reveals. */
+@keyframes soft-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Black cover dissolving once a page settles (error / 404). */
+@keyframes fade-out-overlay {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* Night-ocean waves drifting sideways forever. */
+@keyframes wave-drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Night-ocean layers easing in to their final opacity. */
+@keyframes wave-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: var(--wave-opacity, 1);
+  }
+}
+
+/*
+ * Rich-text body styling for About & Experience HTML columns.
+ * - each paragraph gets vertical spacing
+ * - strong/em emphasis renders truly bold against the light body weight
+ * - the opening paragraph gets a leading indent
+ */
+.html-body p {
+  margin-bottom: 1rem;
+}
+
+.html-body p:last-child {
+  margin-bottom: 0;
+}
+
+.html-body strong {
+  font-weight: 500;
 }
 
 .paragraph-wrapper a {
@@ -119,7 +311,7 @@ body {
   left: 0;
   background-color: currentColor;
   transform-origin: bottom right;
-  transition: transform 0.25s ease-out;
+  transition: transform 0.5s ease-in-out;
 }
 
 .paragraph-wrapper a:hover::after {
@@ -141,7 +333,7 @@ body {
   left: 0;
   background-color: currentColor;
   transform-origin: bottom right;
-  transition: transform 0.25s ease-out;
+  transition: transform 0.5s ease-in-out;
 }
 
 .paragraph-wrapper span:hover::after {
@@ -149,14 +341,17 @@ body {
   transform-origin: bottom left;
 }
 
-@layer utilities {
-  .hide-scrollbar::-webkit-scrollbar {
+/*
+ * Utility `hide-scrollbar` (Tailwind v4).
+ * Didefinisikan dengan `@utility` agar dapat dipakai via `@apply`
+ * maupun sebagai class biasa.
+ */
+@utility hide-scrollbar {
+  &::-webkit-scrollbar {
     display: none;
   }
-  .hide-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 @font-face {

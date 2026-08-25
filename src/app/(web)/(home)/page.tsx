@@ -1,24 +1,128 @@
-import BaseLayout from "@/components/custom/layout";
+﻿import BaseLayout from "@/components/layout";
+import { getHomeData } from "@/server/actions";
+import { getCredentials, getPublications } from "@/services/credentialService";
+import { getContactUrl } from "@/helpers";
+import { buildMenuSections } from "@/models/menu";
 import HeroSection from "./section/hero";
 import AboutSection from "./section/about";
+import ExperienceSection from "./section/experience";
+import SkillsSection, { isVisibleSkillKey } from "./section/skills";
 import ProjectSection from "./section/projects";
-import ssrAction from "./actions";
-import ContactSection from "@/components/custom/section/contact";
+// Hidden for now — kept in the tree to be re-enabled later.
+// import OpenSourceSection from "./section/open-source";
+import CredentialsSection from "./section/credentials";
+import WritingSection from "./section/writing";
+import HomeContactSection from "./section/contact";
+import SkillsMarqueeSection from "./section/skills-marquee";
+
+/**
+ * ISR: pages are prerendered statically and revalidated in the background
+ * at most every 60 seconds, so database edits appear on the site within a
+ * minute — no redeploy and no external webhook needed (DB-only refresh).
+ */
+export const revalidate = 60;
+
+/**
+ * Profile location — fixed in code: Bogor primary, Jakarta as the
+ * rotating alternate (the navbar swaps the two automatically). No
+ * external profile file involved.
+ */
+const LOCATION_LABEL = "Bogor, Indonesia";
 
 const HomePage = async () => {
-  const { data } = await ssrAction();
+  const [{ data }, credentials, publications] = await Promise.all([
+    getHomeData(),
+    getCredentials(),
+    getPublications(),
+  ]);
+
+  // Hero stats from database data: projects, distinct companies, and total
+  // professional experience. The project count covers every ACTIVE project,
+  // not only the showcaseable ones. Zero-valued stats are dropped — with no
+  // data at all the stats column disappears entirely (see HeroSection).
+  const projectCount = data?.allProjects.length ?? 0;
+  const companyCount = data?.experienceStats.companies ?? 0;
+  const years = data?.experienceStats.years ?? 0;
+
+  const stats = [
+    {
+      value: `${projectCount}`,
+      label: `${projectCount === 1 ? "Project" : "Projects"} delivered`,
+    },
+    {
+      value: `${companyCount}`,
+      label: `${companyCount === 1 ? "Company" : "Companies"} worked with`,
+    },
+    {
+      value: `${years}`,
+      label: `${years === 1 ? "Year" : "Years"} of professional experience`,
+    },
+  ].filter((stat) => Number(stat.value) > 0);
+
+  const contacts = data?.personal?.contacts;
+  const linkedinUrl = getContactUrl(contacts, "linkedin");
+  const githubUrl = getContactUrl(contacts, "github");
+
+  const experiences = data?.experiences || [];
+  const skills = data?.skills || [];
+
+  // Sections that disappear entirely when their data is missing also drop
+  // out of the side menu and the navbar mobile menu. Experience and
+  // Projects always render (they switch to their empty-state cards), so
+  // their menu entries stay.
+  const menuSections = buildMenuSections({
+    hasSkills: skills.some((key) => isVisibleSkillKey(key)),
+    hasCredentials: credentials.length > 0,
+    hasWriting: publications.length > 0,
+  });
 
   return (
-    <BaseLayout navbar={true} footer={true}>
+    <BaseLayout
+      navbar={true}
+      footer={true}
+      locationLabel={LOCATION_LABEL}
+      availability={data?.personal?.availability}
+      cvUrl={data?.cv?.url}
+      cvName={data?.cv?.name}
+      sections={menuSections}
+    >
       <div className="w-full bg-black">
-        <HeroSection name={data?.personal?.name} />
+        {/* Name comes from the database; the lead is the curated constant
+            in HeroSection (no external profile file). */}
+        <HeroSection name={data?.personal?.name} stats={stats} />
+        <SkillsMarqueeSection
+          skills={skills}
+          name={data?.personal?.name}
+        />
         <AboutSection
           about={data?.personal?.about}
-          skills={data?.personal?.skills || []}
-          images={data?.personal?.images?.map((img: any) => img.url) || []}
+          availability={data?.personal?.availability}
+          openTo={data?.personal?.openTo || []}
+          languages={data?.personal?.languages || []}
+          prioritySkills={data?.personal?.prioritySkills || []}
+          education={data?.education || []}
         />
-        <ProjectSection projects={data?.projects || []} />
-        <ContactSection contacts={data?.personal?.contacts || []} />
+        <ExperienceSection
+          experiences={experiences}
+          linkedinUrl={linkedinUrl}
+        />
+        {/* The heading count covers every ACTIVE project; the grid still
+            renders the showcaseable subset. */}
+        <ProjectSection
+          projects={data?.projects || []}
+          totalCount={projectCount}
+          githubUrl={githubUrl}
+          linkedinUrl={linkedinUrl}
+        />
+        <SkillsSection skills={skills} />
+        {/* Hidden for now — kept in the tree to be re-enabled later. */}
+        {/* <OpenSourceSection /> */}
+        <CredentialsSection items={credentials} />
+        <WritingSection items={publications} />
+        <HomeContactSection
+          contacts={data?.personal?.contacts || []}
+          availability={data?.personal?.availability}
+        />
       </div>
     </BaseLayout>
   );

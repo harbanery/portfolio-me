@@ -1,4 +1,4 @@
-import { Bebas_Neue, Inter } from "next/font/google";
+import { Cookie, Inter, Martian_Mono } from "next/font/google";
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -9,11 +9,20 @@ export const inter = Inter({
   fallback: ["system-ui", "sans-serif"],
 });
 
-export const bebas = Bebas_Neue({
+export const martianMono = Martian_Mono({
   subsets: ["latin"],
-  variable: "--font-bebas",
+  variable: "--font-martian-mono",
+  display: "swap",
+  weight: ["400", "700"],
+  adjustFontFallback: true,
+  fallback: ["system-ui", "monospace"],
+});
+
+export const cookie = Cookie({
+  subsets: ["latin"],
+  variable: "--font-cookie",
   display: "swap",
   weight: ["400"],
   adjustFontFallback: true,
-  fallback: ["system-ui", "sans-serif"],
+  fallback: ["system-ui", "cursive"],
 });

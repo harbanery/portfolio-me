@@ -1,106 +1,327 @@
 "use client";
 
-import { ArrowRight } from "lucide-react";
-import { logoMap } from "@/utils/helpers/icon";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  ExternalLink,
+  Github,
+  Lock,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
-import { getProjectSlug } from "@/utils/slug";
+import SectionHeading from "@/components/section-heading";
+import { logoMap } from "@/models/icons";
+import { masterDataMap } from "@/models/master-data";
+import { normalizeHtmlBody } from "@/helpers";
+import type { Project } from "@/models/project";
+
+/** Postman icon from the shared icon registry (SiPostman). */
+const PostmanIcon = logoMap.postman;
+
+/** LinkedIn icon from the shared icon registry (FaLinkedin). */
+const LinkedInIcon = logoMap.linkedin;
 
 interface ProjectSectionProps {
-  projects: Array<{
-    id: number;
-    title: string;
-    role: string;
-    image: string;
-    description: string | null;
-    skills: string[];
-    repoLinks: string[];
-    webLink: string | null;
-  }>;
+  projects: Project[];
+  /** Total ACTIVE projects from the database — drives the heading count. */
+  totalCount?: number;
+  /** GitHub profile URL from the personal contacts — the empty-state link. */
+  githubUrl?: string | null;
+  /** LinkedIn profile URL from the personal contacts — the empty-state link. */
+  linkedinUrl?: string | null;
 }
 
-const ProjectSection = ({ projects }: ProjectSectionProps) => {
-  const router = useRouter();
+/** Featured projects shown on the home page. */
+const FEATURED_COUNT = 4;
 
-  if (projects.length === 0) return null;
+/** Skill categories shown on the featured cards — the core stack only
+ *  (languages, frameworks, libraries, databases). Tools, platforms,
+ *  methodologies, and the rest stay on the archive page's plain-text
+ *  list, keeping the cards focused. */
+const CARD_SKILL_CATEGORIES = new Set([
+  "language",
+  "framework",
+  "library",
+  "database",
+]);
 
-  const renderSkillIcon = (skill: string) => {
-    const Icon = logoMap[skill];
-    return Icon ? <Icon size={20} /> : null;
-  };
+/** True when the skill belongs to one of the card categories above. */
+const isCardSkill = (tech: string) => {
+  const categories = masterDataMap[tech.toLowerCase()]?.category ?? [];
+  return categories.some((category) => CARD_SKILL_CATEGORIES.has(category));
+};
 
-  const gridCols = (length: number) => {
-    switch (length) {
-      case 1:
-        return "grid-cols-1";
-      case 2:
-        return "grid-cols-1 md:grid-cols-2";
-      case 3:
-        return "grid-cols-1 md:grid-cols-3";
-      default:
-        return "grid-cols-1 md:grid-cols-3";
-    }
-  };
+/**
+ * Featured work, following the "Some Things I've Built" layout:
+ * alternating screenshot + content rows, the content panel overlapping
+ * the image, a gradient washing the image toward the panel, and icon
+ * links (repo / live site). The skill list keeps the site's tag pills
+ * with icons.
+ */
+/**
+ * Empty state: while no projects exist, point visitors at GitHub (the
+ * code) or LinkedIn (the story). With neither contact available the card
+ * simply explains that the data is being prepared.
+ */
+const ProjectsEmptyState = ({
+  githubUrl,
+  linkedinUrl,
+}: {
+  githubUrl?: string | null;
+  linkedinUrl?: string | null;
+}) => {
+  const link = githubUrl ?? linkedinUrl;
+  const isGithub = !!githubUrl;
 
   return (
-    <section
-      id="projects"
-      className="bg-black flex items-center justify-center px-4 py-20"
-    >
-      <div className="max-w-7xl mx-auto w-full">
-        <h2
-          data-aos="fade-left"
-          data-aos-delay="200"
-          className="text-5xl lg:text-5xl font-neue-haas text-white font-light mb-4 text-right"
+    <div data-aos="fade-up" className="mt-14 md:mt-20">
+      {link ? (
+        <a
+          href={link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex max-w-xl flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-[border-color,box-shadow] duration-500 ease-in-out hover:border-[#DEB887] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)] sm:flex-row sm:items-center sm:justify-between md:p-7"
         >
-          Featured Projects
-        </h2>
+          <div className="min-w-0">
+            <h3 className="text-lg font-inter font-bold tracking-tight text-white md:text-xl">
+              {isGithub
+                ? "Selected work lives on GitHub."
+                : "Selected work lives on LinkedIn."}
+            </h3>
+            <p className="mt-1.5 text-sm text-gray-500 font-neue-haas font-light tracking-wider">
+              The project showcase is being prepared for this site.
+            </p>
+          </div>
+          <span className="inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-white/15 px-5 py-2.5 font-martian-mono text-[11px] font-semibold uppercase tracking-[0.15em] text-gray-300 transition-colors duration-500 group-hover:border-[#DEB887]/60 group-hover:text-[#DEB887] sm:self-auto">
+            {isGithub ? <Github size={14} /> : <LinkedInIcon size={14} />}
+            {isGithub ? "View GitHub" : "View LinkedIn"}
+            <ArrowUpRight
+              size={12}
+              className="transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            />
+          </span>
+        </a>
+      ) : (
+        <div className="max-w-xl rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7">
+          <h3 className="text-lg font-inter font-bold tracking-tight text-white md:text-xl">
+            Projects are being prepared.
+          </h3>
+          <p className="mt-1.5 text-sm text-gray-500 font-neue-haas font-light tracking-wider">
+            The showcase will be published here soon.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ProjectSection = ({
+  projects,
+  totalCount,
+  githubUrl,
+  linkedinUrl,
+}: ProjectSectionProps) => {
+  const router = useRouter();
+
+  // The heading count reflects every ACTIVE project in the database, not
+  // just the showcaseable/featured subset rendered below.
+  const count = totalCount ?? projects.length;
+  const featured = projects.slice(0, FEATURED_COUNT);
+
+  return (
+    <section id="projects" className="relative bg-black py-24 md:py-32">
+      <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
+        <SectionHeading
+          label="Work"
+          meta={count > 0 ? `${count} PROJECTS` : undefined}
+          metaCount={count > 0 ? count : undefined}
+          lineOne="What shipped,"
+          lineTwo="and what it moved."
+        />
+
         <p
-          data-aos="fade-left"
-          data-aos-delay="250"
-          className="text-md sm:text-lg md:text-xl text-gray-400 font-neue-haas font-light mb-12 tracking-wider leading-relaxed text-right"
+          data-aos="fade-up"
+          className="max-w-[60ch] text-base md:text-lg text-gray-400 font-neue-haas font-light tracking-wider leading-relaxed mb-16 md:mb-24"
         >
-          Some things I've built & worked on recently
+          Selected work, front to back. Each one shipped, measured, and still
+          standing.
         </p>
 
-        <div className={`group grid ${gridCols(projects.length)} gap-4 mb-8`}>
-          {projects.slice(0, 3).map((project, index) => (
-            <button
-              key={project.id}
-              data-aos="fade-left"
-              data-aos-delay={`${(index + 2) * 100}`}
-              onClick={() =>
-                router.push(`/projects/${getProjectSlug(project)}`)
-              }
-              className="relative aspect-video bg-gray-800 rounded-none group/button overflow-hidden grayscale transition-all duration-300 will-change-auto"
-            >
-              <img
-                src={project.image}
-                alt={project.title}
-                className="w-full h-full object-cover"
-                loading={index === 0 ? "eager" : "lazy"}
-                fetchPriority={index === 0 ? "high" : "auto"}
-              />
-              <div className="absolute inset-0 bg-black bg-opacity-0 group-hover/button:bg-opacity-60 group-hover/button:!backdrop-blur-none group-hover:backdrop-blur-sm transition-all duration-300 flex flex-col items-center justify-center gap-1">
-                <span className="text-white font-neue-haas text-2xl lg:text-3xl font-light opacity-0 group-hover/button:opacity-100 transition-opacity duration-300">
-                  {project.title}
-                </span>
-                {/* <div className="flex justify-center items-center gap-1">
-                  {project.skills?.map((skill) => renderSkillIcon(skill))}
-                </div> */}
-              </div>
-            </button>
-          ))}
-        </div>
+        {projects.length === 0 ? (
+          <ProjectsEmptyState githubUrl={githubUrl} linkedinUrl={linkedinUrl} />
+        ) : (
+          <div className="space-y-24 md:space-y-40">
+            {featured.map((project, index) => {
+              const flipped = index % 2 === 1;
+              const repoUrl = project.repoLinks[0];
 
-        <button
-          data-aos="fade-zoom-in"
-          data-aos-delay="100"
-          onClick={() => router.push(`/projects`)}
-          className={`inline-flex items-center gap-2 text-white font-neue-haas font-medium tracking-wider hover:!translate-x-1 transition-transform duration-200`}
-        >
-          VIEW MORE PROJECTS
-          <ArrowRight size={16} />
-        </button>
+              return (
+                <article
+                  key={project.id}
+                  data-aos={flipped ? "fade-left" : "fade-right"}
+                >
+                  {/* AOS animates the article; the Tailwind group/hover
+                    lives on the inner grid so transitions keep working.
+                    Laptop (lg, 1024–1280px): a simple 4-column grid where
+                    the image spans 3 (exactly 3/4 of the width); wide
+                    screens (xl+) return to the 12-column split with the
+                    deeper panel overlap. */}
+                  <div className="group grid items-center gap-6 md:grid-cols-12 md:gap-0 lg:grid-cols-4 xl:grid-cols-12">
+                    {/* Screenshot — under the content panel, gradient washing
+                    toward the panel side on desktop. Rests in black &
+                    white, coloring up on hover. Presentation only: no
+                    click-through to the detail page. */}
+                    <div
+                      className={`relative block overflow-hidden rounded-lg border border-white/10 md:col-span-7 lg:col-span-3 xl:col-span-7 ${
+                        flipped
+                          ? "md:col-start-6 lg:col-start-2 xl:col-start-6 md:row-start-1"
+                          : "md:col-start-1 lg:col-start-1 xl:col-start-1 md:row-start-1"
+                      }`}
+                    >
+                      <div className="aspect-video bg-gray-900 pointer-events-none">
+                        {project.image && (
+                          <img
+                            src={project.image}
+                            alt={project.title}
+                            className="h-full w-full object-cover grayscale transition-[filter] duration-500 ease-in-out group-hover:grayscale-0"
+                            loading={index === 0 ? "eager" : "lazy"}
+                            fetchPriority={index === 0 ? "high" : "auto"}
+                          />
+                        )}
+                      </div>
+                      {/* Mobile: darken the whole shot; desktop: fade toward
+                      the overlapping panel. */}
+                      <div
+                        className={`pointer-events-none absolute inset-0 bg-black/45 md:bg-black/0 ${
+                          flipped
+                            ? "md:bg-linear-to-l md:from-transparent md:via-black/35 md:to-black/70"
+                            : "md:bg-linear-to-r md:from-transparent md:via-black/35 md:to-black/70"
+                        } transition-opacity duration-500 group-hover:opacity-75`}
+                      />
+                    </div>
+
+                    {/* Content panel — overlaps the screenshot, elevated. On
+                    hover the border lights up gold with a soft glow.
+                    Laptop (lg): spans the last 2 of the 4 columns,
+                    overlapping the final quarter of the image; xl+
+                    restores the 7/12 overlap. */}
+                    <div
+                      className={`relative z-10 rounded-lg border border-white/10 bg-[#0a0a0a] p-6 shadow-[0_10px_35px_-15px_rgba(0,0,0,0.9)] transition-[border-color,box-shadow] duration-500 group-hover:border-[#DEB887] group-hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)] md:col-span-7 lg:col-span-2 xl:col-span-7 md:p-7 ${
+                        flipped
+                          ? "md:col-start-1 lg:col-start-1 xl:col-start-1 md:row-start-1 md:mr-8"
+                          : "md:col-start-6 lg:col-start-3 xl:col-start-6 md:row-start-1 md:ml-8"
+                      }`}
+                    >
+                      {/* Eyebrow + ownership badge. Internal work is private
+                      (lock icon), client work is client owned, personal
+                      projects carry no badge. */}
+                      <div className="mb-2 flex items-center justify-between gap-3">
+                        <p className="text-[10px] font-martian-mono uppercase tracking-[0.25em] text-[#DEB887]">
+                          Featured Project
+                        </p>
+                        {project.projectType === "internal" && (
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-white/13 px-2.5 py-0.5 font-inter font-medium text-[10px] uppercase tracking-[0.18em] text-gray-400">
+                            <Lock size={10} />
+                            Private
+                          </span>
+                        )}
+                        {project.projectType === "client" && (
+                          <span className="inline-flex items-center rounded-full border border-[#DEB887]/40 px-2.5 py-0.5 font-inter font-medium text-[10px] uppercase tracking-[0.18em] text-[#DEB887]">
+                            Client Owned
+                          </span>
+                        )}
+                      </div>
+
+                      <h3 className="text-xl font-inter font-bold tracking-tight text-white md:text-2xl">
+                        {project.title}
+                      </h3>
+
+                      {project.description && (
+                        <div
+                          className="mt-3 text-sm text-gray-400 text-justify font-neue-haas font-light tracking-wider leading-relaxed paragraph-wrapper wrap-anywhere lg:line-clamp-3"
+                          dangerouslySetInnerHTML={{
+                            __html: normalizeHtmlBody(project.description),
+                          }}
+                        />
+                      )}
+
+                      {/* Skill tags — the site's pill component with icons,
+                      sized like the capabilities grid pills. Only core
+                      stack categories render (see CARD_SKILL_CATEGORIES). */}
+                      <div className="mt-5 flex flex-wrap gap-1.5 md:gap-2">
+                        {project.skills.filter(isCardSkill).map((tech) => {
+                          const Icon = logoMap[tech.toLowerCase()];
+                          const techData = masterDataMap[tech.toLowerCase()];
+                          return (
+                            <span
+                              key={tech}
+                              className="inline-flex items-center gap-1.5 md:gap-2 rounded-full border border-white/13 px-2 py-0.5 text-[10px] md:px-3 md:py-1 md:text-xs text-gray-300 font-neue-haas"
+                            >
+                              {Icon && <Icon className="h-3.5 w-3.5" />}
+                              {techData?.name || tech}
+                            </span>
+                          );
+                        })}
+                      </div>
+
+                      {/* Links */}
+                      <div className="mt-5 flex items-center gap-4 text-gray-400">
+                        {repoUrl && (
+                          <a
+                            href={repoUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${project.title} repository`}
+                            className="transition-colors duration-500 hover:text-[#DEB887]"
+                          >
+                            <Github size={18} />
+                          </a>
+                        )}
+                        {project.webLink && (
+                          <a
+                            href={project.webLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${project.title} live site`}
+                            className="transition-colors duration-500 hover:text-[#DEB887]"
+                          >
+                            <ExternalLink size={18} />
+                          </a>
+                        )}
+                        {project.apiDocumentation && (
+                          <a
+                            href={project.apiDocumentation}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${project.title} API documentation`}
+                            title="API documentation (Postman)"
+                            className="transition-colors duration-500 hover:text-[#DEB887]"
+                          >
+                            <PostmanIcon size={18} />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
+
+        {count > FEATURED_COUNT && projects.length > 0 && (
+          <div data-aos="fade-up" className="mt-16 flex justify-center">
+            <button
+              onClick={() => router.push("/projects")}
+              className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-xs sm:px-7 sm:py-3.5 sm:text-sm md:px-8 md:py-4 font-martian-mono tracking-wider text-white hover:border-white/50 transition-colors duration-500"
+            >
+              VIEW ALL PROJECTS
+              <ArrowRight
+                size={16}
+                className="transition-transform duration-500 group-hover:translate-x-1"
+              />
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

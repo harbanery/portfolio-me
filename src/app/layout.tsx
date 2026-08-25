@@ -1,22 +1,27 @@
 import "@/assets/global/index.css";
-import type { Metadata } from "next";
-import { Suspense } from "react";
+import type { Metadata, Viewport } from "next";
 import {
   BASE_URL,
   META_APP,
   META_DESCRIPTION,
   META_TITLE,
   NODE_ENV,
-} from "@/lib/config/variables";
-import { bebas, inter } from "@/utils/fonts/next-google";
-import { neueHaasDisplay } from "@/utils/fonts/neue-haas";
+} from "@/config/variables";
 import { VercelCompatibleComponents } from "@/components/vercel";
+import DevelopmentBanner from "@/components/development-banner";
+import { cookie, inter, martianMono } from "@/utils/fonts/next-google";
+import { neueHaasDisplay } from "@/utils/fonts/next-local";
 
 export const metadata: Metadata = {
   title: META_TITLE,
   applicationName: META_APP,
   ...(META_DESCRIPTION && { description: META_DESCRIPTION }),
   metadataBase: new URL(BASE_URL),
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: META_APP,
+  },
   formatDetection: {
     telephone: false,
     email: false,
@@ -29,7 +34,6 @@ export const metadata: Metadata = {
     siteName: META_APP,
     countryName: "Indonesia",
     locale: "en-US",
-    alternateLocale: "id-ID",
     url: `/`,
     images: [
       {
@@ -55,7 +59,9 @@ export const metadata: Metadata = {
   //   ],
   // },
   creator: "Raihan Yusuf",
-  authors: [{ name: "Raihan Yusuf" }],
+  authors: [
+    { name: "Raihan Yusuf", url: "https://www.linkedin.com/in/raihan-yusuf" },
+  ],
   icons: [
     {
       rel: "icon",
@@ -65,8 +71,27 @@ export const metadata: Metadata = {
     },
     {
       rel: "apple-touch-icon",
-      type: "image/x-icon",
-      url: `/favicon.ico`,
+      type: "image/png",
+      url: `/ios/180.png`,
+      sizes: "180x180",
+    },
+    {
+      rel: "apple-touch-icon",
+      type: "image/png",
+      url: `/ios/120.png`,
+      sizes: "120x120",
+    },
+    {
+      rel: "apple-touch-icon",
+      type: "image/png",
+      url: `/ios/152.png`,
+      sizes: "152x152",
+    },
+    {
+      rel: "apple-touch-icon",
+      type: "image/png",
+      url: `/ios/1024.png`,
+      sizes: "1024x1024",
     },
     {
       rel: "shortcut icon",
@@ -76,28 +101,23 @@ export const metadata: Metadata = {
   ],
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      </head>
-
+    <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body
-        className={`${neueHaasDisplay.variable} ${inter.variable} ${bebas.variable} antialiased ${NODE_ENV === "development" ? "relative" : ""}`}
+        className={`${neueHaasDisplay.variable} ${inter.variable} ${martianMono.variable} ${cookie.variable} antialiased ${NODE_ENV === "development" ? "relative" : ""}`}
       >
-        <Suspense fallback={<></>}>
-          {NODE_ENV === "development" && (
-            <div className="font-inter fixed top-10 -right-10 z-[99999] text-white px-10 py-1 bg-red-600 rotate-45">
-              DEVELOPMENT
-            </div>
-          )}
-          {children}
-        </Suspense>
+        <DevelopmentBanner />
+        {children}
         <VercelCompatibleComponents.Analytics />
         <VercelCompatibleComponents.SpeedInsights />
       </body>
