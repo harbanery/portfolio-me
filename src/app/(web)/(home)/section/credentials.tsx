@@ -20,8 +20,8 @@ const capitalize = (value: string) =>
 
 /** Filterable, paginated credential list backed by the Certification table. */
 const CredentialsSection = ({ items }: CredentialsSectionProps) => {
-  // A credential without a verification link is not shown, so the whole
-  // section is hidden when nothing qualifies.
+  // A credential without a link (verification URL or certificate file)
+  // is not shown, so the whole section is hidden when nothing qualifies.
   const credentials = items.filter((item) => item.url);
 
   const [active, setActive] = useState("All");

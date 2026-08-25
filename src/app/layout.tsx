@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: `images/opengraph-image.png`,
-        alt: META_APP,
+        alt: META_TITLE,
         type: "image/png",
       },
     ],
