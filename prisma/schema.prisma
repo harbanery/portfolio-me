@@ -175,6 +175,7 @@ model Certification {
   expiryDate    DateTime?             @map("expiry_date")
   credentialId  String?               @map("credential_id")
   credentialUrl String?               @map("credential_url")
+  fileUrl       String?               @map("file_url")
   skills        String[]
   status        CertificationStatus   @default(ACTIVE)
   createdAt     DateTime              @default(now())
