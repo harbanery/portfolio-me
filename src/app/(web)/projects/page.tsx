@@ -11,9 +11,9 @@ import { META_APP } from "@/config/variables";
  */
 export const revalidate = 60;
 
-/** Page metadata — mirrors the root layout's shape, but points the
- *  Open Graph image at the dedicated archive artwork under
- *  public/images/projects instead of the site-wide one. */
+/** Page metadata — mirrors the root layout's shape and shares its
+ *  Open Graph artwork (with the call-to-action pill), pointing the
+ *  URL and title at the archive. */
 export const metadata: Metadata = {
   title: "Project Archives by Raihan Yusuf",
   description:
@@ -29,9 +29,11 @@ export const metadata: Metadata = {
     url: `/projects`,
     images: [
       {
-        url: `images/projects/opengraph-image.png`,
+        url: `images/opengraph-image.png`,
         alt: "Project Archives by Raihan Yusuf",
         type: "image/png",
+        width: 1200,
+        height: 630,
       },
     ],
   },

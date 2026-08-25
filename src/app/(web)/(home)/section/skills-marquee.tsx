@@ -49,7 +49,11 @@ const SkillsMarqueeSection = ({
                   key={`${item.key}-${index + 1}`}
                   className="flex items-center gap-16 md:gap-24 text-gray-500 hover:text-white cursor-pointer transition-colors duration-500 whitespace-nowrap"
                 >
-                  <item.icon size={36} className="shrink-0" />
+                  {/* Decorative logos — the section's aria-label carries the
+                      meaning, so the icons stay out of the accessibility
+                      tree (svg role="img" without a <title> would fail
+                      Lighthouse's agent accessibility audit). */}
+                  <item.icon size={36} className="shrink-0" aria-hidden="true" />
                   <span className="h-1 w-1 rounded-full bg-gray-700" />
                 </span>
               ))

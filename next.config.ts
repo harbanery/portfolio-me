@@ -4,6 +4,13 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
 
   images: {
+    // Local images next/image may optimize: the site logo and the
+    // portfolio-cover route (its `?v=<updatedAt>` query busts the
+    // immutable cache when the admin updates a record).
+    localPatterns: [
+      { pathname: "/logo.png" },
+      { pathname: "/api/portfolio-cover/**" },
+    ],
     remotePatterns: [
       {
         protocol: "https",

@@ -34,3 +34,38 @@ export interface ProjectSummary {
   title: string;
   image: string;
 }
+
+/** Showcase card shape (home page) — only the fields the featured
+ *  card renders. Keeping this lean shrinks the RSC payload sent to
+ *  the client: long-form fields (story, features, highlights…) are
+ *  never serialized into the HTML. */
+export interface ShowcaseProject {
+  id: number;
+  title: string;
+  projectType: string;
+  image: string;
+  description?: string | null;
+  apiDocumentation?: string | null;
+  skills: string[];
+  repoLinks: string[];
+  webLink?: string | null;
+}
+
+/** Archive row shape (/projects) — only the fields the year table
+ *  renders. Descriptions and galleries are not needed here at all,
+ *  so they stay out of the payload entirely. */
+export interface ArchiveProject {
+  id: number;
+  title: string;
+  projectType: string;
+  clientName?: string | null;
+  companyName?: string | null;
+  role: string;
+  skills: string[];
+  repoLinks: string[];
+  webLink?: string | null;
+  /** Completion date — drives the archive year; null while ongoing. */
+  endDate?: string | Date | null;
+  /** Record creation — archive year fallback (no start date column). */
+  createdAt?: string | Date | null;
+}

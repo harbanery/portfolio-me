@@ -1,5 +1,9 @@
 import prisma from "@/server/db";
-import type { Project } from "@/models/project";
+import type {
+  ArchiveProject,
+  Project,
+  ShowcaseProject,
+} from "@/models/project";
 
 /**
  * Data service for portfolio projects.
@@ -9,9 +13,10 @@ import type { Project } from "@/models/project";
  */
 
 /**
- * Column set used by the UI. Explicit select keeps queries working before
- * the newer admin-portfolio columns (is_ongoing, end_date, order) are
- * migrated into an older database.
+ * Full column set — used by the single-project lookups only. The list
+ * endpoints below select leaner shapes so long-form fields (story,
+ * features, highlights, challenges, solutions, outcomes, galleries)
+ * never bloat the RSC payload embedded in the HTML.
  */
 const projectColumns = {
   id: true,
@@ -39,6 +44,37 @@ const projectColumns = {
   createdAt: true,
 } as const;
 
+/** Showcase (home) columns — everything the featured card renders.
+ *  `updatedAt` feeds the cover URL's cache buster (not part of the
+ *  public shape). */
+const showcaseColumns = {
+  id: true,
+  title: true,
+  projectType: true,
+  image: true,
+  description: true,
+  apiDocumentation: true,
+  skills: true,
+  repoLinks: true,
+  webLink: true,
+  updatedAt: true,
+} as const;
+
+/** Archive (/projects) columns — everything the year table renders. */
+const archiveColumns = {
+  id: true,
+  title: true,
+  projectType: true,
+  clientName: true,
+  companyName: true,
+  role: true,
+  skills: true,
+  repoLinks: true,
+  webLink: true,
+  endDate: true,
+  createdAt: true,
+} as const;
+
 /**
  * Showcase order: smallest `order` first (top of the page), newest created
  * breaking ties.
@@ -50,22 +86,27 @@ const projectOrdering = [{ order: "asc" as const }, { createdAt: "desc" as const
  * a live web link. Ongoing/active status is enforced by isOngoing when the
  * column exists (older rows without it default true in the schema).
  */
-const isShowcaseable = (project: Project): boolean =>
-  !!project.image && !!project.webLink;
+const isShowcaseable = (
+  project: Pick<Project, "image" | "webLink">,
+): boolean => !!project.image && !!project.webLink;
 
 /**
  * Effective archive date as a timestamp: the completion date (endDate) when
  * set, else the record's creation date — the same date that drives the
  * archive year column. Dateless records sink to the bottom (0).
  */
-const archiveTimestampOf = (project: Project): number => {
+const archiveTimestampOf = (
+  project: Pick<ArchiveProject, "endDate" | "createdAt">,
+): number => {
   const raw = project.endDate || project.createdAt;
   if (!raw) return 0;
   const time = new Date(raw).getTime();
   return Number.isNaN(time) ? 0 : time;
 };
 
-const createdTimestampOf = (project: Project): number =>
+const createdTimestampOf = (
+  project: Pick<ArchiveProject, "createdAt">,
+): number =>
   project.createdAt ? new Date(project.createdAt).getTime() || 0 : 0;
 
 /**
@@ -73,20 +114,32 @@ const createdTimestampOf = (project: Project): number =>
  * archive date descending. Records sharing a date fall back to newest
  * created first; dateless records sink to the bottom.
  */
-const byArchiveDateDesc = (a: Project, b: Project): number =>
+const byArchiveDateDesc = (
+  a: Pick<ArchiveProject, "endDate" | "createdAt">,
+  b: Pick<ArchiveProject, "endDate" | "createdAt">,
+): number =>
   archiveTimestampOf(b) - archiveTimestampOf(a) ||
   createdTimestampOf(b) - createdTimestampOf(a);
 
 /** Every ACTIVE showcaseable project, smallest order first. */
-export async function getProjects(): Promise<Project[]> {
+export async function getProjects(): Promise<ShowcaseProject[]> {
   try {
     const projects = await prisma.portfolio.findMany({
       where: { status: "ACTIVE" },
       orderBy: projectOrdering,
-      select: projectColumns,
+      select: showcaseColumns,
     });
 
-    return (projects as Project[]).filter(isShowcaseable);
+    return (projects as (ShowcaseProject & { updatedAt: Date })[])
+      .filter(isShowcaseable)
+      .map(({ updatedAt, ...project }) => ({
+        ...project,
+        // Inline base64 covers are served through the cacheable cover
+        // route instead of being embedded in the RSC payload.
+        image: project.image.startsWith("data:")
+          ? `/api/portfolio-cover/${project.id}?v=${updatedAt.getTime()}`
+          : project.image,
+      }));
   } catch (error) {
     console.error("Error fetching projects:", error);
     return [];
@@ -133,15 +186,15 @@ export async function getOtherProjects(
  * archive date (endDate, falling back to createdAt) descending: latest
  * year first, then latest month.
  */
-export async function getAllProjects(): Promise<Project[]> {
+export async function getAllProjects(): Promise<ArchiveProject[]> {
   try {
     const projects = await prisma.portfolio.findMany({
       where: { status: "ACTIVE" },
       orderBy: projectOrdering,
-      select: projectColumns,
+      select: archiveColumns,
     });
 
-    return (projects as Project[]).sort(byArchiveDateDesc);
+    return (projects as ArchiveProject[]).sort(byArchiveDateDesc);
   } catch (error) {
     console.error("Error fetching all projects:", error);
     return [];
