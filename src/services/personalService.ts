@@ -1,5 +1,4 @@
 import prisma from "@/server/db";
-import { dummyExperiences } from "@/models/dummy-experiences";
 import { masterDataMap } from "@/models/master-data";
 import {
   normalizeEmploymentType,
@@ -14,7 +13,8 @@ import type {
 /**
  * Data service for personal profile and experiences.
  * Mirrors the progress-self pattern: server actions stay thin and delegate
- * data access + grouping logic to `src/services`.
+ * data access + grouping logic to `src/services`. No dummy fallback: an
+ * empty or unreachable database yields empty results.
  */
 
 /** Spoken language entry stored as JSON on the Personal row. */
@@ -46,21 +46,6 @@ export interface ExperienceStats {
   years: number;
 }
 
-const MONTH_LABELS = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
 /** Whole months between two dates (day granularity ignored). */
 function monthsBetween(from: Date, to: Date): number {
   return (
@@ -69,18 +54,9 @@ function monthsBetween(from: Date, to: Date): number {
   );
 }
 
-/** Parse the "MMM YYYY" start label of a dummy timeline title. */
-function parseStartFromTitle(title: string): Date | null {
-  const match = /^([A-Za-z]{3}) (\d{4})$/.exec(title.split(" – ")[0].trim());
-  if (!match) return null;
-  const monthIndex = MONTH_LABELS.indexOf(match[1]);
-  if (monthIndex === -1) return null;
-  return new Date(Number(match[2]), monthIndex, 1);
-}
-
 /**
  * Company count and total experience span, computed from the database.
- * Falls back to the dummy timeline while no rows exist.
+ * Zeroes when there is no data — the hero hides zero-valued stats.
  */
 export async function getExperienceStats(): Promise<ExperienceStats> {
   let companies = 0;
@@ -102,42 +78,11 @@ export async function getExperienceStats(): Promise<ExperienceStats> {
     console.error("Error fetching experience stats:", error);
   }
 
-  // Database empty or unreachable: derive the same figures from the dummy
-  // timeline ("MMM YYYY – ..." titles).
-  if (companies === 0) {
-    companies = dummyExperiences.length;
-    earliest = dummyExperiences
-      .map((entry) => parseStartFromTitle(entry.title))
-      .filter((date): date is Date => date !== null)
-      .reduce<Date | null>(
-        (min, current) => (min === null || current < min ? current : min),
-        null,
-      );
-  }
-
   const months = earliest
     ? Math.max(0, monthsBetween(earliest, new Date()))
     : 0;
-  return { companies, years: Math.max(1, Math.round(months / 12)) };
+  return { companies, years: months > 0 ? Math.max(1, Math.round(months / 12)) : 0 };
 }
-
-const SKILL_ORDER = [
-  "react",
-  "next",
-  "typescript",
-  "javascript",
-  "redux",
-  "css",
-  "tailwind",
-  "golang",
-  "laravel",
-  "postgre",
-  "cloudinary",
-  "github",
-];
-
-/** Fallback skill marquee when the profile has no skills yet. */
-const dummySkills = SKILL_ORDER.filter((key) => !!masterDataMap[key]);
 
 /** Normalizes the languages JSON into a typed list (bad shapes dropped). */
 const toLanguages = (value: unknown): PersonalLanguage[] =>
@@ -222,10 +167,9 @@ export async function getPersonalProfile(): Promise<PersonalProfile | null> {
   }
 }
 
-/** Skills for the marquee; falls back to a curated default set. */
+/** Skills for the marquee — known keys only; empty when the profile has none. */
 export function getMarqueeSkills(skills: string[] | undefined): string[] {
-  const list = (skills ?? []).filter((skill) => !!masterDataMap[skill]);
-  return list.length > 0 ? list : dummySkills;
+  return (skills ?? []).filter((skill) => !!masterDataMap[skill]);
 }
 
 /** Single entry of the Personal `contacts` JSON column. */
@@ -327,8 +271,7 @@ async function fetchExperiences(): Promise<Experience[]> {
 
 /**
  * Group raw experiences by company, merge consecutive roles, and sort by
- * most recent start date. Falls back to dummy entries while the database
- * has no active experience rows yet.
+ * most recent start date.
  */
 export async function getExperiences(): Promise<ExperienceTimelineEntry[]> {
   let experiences: Experience[];
@@ -336,15 +279,12 @@ export async function getExperiences(): Promise<ExperienceTimelineEntry[]> {
   try {
     experiences = await fetchExperiences();
   } catch (error) {
-    console.error(
-      "Error fetching experiences, falling back to dummy data:",
-      error,
-    );
-    return dummyExperiences;
+    console.error("Error fetching experiences:", error);
+    return [];
   }
 
-  // No data yet: serve the dummy timeline.
-  if (experiences.length === 0) return dummyExperiences;
+  // No data yet: the UI renders its empty state.
+  if (experiences.length === 0) return [];
 
   // Group experiences by company name
   const companyMap: Record<string, Experience[]> = {};

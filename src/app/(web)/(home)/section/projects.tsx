@@ -1,6 +1,12 @@
 "use client";
 
-import { ArrowRight, ExternalLink, Github, Lock } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  ExternalLink,
+  Github,
+  Lock,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import SectionHeading from "@/components/section-heading";
 import { logoMap } from "@/models/icons";
@@ -11,10 +17,17 @@ import type { Project } from "@/models/project";
 /** Postman icon from the shared icon registry (SiPostman). */
 const PostmanIcon = logoMap.postman;
 
+/** LinkedIn icon from the shared icon registry (FaLinkedin). */
+const LinkedInIcon = logoMap.linkedin;
+
 interface ProjectSectionProps {
   projects: Project[];
   /** Total ACTIVE projects from the database — drives the heading count. */
   totalCount?: number;
+  /** GitHub profile URL from the personal contacts — the empty-state link. */
+  githubUrl?: string | null;
+  /** LinkedIn profile URL from the personal contacts — the empty-state link. */
+  linkedinUrl?: string | null;
 }
 
 /** Featured projects shown on the home page. */
@@ -44,23 +57,83 @@ const isCardSkill = (tech: string) => {
  * links (repo / live site). The skill list keeps the site's tag pills
  * with icons.
  */
-const ProjectSection = ({ projects, totalCount }: ProjectSectionProps) => {
+/**
+ * Empty state: while no projects exist, point visitors at GitHub (the
+ * code) or LinkedIn (the story). With neither contact available the card
+ * simply explains that the data is being prepared.
+ */
+const ProjectsEmptyState = ({
+  githubUrl,
+  linkedinUrl,
+}: {
+  githubUrl?: string | null;
+  linkedinUrl?: string | null;
+}) => {
+  const link = githubUrl ?? linkedinUrl;
+  const isGithub = !!githubUrl;
+
+  return (
+    <div data-aos="fade-up" className="mt-14 md:mt-20">
+      {link ? (
+        <a
+          href={link}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex max-w-xl flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-[border-color,box-shadow] duration-500 ease-in-out hover:border-[#DEB887] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)] sm:flex-row sm:items-center sm:justify-between md:p-7"
+        >
+          <div className="min-w-0">
+            <h3 className="text-lg font-inter font-bold tracking-tight text-white md:text-xl">
+              {isGithub
+                ? "Selected work lives on GitHub."
+                : "Selected work lives on LinkedIn."}
+            </h3>
+            <p className="mt-1.5 text-sm text-gray-500 font-neue-haas font-light tracking-wider">
+              The project showcase is being prepared for this site.
+            </p>
+          </div>
+          <span className="inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-white/15 px-5 py-2.5 font-martian-mono text-[11px] font-semibold uppercase tracking-[0.15em] text-gray-300 transition-colors duration-500 group-hover:border-[#DEB887]/60 group-hover:text-[#DEB887] sm:self-auto">
+            {isGithub ? <Github size={14} /> : <LinkedInIcon size={14} />}
+            {isGithub ? "View GitHub" : "View LinkedIn"}
+            <ArrowUpRight
+              size={12}
+              className="transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            />
+          </span>
+        </a>
+      ) : (
+        <div className="max-w-xl rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7">
+          <h3 className="text-lg font-inter font-bold tracking-tight text-white md:text-xl">
+            Projects are being prepared.
+          </h3>
+          <p className="mt-1.5 text-sm text-gray-500 font-neue-haas font-light tracking-wider">
+            The showcase will be published here soon.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const ProjectSection = ({
+  projects,
+  totalCount,
+  githubUrl,
+  linkedinUrl,
+}: ProjectSectionProps) => {
   const router = useRouter();
 
-  if (projects.length === 0) return null;
-
-  const featured = projects.slice(0, FEATURED_COUNT);
   // The heading count reflects every ACTIVE project in the database, not
   // just the showcaseable/featured subset rendered below.
   const count = totalCount ?? projects.length;
+  const featured = projects.slice(0, FEATURED_COUNT);
 
   return (
     <section id="projects" className="relative bg-black py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
         <SectionHeading
           label="Work"
-          meta={`${count} PROJECTS`}
-          metaCount={count}
+          meta={count > 0 ? `${count} PROJECTS` : undefined}
+          metaCount={count > 0 ? count : undefined}
           lineOne="What shipped,"
           lineTwo="and what it moved."
         />
@@ -73,7 +146,10 @@ const ProjectSection = ({ projects, totalCount }: ProjectSectionProps) => {
           standing.
         </p>
 
-        <div className="space-y-24 md:space-y-40">
+        {projects.length === 0 ? (
+          <ProjectsEmptyState githubUrl={githubUrl} linkedinUrl={linkedinUrl} />
+        ) : (
+          <div className="space-y-24 md:space-y-40">
           {featured.map((project, index) => {
             const flipped = index % 2 === 1;
             const repoUrl = project.repoLinks[0];
@@ -222,9 +298,10 @@ const ProjectSection = ({ projects, totalCount }: ProjectSectionProps) => {
               </article>
             );
           })}
-        </div>
+          </div>
+        )}
 
-        {count > FEATURED_COUNT && (
+        {count > FEATURED_COUNT && projects.length > 0 && (
           <div data-aos="fade-up" className="mt-16 flex justify-center">
             <button
               onClick={() => router.push("/projects")}

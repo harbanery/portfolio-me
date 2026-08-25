@@ -53,8 +53,11 @@ const AuthorLine = ({ authors }: { authors: string[] }) => {
   );
 };
 
-/** Writing section backed by the Publication table. */
-const WritingSection = ({ items }: WritingSectionProps) => (
+/** Writing section backed by the Publication table. Hidden while empty. */
+const WritingSection = ({ items }: WritingSectionProps) => {
+  if (items.length === 0) return null;
+
+  return (
   <section id="writing" className="relative bg-black py-24 md:py-32">
     <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
       <SectionHeading
@@ -123,6 +126,7 @@ const WritingSection = ({ items }: WritingSectionProps) => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default WritingSection;

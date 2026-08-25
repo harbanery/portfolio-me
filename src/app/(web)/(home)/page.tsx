@@ -2,10 +2,12 @@
 import { getHomeData } from "@/server/actions";
 import { getHeroContent } from "@/services/meProfileService";
 import { getCredentials, getPublications } from "@/services/credentialService";
+import { getContactUrl } from "@/helpers";
+import { buildMenuSections } from "@/models/menu";
 import HeroSection from "./section/hero";
 import AboutSection from "./section/about";
 import ExperienceSection from "./section/experience";
-import SkillsSection from "./section/skills";
+import SkillsSection, { isVisibleSkillKey } from "./section/skills";
 import ProjectSection from "./section/projects";
 // Hidden for now — kept in the tree to be re-enabled later.
 // import OpenSourceSection from "./section/open-source";
@@ -31,7 +33,8 @@ const HomePage = async () => {
 
   // Hero stats from database data: projects, distinct companies, and total
   // professional experience. The project count covers every ACTIVE project,
-  // not only the showcaseable ones. Labels stay formal and count-aware.
+  // not only the showcaseable ones. Zero-valued stats are dropped — with no
+  // data at all the stats column disappears entirely (see HeroSection).
   const projectCount = data?.allProjects.length ?? 0;
   const companyCount = data?.experienceStats.companies ?? 0;
   const years = data?.experienceStats.years ?? 0;
@@ -49,7 +52,24 @@ const HomePage = async () => {
       value: `${years}`,
       label: `${years === 1 ? "Year" : "Years"} of professional experience`,
     },
-  ];
+  ].filter((stat) => Number(stat.value) > 0);
+
+  const contacts = data?.personal?.contacts;
+  const linkedinUrl = getContactUrl(contacts, "linkedin");
+  const githubUrl = getContactUrl(contacts, "github");
+
+  const experiences = data?.experiences || [];
+  const skills = data?.skills || [];
+
+  // Sections that disappear entirely when their data is missing also drop
+  // out of the side menu and the navbar mobile menu. Experience and
+  // Projects always render (they switch to their empty-state cards), so
+  // their menu entries stay.
+  const menuSections = buildMenuSections({
+    hasSkills: skills.some((key) => isVisibleSkillKey(key)),
+    hasCredentials: credentials.length > 0,
+    hasWriting: publications.length > 0,
+  });
 
   return (
     <BaseLayout
@@ -59,6 +79,7 @@ const HomePage = async () => {
       availability={data?.personal?.availability}
       cvUrl={data?.cv?.url}
       cvName={data?.cv?.name}
+      sections={menuSections}
     >
       <div className="w-full bg-black">
         <HeroSection
@@ -66,7 +87,10 @@ const HomePage = async () => {
           lead={hero?.lead}
           stats={stats}
         />
-        <SkillsMarqueeSection skills={data?.skills || []} />
+        <SkillsMarqueeSection
+          skills={skills}
+          name={data?.personal?.name ?? hero?.name}
+        />
         <AboutSection
           about={data?.personal?.about}
           availability={data?.personal?.availability}
@@ -75,14 +99,19 @@ const HomePage = async () => {
           prioritySkills={data?.personal?.prioritySkills || []}
           education={data?.education || []}
         />
-        <ExperienceSection experiences={data?.experiences || []} />
+        <ExperienceSection
+          experiences={experiences}
+          linkedinUrl={linkedinUrl}
+        />
         {/* The heading count covers every ACTIVE project; the grid still
             renders the showcaseable subset. */}
         <ProjectSection
           projects={data?.projects || []}
-          totalCount={data?.allProjects.length ?? 0}
+          totalCount={projectCount}
+          githubUrl={githubUrl}
+          linkedinUrl={linkedinUrl}
         />
-        <SkillsSection skills={data?.skills || []} />
+        <SkillsSection skills={skills} />
         {/* Hidden for now — kept in the tree to be re-enabled later. */}
         {/* <OpenSourceSection /> */}
         <CredentialsSection items={credentials} />

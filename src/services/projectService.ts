@@ -1,11 +1,11 @@
 import prisma from "@/server/db";
-import { dummyProjects } from "@/models/dummy-projects";
 import type { Project } from "@/models/project";
 
 /**
  * Data service for portfolio projects.
  * Mirrors the progress-self pattern: server actions stay thin and delegate
- * data access + fallback logic to `src/services`.
+ * data access to `src/services`. No dummy fallback: an empty or unreachable
+ * database yields an empty list and the UI renders its empty state.
  */
 
 /**
@@ -71,13 +71,13 @@ const createdTimestampOf = (project: Project): number =>
 /**
  * Archive ordering: latest year first, then latest month — the effective
  * archive date descending. Records sharing a date fall back to newest
- * created first; dateless records (dummy data) keep their original order.
+ * created first; dateless records sink to the bottom.
  */
 const byArchiveDateDesc = (a: Project, b: Project): number =>
   archiveTimestampOf(b) - archiveTimestampOf(a) ||
   createdTimestampOf(b) - createdTimestampOf(a);
 
-/** Projects are "real" once the database holds at least one ACTIVE row. */
+/** Every ACTIVE showcaseable project, smallest order first. */
 export async function getProjects(): Promise<Project[]> {
   try {
     const projects = await prisma.portfolio.findMany({
@@ -86,15 +86,14 @@ export async function getProjects(): Promise<Project[]> {
       select: projectColumns,
     });
 
-    if (projects.length === 0) return dummyProjects;
     return (projects as Project[]).filter(isShowcaseable);
   } catch (error) {
-    console.error("Error fetching projects, falling back to dummy data:", error);
-    return dummyProjects;
+    console.error("Error fetching projects:", error);
+    return [];
   }
 }
 
-/** A single ACTIVE project by its ID slug, with dummy fallback. */
+/** A single ACTIVE project by its ID slug. */
 export async function getProjectById(
   projectId: number,
 ): Promise<Project | null> {
@@ -104,13 +103,11 @@ export async function getProjectById(
       where: { id: projectId, status: "ACTIVE" },
       select: projectColumns,
     });
-    if (project) return project as Project;
+    return (project as Project) ?? null;
   } catch (error) {
     console.error("Error fetching project:", error);
+    return null;
   }
-
-  // Database unavailable or empty: serve matching dummy data.
-  return dummyProjects.find((project) => project.id === projectId) ?? null;
 }
 
 /** Every ACTIVE showcaseable project except the given one, smallest order first. */
@@ -121,17 +118,13 @@ export async function getOtherProjects(
     const projects = await prisma.portfolio.findMany({
       where: { id: { not: projectId }, status: "ACTIVE" },
       orderBy: projectOrdering,
-      select: { id: true, title: true, image: true, order: true },
+      select: projectColumns,
     });
-    if (projects.length > 0) {
-      return (projects as Project[]).filter(isShowcaseable);
-    }
+    return (projects as Project[]).filter(isShowcaseable);
   } catch (error) {
     console.error("Error fetching other projects:", error);
+    return [];
   }
-
-  // Database unavailable or empty: serve matching dummy data.
-  return dummyProjects.filter((project) => project.id !== projectId);
 }
 
 /**
@@ -148,10 +141,9 @@ export async function getAllProjects(): Promise<Project[]> {
       select: projectColumns,
     });
 
-    if (projects.length === 0) return dummyProjects;
     return (projects as Project[]).sort(byArchiveDateDesc);
   } catch (error) {
-    console.error("Error fetching all projects, falling back to dummy data:", error);
-    return dummyProjects;
+    console.error("Error fetching all projects:", error);
+    return [];
   }
 }

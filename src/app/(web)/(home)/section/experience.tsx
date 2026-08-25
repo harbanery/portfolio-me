@@ -1,5 +1,6 @@
 import SectionHeading from "@/components/section-heading";
 import SmoothSticky from "@/components/smooth-sticky";
+import { ArrowUpRight } from "lucide-react";
 import { logoMap } from "@/models/icons";
 import { masterDataMap } from "@/models/master-data";
 import { normalizeHtmlBody } from "@/helpers";
@@ -8,27 +9,78 @@ import type { ExperienceTimelineEntry } from "@/models/experience";
 
 interface ExperienceSectionProps {
   experiences: ExperienceTimelineEntry[];
+  /** LinkedIn profile URL from the personal contacts — the empty-state link. */
+  linkedinUrl?: string | null;
 }
 
+/** LinkedIn icon from the shared icon registry (FaLinkedin). */
+const LinkedInIcon = logoMap.linkedin;
+
+/**
+ * Empty state: while no experience rows exist, point visitors at the
+ * LinkedIn profile instead. Without a LinkedIn contact the card simply
+ * explains that the data is being prepared.
+ */
+const ExperienceEmptyState = ({
+  linkedinUrl,
+}: {
+  linkedinUrl?: string | null;
+}) => (
+  <div data-aos="fade-up" className="mt-14 md:mt-20">
+    {linkedinUrl ? (
+      <a
+        href={linkedinUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group flex max-w-xl flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.02] p-6 transition-[border-color,box-shadow] duration-500 ease-in-out hover:border-[#DEB887] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)] sm:flex-row sm:items-center sm:justify-between md:p-7"
+      >
+        <div className="min-w-0">
+          <h3 className="text-lg font-inter font-bold tracking-tight text-white md:text-xl">
+            Experience details live on LinkedIn.
+          </h3>
+          <p className="mt-1.5 text-sm text-gray-500 font-neue-haas font-light tracking-wider">
+            The full work history is being prepared for this site.
+          </p>
+        </div>
+        <span className="inline-flex shrink-0 items-center gap-2 self-start rounded-full border border-white/15 px-5 py-2.5 font-martian-mono text-[11px] font-semibold uppercase tracking-[0.15em] text-gray-300 transition-colors duration-500 group-hover:border-[#DEB887]/60 group-hover:text-[#DEB887] sm:self-auto">
+          <LinkedInIcon size={14} />
+          View LinkedIn
+          <ArrowUpRight
+            size={12}
+            className="transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+          />
+        </span>
+      </a>
+    ) : (
+      <div className="max-w-xl rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7">
+        <h3 className="text-lg font-inter font-bold tracking-tight text-white md:text-xl">
+          Experience is being prepared.
+        </h3>
+        <p className="mt-1.5 text-sm text-gray-500 font-neue-haas font-light tracking-wider">
+          The work history will be published here soon.
+        </p>
+      </div>
+    )}
+  </div>
+);
+
 /** Experience list with the date range on the left, per the reference design. */
-const ExperienceSection = ({ experiences }: ExperienceSectionProps) => (
+const ExperienceSection = ({
+  experiences,
+  linkedinUrl,
+}: ExperienceSectionProps) => (
   <section id="experience" className="relative bg-black py-24 md:py-32">
     <div className="mx-auto w-full max-w-6xl px-6 lg:px-10">
       <SectionHeading
         label="Experience"
-        meta={`${experiences.length} ROLES`}
-        metaCount={experiences.length}
+        meta={experiences.length > 0 ? `${experiences.length} ROLES` : undefined}
+        metaCount={experiences.length > 0 ? experiences.length : undefined}
         lineOne="From bootcamp"
         lineTwo="to enterprise."
       />
 
       {experiences.length === 0 ? (
-        <p
-          data-aos="fade-up"
-          className="mt-14 text-lg text-gray-500 font-neue-haas font-light"
-        >
-          Roles will be listed here soon.
-        </p>
+        <ExperienceEmptyState linkedinUrl={linkedinUrl} />
       ) : (
         <div className="mt-14 md:mt-20">
           {experiences.map((item) => (

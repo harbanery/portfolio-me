@@ -14,6 +14,13 @@ interface SkillsSectionProps {
  */
 const EXCLUDED_CATEGORIES = new Set(["application", "soft-skill"]);
 
+/** True when the skill key renders in the capabilities grid (shared with
+ *  the home page for the side-menu visibility flags). */
+export const isVisibleSkillKey = (key: string): boolean => {
+  const categories = masterDataMap[key]?.category ?? [];
+  return !categories.some((category) => EXCLUDED_CATEGORIES.has(category));
+};
+
 const isVisibleSkill = (categories: string[]) =>
   !categories.some((category) => EXCLUDED_CATEGORIES.has(category));
 
@@ -59,44 +66,16 @@ const GROUP_RULES: Array<{
   },
 ];
 
-/** Fallback when the profile has no skills yet. */
-const FALLBACK_KEYS = [
-  "javascript",
-  "typescript",
-  "golang",
-  "css",
-  "react",
-  "next",
-  "laravel",
-  "node",
-  "antd",
-  "tailwind",
-  "redux",
-  "axios",
-  "postgre",
-  "mysql",
-  "redis",
-  "prisma",
-  "cloudinary",
-  "vercel",
-  "git",
-  "gitlab",
-  "github",
-  "docker",
-  "postman",
-  "figma",
-  "jwt",
-  "i18n",
-  "testing",
-  "microservices",
-];
-
-/** Grouped capability grid built from the DB skill list. */
+/** Grouped capability grid built from the DB skill list. Hidden while the
+ *  profile has no visible skills. */
 const SkillsSection = ({ skills }: SkillsSectionProps) => {
   const keys = skills.filter(
     (key) => masterDataMap[key] && isVisibleSkill(masterDataMap[key].category),
   );
-  const source = keys.length > 0 ? keys : FALLBACK_KEYS;
+
+  if (keys.length === 0) return null;
+
+  const source = keys;
 
   const groups = GROUP_RULES.map((rule) => ({
     title: rule.title,

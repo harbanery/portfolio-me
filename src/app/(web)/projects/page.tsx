@@ -1,6 +1,7 @@
 import BaseLayout from "@/components/layout";
 import ListProjectSection from "./section/list";
 import { getProjectsData } from "@/server/actions";
+import { getContactUrl } from "@/helpers";
 
 /**
  * ISR (see the home page for details) — 60-second background
@@ -22,7 +23,11 @@ const ProjectsPage = async () => {
       availability={data?.personal?.availability}
     >
       <div className="w-full bg-black">
-        <ListProjectSection projects={data?.archiveProjects || []} />
+        <ListProjectSection
+          projects={data?.archiveProjects || []}
+          githubUrl={getContactUrl(data?.personal?.contacts, "github")}
+          linkedinUrl={getContactUrl(data?.personal?.contacts, "linkedin")}
+        />
       </div>
     </BaseLayout>
   );

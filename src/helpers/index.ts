@@ -38,3 +38,34 @@ export function formatURLContact(value: string, type: string): string {
       return value;
   }
 }
+
+/** One entry of the Personal `contacts` JSON column. */
+interface ContactEntry {
+  type: string;
+  value: string;
+}
+
+const isContactEntry = (value: unknown): value is ContactEntry =>
+  !!value &&
+  typeof value === "object" &&
+  typeof (value as ContactEntry).type === "string" &&
+  typeof (value as ContactEntry).value === "string";
+
+/**
+ * Full profile URL for a contact channel (e.g. "linkedin" → the LinkedIn
+ * profile page) from the raw `contacts` JSON column. Null when the
+ * channel is absent — used for the section empty-state links.
+ */
+export function getContactUrl(
+  contacts: unknown,
+  type: string,
+): string | null {
+  if (!Array.isArray(contacts)) return null;
+  const entry = contacts.find(
+    (item): item is ContactEntry =>
+      isContactEntry(item) && item.type === type && !!item.value.trim(),
+  );
+  if (!entry) return null;
+  const url = formatURLContact(entry.value.trim(), type);
+  return url.startsWith("http") ? url : `https://${url}`;
+}

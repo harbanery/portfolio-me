@@ -26,17 +26,7 @@ const DEFAULT_LEAD =
 const FOCUS_LINE =
   "Fullstack web development. Scalable frontend platforms. Performance-focused engineering.";
 
-const DEFAULT_STATS: HeroStat[] = [
-  { value: "9", label: "Projects delivered" },
-  { value: "2", label: "Companies worked with" },
-  { value: "2", label: "Years of professional experience" },
-];
-
-const HeroSection = ({
-  name,
-  lead,
-  stats = DEFAULT_STATS,
-}: HeroSectionProps) => {
+const HeroSection = ({ name, lead, stats = [] }: HeroSectionProps) => {
   const [showIntro, setShowIntro] = useState(true);
 
   useEffect(() => {
@@ -67,6 +57,15 @@ const HeroSection = ({
   const firstName = (nameParts[0] ?? "").toUpperCase();
   const lastName = nameParts.slice(1).join(" ").toUpperCase();
 
+  // Mobile stat columns follow the surviving stat count (stats with a
+  // zero value are dropped by the page): 3 → thirds, 2 → halves, 1 → full.
+  const statColumnsClass =
+    stats.length === 3
+      ? "grid-cols-3"
+      : stats.length === 2
+        ? "grid-cols-2"
+        : "grid-cols-1";
+
   return (
     <>
       {showIntro && <IntroSection onComplete={handleIntroComplete} />}
@@ -80,7 +79,14 @@ const HeroSection = ({
         <ShootingStars className="pointer-events-none" />
 
         <div className="mx-auto w-full max-w-6xl px-6 lg:px-10 py-28">
-          <div className="grid items-center gap-16 lg:grid-cols-[1.6fr_1fr]">
+          {/* Two columns only while stats exist; zero-valued stats are
+              dropped by the page, and an empty list removes the right
+              column entirely so the identity block takes full width. */}
+          <div
+            className={`grid items-center gap-16 ${
+              stats.length > 0 ? "lg:grid-cols-[1.6fr_1fr]" : ""
+            }`}
+          >
             {/* Left: identity — the full status row (availability, location,
                 local time) lives in the navbar on the home route. */}
             <div className="min-w-0">
@@ -156,58 +162,63 @@ const HeroSection = ({
 
               {/* Stats — compact row for tablet/mobile (the desktop
                   sidebar column below takes over from lg). Same count-up
-                  behavior and delay as the desktop block. */}
-              <dl
-                data-aos="fade-up"
-                data-aos-delay="450"
-                data-aos-offset="0"
-                className="mt-12 grid grid-cols-3 gap-x-4 gap-y-5 border-t border-white/10 pt-8 sm:gap-x-6 lg:hidden"
-              >
-                {stats.map((stat) => (
-                  <div key={stat.label} className="min-w-0">
-                    <dt className="font-inter text-2xl sm:text-3xl font-bold tracking-tight text-white">
-                      <CountUp
-                        to={Number(stat.value)}
-                        fallback={stat.value}
-                        delay={showIntro ? 5 : 0}
-                      />
-                    </dt>
-                    <dd className="mt-1.5 text-[9px] sm:text-[10px] font-martian-mono uppercase leading-relaxed tracking-[0.2em] text-gray-500">
-                      {stat.label}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
+                  behavior and delay as the desktop block. Hidden entirely
+                  when no stat qualifies (all values zero / no data). */}
+              {stats.length > 0 && (
+                <dl
+                  data-aos="fade-up"
+                  data-aos-delay="450"
+                  data-aos-offset="0"
+                  className={`mt-12 grid ${statColumnsClass} gap-x-4 gap-y-5 border-t border-white/10 pt-8 sm:gap-x-6 lg:hidden`}
+                >
+                  {stats.map((stat) => (
+                    <div key={stat.label} className="min-w-0">
+                      <dt className="font-inter text-2xl sm:text-3xl font-bold tracking-tight text-white">
+                        <CountUp
+                          to={Number(stat.value)}
+                          fallback={stat.value}
+                          delay={showIntro ? 5 : 0}
+                        />
+                      </dt>
+                      <dd className="mt-1.5 text-[9px] sm:text-[10px] font-martian-mono uppercase leading-relaxed tracking-[0.2em] text-gray-500">
+                        {stat.label}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
             </div>
 
             {/* Right: stats — the count starts after this block's AOS
                 reveal finishes (delay 450 + duration 500), plus the intro
                 splash time so the numbers are never counted behind it. */}
-            <div
-              data-aos="fade-left"
-              data-aos-delay="450"
-              className="hidden lg:block"
-            >
-              <dl className="divide-y divide-white/10 border-y border-white/10">
-                {stats.map((stat) => (
-                  <div
-                    key={stat.label}
-                    className="group py-6 first:pt-7 last:pb-7 transition-colors"
-                  >
-                    <dt className="font-inter text-3xl font-bold tracking-tight text-white transition-colors group-hover:text-[#DEB887]">
-                      <CountUp
-                        to={Number(stat.value)}
-                        fallback={stat.value}
-                        delay={showIntro ? 5 : 0}
-                      />
-                    </dt>
-                    <dd className="mt-2 text-[10px] font-martian-mono uppercase tracking-[0.25em] text-gray-500">
-                      {stat.label}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </div>
+            {stats.length > 0 && (
+              <div
+                data-aos="fade-left"
+                data-aos-delay="450"
+                className="hidden lg:block"
+              >
+                <dl className="divide-y divide-white/10 border-y border-white/10">
+                  {stats.map((stat) => (
+                    <div
+                      key={stat.label}
+                      className="group py-6 first:pt-7 last:pb-7 transition-colors"
+                    >
+                      <dt className="font-inter text-3xl font-bold tracking-tight text-white transition-colors group-hover:text-[#DEB887]">
+                        <CountUp
+                          to={Number(stat.value)}
+                          fallback={stat.value}
+                          delay={showIntro ? 5 : 0}
+                        />
+                      </dt>
+                      <dd className="mt-2 text-[10px] font-martian-mono uppercase tracking-[0.25em] text-gray-500">
+                        {stat.label}
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            )}
           </div>
         </div>
 

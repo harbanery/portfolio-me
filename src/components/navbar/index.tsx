@@ -3,7 +3,7 @@
 import { Download, Loader2, MapPin, Menu, X } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
-import { menuSections } from "@/models/menu";
+import { buildMenuSections, type MenuSection } from "@/models/menu";
 
 const emptySubscribe = () => () => {};
 
@@ -59,6 +59,7 @@ const Navbar = ({
   cvUrl,
   cvName,
   name,
+  sections,
 }: {
   locationLabel?: string;
   availability?: AvailabilityStatus | null;
@@ -68,9 +69,12 @@ const Navbar = ({
   cvName?: string | null;
   /** Profile name for the non-home brand button. */
   name?: string | null;
+  /** Home menu sections — pages omit sections whose data is missing. */
+  sections?: MenuSection[];
 }) => {
   const pathname = usePathname();
   const router = useRouter();
+  const menuSections = sections ?? buildMenuSections();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const mounted = useMounted();
   const [clock, setClock] = useState<string | null>(null);
@@ -167,10 +171,13 @@ const Navbar = ({
     return () => clearInterval(id);
   }, []);
 
-  const badge = AVAILABILITY_BADGE[availability ?? "AVAILABLE"];
+  // No profile data → assume "Busy" (NOT_AVAILABLE) so the status never
+  // overpromises while the database is empty or unreachable.
+  const effectiveAvailability: AvailabilityStatus =
+    availability ?? "NOT_AVAILABLE";
+  const badge = AVAILABILITY_BADGE[effectiveAvailability];
   const isHireable =
-    (availability ?? "AVAILABLE") !== "NOT_AVAILABLE" &&
-    pathname !== "/contacts";
+    effectiveAvailability !== "NOT_AVAILABLE" && pathname !== "/contacts";
 
   // locationLabel looks like "Bogor, Indonesia" — the city swaps, the
   // country stays put.

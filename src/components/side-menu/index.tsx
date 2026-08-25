@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { menuSections } from "@/models/menu";
+import { buildMenuSections, type MenuSection } from "@/models/menu";
 
 /**
  * Vertical section menu pinned to the right edge of the viewport
@@ -13,7 +13,8 @@ import { menuSections } from "@/models/menu";
 /** Viewport fraction that marks the "current" reading position. */
 const ACTIVE_LINE_RATIO = 0.35;
 
-const SideMenu = () => {
+const SideMenu = ({ sections }: { sections?: MenuSection[] }) => {
+  const menuSections = sections ?? buildMenuSections();
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -62,7 +63,7 @@ const SideMenu = () => {
       window.removeEventListener("scroll", handleScroll);
       if (frame.current !== null) cancelAnimationFrame(frame.current);
     };
-  }, [isHome]);
+  }, [isHome, menuSections]);
 
   if (!isHome) return null;
 

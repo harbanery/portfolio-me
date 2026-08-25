@@ -9,6 +9,7 @@ import "aos/dist/aos.css";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import type { AvailabilityStatus } from "../navbar";
+import { buildMenuSections, type MenuSection } from "@/models/menu";
 
 const BaseLayout = ({
   navbar = false,
@@ -19,6 +20,7 @@ const BaseLayout = ({
   cvUrl,
   cvName,
   name,
+  sections,
 }: {
   navbar?: boolean;
   children: React.ReactNode;
@@ -31,8 +33,11 @@ const BaseLayout = ({
   cvName?: string | null;
   /** Profile name for the navbar brand on non-home pages. */
   name?: string | null;
+  /** Home menu sections; hidden sections (no data) are omitted by the page. */
+  sections?: MenuSection[];
 }) => {
   const pathname = usePathname();
+  const menuSections = sections ?? buildMenuSections();
 
   const shouldScrollToTop =
     pathname === "/" ||
@@ -59,11 +64,12 @@ const BaseLayout = ({
           cvUrl={cvUrl}
           cvName={cvName}
           name={name}
+          sections={menuSections}
         />
       )}
       {/* Vertical section menu on the right edge — renders itself only on
           the home route. */}
-      {navbar && <SideMenu />}
+      {navbar && <SideMenu sections={menuSections} />}
       {/* Scroll-to-top on the left edge — appears from the About section. */}
       {navbar && <ScrollToTop />}
       {children}

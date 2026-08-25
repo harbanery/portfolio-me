@@ -2,8 +2,9 @@ import prisma from "@/server/db";
 
 /**
  * Data service for certifications (credentials section) and publications
- * (writing section). Mirrors the admin-portfolio schema. Dummy data is
- * served while the tables are empty or unreachable.
+ * (writing section). Mirrors the admin-portfolio schema. No dummy
+ * fallback: empty or unreachable tables yield empty lists and the
+ * sections stay hidden.
  */
 
 export interface CredentialItem {
@@ -34,76 +35,6 @@ export interface EducationItem {
   field: string;
   year: string;
 }
-
-/** Dummy education for the about info card. */
-const dummyEducation: EducationItem[] = [
-  {
-    kind: "Formal",
-    school: "Institute of Technology",
-    degree: "Bachelor",
-    field: "Informatics Engineering",
-    year: "2019 – 2023",
-  },
-  {
-    kind: "Non-formal",
-    school: "Pijar Camp",
-    degree: null,
-    field: "Fullstack Web & Golang Developer",
-    year: "2024",
-  },
-];
-
-/** Dummy credentials, aligned with the Certification categories. */
-const dummyCredentials: CredentialItem[] = [
-  {
-    category: "CERTIFICATION",
-    year: "2026",
-    title: "Google IT Support",
-    issuer: "Google",
-    detail: "IT support fundamentals, troubleshooting, and system administration.",
-    url: null,
-  },
-  {
-    category: "CERTIFICATION",
-    year: "2026",
-    title: "Google Network Security Specialization",
-    issuer: "Google",
-    detail: "Network security defense, detection, and mitigation practices.",
-    url: null,
-  },
-  {
-    category: "TRAINING",
-    year: "2024",
-    title: "Fullstack Web & Golang Developer",
-    issuer: "Pijar Camp",
-    detail: "Intensive bootcamp — graduated with distinction (95.33%).",
-    url: null,
-  },
-];
-
-/** Dummy publications for the writing section. */
-const dummyWriting: WritingItem[] = [
-  {
-    kind: "JOURNAL",
-    year: "2023",
-    title:
-      "Super Encryption on Video Cryptography: Vigenere Cipher and Transposition Myszkowski",
-    excerpt:
-      "Combining Vigenere cipher with Myszkowski transposition to strengthen video data confidentiality.",
-    url: null,
-    authors: ["Dian Novita", "Ahmad Fauzi", "Siti Rahma", "Budi Santoso"],
-  },
-  {
-    kind: "OTHER",
-    year: "2022",
-    title:
-      "Tempellemahbang Tourism Village Website for Promotion and Increasing Visitors",
-    excerpt:
-      "A community tourism website built to promote a local village and grow visitor numbers.",
-    url: null,
-    authors: ["Clara Wijaya"],
-  },
-];
 
 const yearOf = (date: Date) => `${date.getFullYear()}`;
 
@@ -182,10 +113,10 @@ export async function getEducation(): Promise<EducationItem[]> {
       }));
     }
   } catch (error) {
-    console.error("Error fetching education, falling back to dummy data:", error);
+    console.error("Error fetching education:", error);
   }
 
-  return dummyEducation;
+  return [];
 }
 
 /** Certifications from the database, newest first. */
@@ -224,10 +155,10 @@ export async function getCredentials(): Promise<CredentialItem[]> {
       }));
     }
   } catch (error) {
-    console.error("Error fetching certifications, falling back to dummy data:", error);
+    console.error("Error fetching certifications:", error);
   }
 
-  return dummyCredentials;
+  return [];
 }
 
 /** Publications from the database, newest first. */
@@ -257,8 +188,8 @@ export async function getPublications(): Promise<WritingItem[]> {
       }));
     }
   } catch (error) {
-    console.error("Error fetching publications, falling back to dummy data:", error);
+    console.error("Error fetching publications:", error);
   }
 
-  return dummyWriting;
+  return [];
 }
