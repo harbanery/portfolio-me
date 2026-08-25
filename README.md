@@ -20,6 +20,7 @@
 - [Table of Contents](#table-of-contents)
 - [About The Project](#about-the-project)
   - [Built With](#built-with)
+- [The Story](#the-story)
 - [Usage](#usage)
   - [Features](#features)
   - [Project Structure](#project-structure)
@@ -40,6 +41,10 @@ My personal portfolio website, built to present the work behind my name: selecte
 [![PostgreSQL][PostgreSQL]][PostgreSQL-url]
 [![TypeScript][TypeScript]][TypeScript-url]
 [![Node][Node.js]][Node-url]
+
+## The Story
+
+After quite a long time, I finally decided to build this project. For years I never had a portfolio of my own — the work was always there, in repositories, in organizations, in things I shipped, but never gathered in one place that truly represented me. This website is that missing piece: a home for the projects I have built, the experience behind them, and the ways to reach me. It grew from a simple page into a database-driven site I can keep curating as my work evolves.
 
 ## Usage
 
@@ -87,6 +92,8 @@ Distributed under the MIT License. See [`LICENSE`](LICENSE) for more information
 If you have any questions or inquiries regarding this project, feel free to contact me at [ryusuf05@gmail.com](mailto:ryusuf05@gmail.com)
 
 ## Acknowledgements
+
+Special thanks go to [Brittany Chiang](https://v4.brittanychiang.com/) and [Faris Maulana](https://faris-portfolio-red.vercel.app/) — this portfolio's design takes much inspiration from their beautiful work. You guys should check it out!
 
 Feel free to check it out:
 
