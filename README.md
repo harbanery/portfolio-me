@@ -35,12 +35,10 @@ My personal portfolio website, built to present the work behind my name: selecte
 ### Built With
 
 [![Next][Next.js]][Next-url]
-[![React][React.js]][React-url]
+[![TypeScript][TypeScript]][TypeScript-url]
 [![Tailwind][Tailwind]][Tailwind-url]
 [![Prisma][Prisma]][Prisma-url]
 [![PostgreSQL][PostgreSQL]][PostgreSQL-url]
-[![TypeScript][TypeScript]][TypeScript-url]
-[![Node][Node.js]][Node-url]
 
 ## The Story
 
@@ -111,12 +109,8 @@ Feel free to check it out:
 
 <!-- MARKDOWN LINKS & IMAGES -->
 
-[Node.js]: https://img.shields.io/badge/node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white
-[Node-url]: https://nodejs.org/en
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=white
-[React-url]: https://reactjs.org/
 [Tailwind]: https://img.shields.io/badge/tailwindcss-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white
 [Tailwind-url]: https://tailwindcss.com/
 [Prisma]: https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white
