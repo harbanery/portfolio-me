@@ -160,17 +160,21 @@ const ProjectSection = ({
                   data-aos={flipped ? "fade-left" : "fade-right"}
                 >
                   {/* AOS animates the article; the Tailwind group/hover
-                    lives on the inner grid so transitions keep working. */}
-                  <div className="group grid items-center gap-6 md:grid-cols-12 md:gap-0">
+                    lives on the inner grid so transitions keep working.
+                    Laptop (lg, 1024–1280px): a simple 4-column grid where
+                    the image spans 3 (exactly 3/4 of the width); wide
+                    screens (xl+) return to the 12-column split with the
+                    deeper panel overlap. */}
+                  <div className="group grid items-center gap-6 md:grid-cols-12 md:gap-0 lg:grid-cols-4 xl:grid-cols-12">
                     {/* Screenshot — under the content panel, gradient washing
                     toward the panel side on desktop. Rests in black &
                     white, coloring up on hover. Presentation only: no
                     click-through to the detail page. */}
                     <div
-                      className={`relative block overflow-hidden rounded-lg border border-white/10 md:col-span-7 ${
+                      className={`relative block overflow-hidden rounded-lg border border-white/10 md:col-span-7 lg:col-span-3 xl:col-span-7 ${
                         flipped
-                          ? "md:col-start-6 md:row-start-1"
-                          : "md:col-span-7 md:col-start-1 md:row-start-1"
+                          ? "md:col-start-6 lg:col-start-2 xl:col-start-6 md:row-start-1"
+                          : "md:col-start-1 lg:col-start-1 xl:col-start-1 md:row-start-1"
                       }`}
                     >
                       <div className="aspect-video bg-gray-900 pointer-events-none">
@@ -196,12 +200,15 @@ const ProjectSection = ({
                     </div>
 
                     {/* Content panel — overlaps the screenshot, elevated. On
-                    hover the border lights up gold with a soft glow. */}
+                    hover the border lights up gold with a soft glow.
+                    Laptop (lg): spans the last 2 of the 4 columns,
+                    overlapping the final quarter of the image; xl+
+                    restores the 7/12 overlap. */}
                     <div
-                      className={`relative z-10 rounded-lg border border-white/10 bg-[#0a0a0a] p-6 shadow-[0_10px_35px_-15px_rgba(0,0,0,0.9)] transition-[border-color,box-shadow] duration-500 group-hover:border-[#DEB887] group-hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)] md:col-span-7 md:p-7 ${
+                      className={`relative z-10 rounded-lg border border-white/10 bg-[#0a0a0a] p-6 shadow-[0_10px_35px_-15px_rgba(0,0,0,0.9)] transition-[border-color,box-shadow] duration-500 group-hover:border-[#DEB887] group-hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)] md:col-span-7 lg:col-span-2 xl:col-span-7 md:p-7 ${
                         flipped
-                          ? "md:col-start-1 md:row-start-1 md:mr-8"
-                          : "md:col-start-6 md:row-start-1 md:ml-8"
+                          ? "md:col-start-1 lg:col-start-1 xl:col-start-1 md:row-start-1 md:mr-8"
+                          : "md:col-start-6 lg:col-start-3 xl:col-start-6 md:row-start-1 md:ml-8"
                       }`}
                     >
                       {/* Eyebrow + ownership badge. Internal work is private

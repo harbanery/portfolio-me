@@ -33,6 +33,8 @@ export interface EducationItem {
   /** e.g. "Bachelor" — omitted for non-formal education. */
   degree: string | null;
   field: string;
+  /** e.g. "3.87 / 4.00" — omitted when not stored. */
+  grade: string | null;
   year: string;
 }
 
@@ -94,6 +96,7 @@ export async function getEducation(): Promise<EducationItem[]> {
         school: true,
         degree: true,
         field: true,
+        grade: true,
         startDate: true,
         endDate: true,
       },
@@ -106,6 +109,7 @@ export async function getEducation(): Promise<EducationItem[]> {
         school: row.school,
         degree: row.degree || null,
         field: row.field,
+        grade: row.grade || null,
         year: yearRangeOf(
           new Date(row.startDate),
           row.endDate ? new Date(row.endDate) : null,

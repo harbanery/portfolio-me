@@ -76,7 +76,7 @@ const SideMenu = ({ sections }: { sections?: MenuSection[] }) => {
   return (
     <nav
       aria-label="Section navigation"
-      className={`fixed right-5 top-1/2 -translate-y-1/2 z-40 hidden xl:flex flex-col items-end gap-4 transition-all duration-500 ease-in-out ${
+      className={`fixed right-5 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col items-end gap-4 transition-all duration-500 ease-in-out ${
         visible ? "translate-x-0 opacity-100" : "translate-x-4 opacity-0"
       }`}
     >

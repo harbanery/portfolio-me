@@ -196,10 +196,17 @@ const AboutSection = ({
                             {item.school}
                           </p>
                           <p className="mt-0.5 text-xs text-gray-500 font-neue-haas tracking-wider font-light">
-                            {[item.degree, item.field].filter(Boolean).join(" · ")}
+                            {[item.degree, item.field]
+                              .filter(Boolean)
+                              .join(" · ")}
                           </p>
-                          <p className="mt-1 font-martian-mono text-[10px] uppercase tracking-[0.2em] text-gray-600 tabular-nums">
-                            {item.kind} · {item.year}
+                          <p className="mt-1 flex flex-wrap items-baseline gap-x-2 gap-y-0.5 font-martian-mono text-[10px] uppercase text-gray-600 tabular-nums">
+                            {item.kind} · {item.year} ·{" "}
+                            {item.grade && (
+                              <span className="normal-case tracking-normal text-[#DEB887]">
+                                {item.grade}
+                              </span>
+                            )}
                           </p>
                         </li>
                       ))}
@@ -236,7 +243,8 @@ const AboutSection = ({
                         >
                           {language.name}
                           <span className="text-xs text-gray-500">
-                            {LANGUAGE_LEVEL_LABEL[language.level] ?? language.level}
+                            {LANGUAGE_LEVEL_LABEL[language.level] ??
+                              language.level}
                           </span>
                         </li>
                       ))}

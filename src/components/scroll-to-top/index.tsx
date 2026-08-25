@@ -25,7 +25,9 @@ const ScrollToTop = () => {
       if (about) {
         // Home: appears once the About section (first after the hero) is
         // in view, hides again on the hero itself.
-        setVisible(about.getBoundingClientRect().top <= window.innerHeight * 0.5);
+        setVisible(
+          about.getBoundingClientRect().top <= window.innerHeight * 0.5,
+        );
       } else {
         // Every other page (projects, contacts, …) has no #about anchor —
         // fall back to pure scroll depth so the button shows up there too.
@@ -60,7 +62,7 @@ const ScrollToTop = () => {
     <button
       onClick={scrollTop}
       aria-label="Scroll back to top"
-      className={`group fixed bottom-3 left-5 z-40 flex cursor-pointer items-center gap-2 rounded-full border border-white/15 bg-black/60 py-2 pl-3 pr-3 text-gray-400 backdrop-blur-md transition-all duration-500 hover:border-white/40 hover:text-white ${
+      className={`group fixed bottom-4 left-5 z-40 flex cursor-pointer items-center gap-2 rounded-full border border-white/15 bg-black/60 py-2 pl-3 pr-3 text-gray-400 backdrop-blur-md transition-all duration-500 hover:border-white/40 hover:text-white ${
         visible
           ? "translate-y-0 opacity-100"
           : "pointer-events-none translate-y-4 opacity-0"

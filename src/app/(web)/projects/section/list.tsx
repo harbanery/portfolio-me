@@ -346,10 +346,11 @@ const ListProjectSection = ({
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label={`${project.title} repository`}
+                            title={`${project.title} repository on GitHub`}
                             className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap text-xs md:text-sm text-gray-400 font-neue-haas tracking-wider font-light transition-colors duration-500 hover:text-[#DEB887]"
                           >
                             <Github size={15} className="shrink-0" />
-                            Github
+                            Link
                           </a>
                         ) : (
                           <a
@@ -357,9 +358,10 @@ const ListProjectSection = ({
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label={`${project.title} website`}
+                            title={hostOf(href)}
                             className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap text-xs md:text-sm text-gray-400 font-neue-haas tracking-wider font-light transition-colors duration-500 hover:text-[#DEB887]"
                           >
-                            {hostOf(href)}
+                            Link
                             <ExternalLink size={15} className="shrink-0" />
                           </a>
                         )
