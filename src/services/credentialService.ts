@@ -104,8 +104,7 @@ export async function getEducation(): Promise<EducationItem[]> {
 
     if (rows.length > 0) {
       return rows.map((row) => ({
-        kind:
-          row.educationType === "FORMAL" ? "Formal" : "Non-formal",
+        kind: row.educationType === "FORMAL" ? "Formal" : "Non-formal",
         school: row.school,
         degree: row.degree || null,
         field: row.field,
@@ -136,17 +135,20 @@ export async function getCredentials(): Promise<CredentialItem[]> {
         issueDate: true,
         expiryDate: true,
         credentialUrl: true,
+        fileUrl: true,
       },
     });
 
     // Once the table responds, its rows are the source of truth (no dummy
-    // fallback). Visibility rules: a credential needs a verification link,
-    // and one with a passed expiry date is retired.
+    // fallback). Visibility rules: a credential needs a link — the
+    // verification URL, or the certificate file when no URL exists — and
+    // one with a passed expiry date is retired.
     if (rows.length > 0) {
       const now = new Date();
       const visible = rows.filter(
-        (row): row is typeof row & { credentialUrl: string } =>
-          !!row.credentialUrl && (!row.expiryDate || row.expiryDate >= now),
+        (row) =>
+          !!(row.credentialUrl || row.fileUrl) &&
+          (!row.expiryDate || row.expiryDate >= now),
       );
 
       return visible.map((row) => ({
@@ -155,7 +157,7 @@ export async function getCredentials(): Promise<CredentialItem[]> {
         title: row.title,
         issuer: row.issuer,
         detail: "",
-        url: row.credentialUrl,
+        url: row.credentialUrl || row.fileUrl,
       }));
     }
   } catch (error) {
