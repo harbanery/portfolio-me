@@ -5,10 +5,10 @@ import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
 import { menuRole } from "@/models/menu";
 import { masterDataMap } from "@/models/master-data";
 import { logoMap } from "@/models/icons";
-import type { Project } from "@/models/project";
+import type { ArchiveProject } from "@/models/project";
 
 interface ProjectSectionProps {
-  projects: Project[];
+  projects: ArchiveProject[];
   /** GitHub profile URL from the personal contacts — the empty-state link. */
   githubUrl?: string | null;
   /** LinkedIn profile URL from the personal contacts — the empty-state link. */
@@ -105,7 +105,7 @@ const hostOf = (url: string): string => {
 };
 
 /** Archive year: end date when set, else the record's creation date. */
-const yearOf = (project: Project): string => {
+const yearOf = (project: ArchiveProject): string => {
   const raw = project.endDate || project.createdAt;
   if (!raw) return "—";
   const year = new Date(raw).getFullYear();
@@ -132,7 +132,7 @@ const ListProjectSection = ({
   /** Consecutive same-year rows collapse into one group (the sort already
    *  orders them, so groups appear newest-year first). */
   const yearGroups = useMemo(() => {
-    const groups: { year: string; items: Project[] }[] = [];
+    const groups: { year: string; items: ArchiveProject[] }[] = [];
     projects.forEach((project) => {
       const year = yearOf(project);
       const last = groups[groups.length - 1];
@@ -345,7 +345,7 @@ const ListProjectSection = ({
                             href={href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            aria-label={`${project.title} repository`}
+                            aria-label={`Link — ${project.title} repository`}
                             title={`${project.title} repository on GitHub`}
                             className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap text-xs md:text-sm text-gray-400 font-neue-haas tracking-wider font-light transition-colors duration-500 hover:text-[#DEB887]"
                           >
@@ -357,7 +357,7 @@ const ListProjectSection = ({
                             href={href}
                             target="_blank"
                             rel="noopener noreferrer"
-                            aria-label={`${project.title} website`}
+                            aria-label={`Link — ${project.title} website`}
                             title={hostOf(href)}
                             className="inline-flex cursor-pointer items-center gap-1.5 whitespace-nowrap text-xs md:text-sm text-gray-400 font-neue-haas tracking-wider font-light transition-colors duration-500 hover:text-[#DEB887]"
                           >

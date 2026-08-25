@@ -7,12 +7,13 @@ import {
   Github,
   Lock,
 } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import SectionHeading from "@/components/section-heading";
 import { logoMap } from "@/models/icons";
 import { masterDataMap } from "@/models/master-data";
 import { normalizeHtmlBody } from "@/helpers";
-import type { Project } from "@/models/project";
+import type { ShowcaseProject } from "@/models/project";
 
 /** Postman icon from the shared icon registry (SiPostman). */
 const PostmanIcon = logoMap.postman;
@@ -21,7 +22,7 @@ const PostmanIcon = logoMap.postman;
 const LinkedInIcon = logoMap.linkedin;
 
 interface ProjectSectionProps {
-  projects: Project[];
+  projects: ShowcaseProject[];
   /** Total ACTIVE projects from the database — drives the heading count. */
   totalCount?: number;
   /** GitHub profile URL from the personal contacts — the empty-state link. */
@@ -179,12 +180,14 @@ const ProjectSection = ({
                     >
                       <div className="aspect-video bg-gray-900 pointer-events-none">
                         {project.image && (
-                          <img
+                          <Image
                             src={project.image}
                             alt={project.title}
-                            className="h-full w-full object-cover grayscale transition-[filter] duration-500 ease-in-out group-hover:grayscale-0"
-                            loading={index === 0 ? "eager" : "lazy"}
-                            fetchPriority={index === 0 ? "high" : "auto"}
+                            fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 75vw, 58vw"
+                            className="object-cover grayscale transition-[filter] duration-500 ease-in-out group-hover:grayscale-0"
+                            priority={index === 0}
+                            quality={85}
                           />
                         )}
                       </div>

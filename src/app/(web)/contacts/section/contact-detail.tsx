@@ -196,6 +196,7 @@ const ContactsDetailSection = ({
                       }
                       target="_blank"
                       rel="noopener noreferrer"
+                      aria-label={`${contact.type} profile`}
                       className="text-gray-400 hover:text-white transition-colors duration-500"
                     >
                       <Icon size={26} />

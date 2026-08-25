@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { StarsBackground } from "@/components/effects/bg-stars";
 import { ShootingStars } from "@/components/effects/shooting-stars";
 
@@ -35,10 +36,13 @@ const IntroSection = ({ onComplete }: { onComplete: () => void }) => {
       <div className="text-center">
         <div className="relative w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64">
           <div className="absolute inset-0 flex items-center justify-center">
-            <img
+            <Image
               src="/logo.png"
               alt="Logo"
-              className="w-full h-full object-contain"
+              fill
+              priority
+              sizes="(max-width: 640px) 128px, (max-width: 768px) 192px, 256px"
+              className="object-contain"
               style={{
                 animation: isVisible ? 'zoomIn 1s ease-out' : 'zoomOut 0.5s ease-in'
               }}
