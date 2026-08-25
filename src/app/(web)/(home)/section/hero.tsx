@@ -18,9 +18,13 @@ interface HeroSectionProps {
   stats?: HeroStat[];
 }
 
-/** Fallback lead while public/data/me.en.json is unavailable. */
+/**
+ * Hero lead — curated in code (rich text: <strong> emphasis, <span>
+ * italic accent). The profile database only feeds the name and stats;
+ * no external profile file is involved.
+ */
 const DEFAULT_LEAD =
-  "Fullstack Developer building <strong>scalable web applications</strong>. I develop <span>production-grade systems</span> with Next.js, TypeScript, and Golang.";
+  "Principal engineer on <strong>enterprise systems</strong>, owning <span>~94%</span> of commits on a national rail ticketing platform. I develop <strong>fullstack applications</strong> that cut load times by <span>60%</span> and raise coverage to <span>80%+</span>.";
 
 /** Focus line, aligned with the Fullstack Developer profile. */
 const FOCUS_LINE =
@@ -116,7 +120,7 @@ const HeroSection = ({ name, lead, stats = [] }: HeroSectionProps) => {
                   No paragraph-wrapper here on purpose: it underlines spans. */}
               <div data-aos="fade-up" data-aos-delay="300" className="mt-8">
                 <p
-                  className="text-base sm:text-lg md:text-xl text-gray-400 font-neue-haas text-balance tracking-wide leading-relaxed [&_span]:font-medium [&_span]:italic [&_span]:text-[#DEB887] [&_strong]:font-medium [&_strong]:text-white"
+                  className="text-base sm:text-lg md:text-xl text-gray-400 font-neue-haas text-balance tracking-wide leading-relaxed [&_span]:font-cookie [&_span]:text-xl [&_span]:md:text-2xl [&_span]:font-medium [&_span]:text-[#DEB887] [&_strong]:font-medium [&_strong]:text-white"
                   dangerouslySetInnerHTML={{ __html: lead ?? DEFAULT_LEAD }}
                 />
               </div>

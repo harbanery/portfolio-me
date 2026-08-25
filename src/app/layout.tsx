@@ -9,7 +9,7 @@ import {
 } from "@/config/variables";
 import { VercelCompatibleComponents } from "@/components/vercel";
 import DevelopmentBanner from "@/components/development-banner";
-import { inter, martianMono } from "@/utils/fonts/next-google";
+import { cookie, inter, martianMono } from "@/utils/fonts/next-google";
 import { neueHaasDisplay } from "@/utils/fonts/next-local";
 
 export const metadata: Metadata = {
@@ -114,7 +114,7 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body
-        className={`${neueHaasDisplay.variable} ${inter.variable} ${martianMono.variable} antialiased ${NODE_ENV === "development" ? "relative" : ""}`}
+        className={`${neueHaasDisplay.variable} ${inter.variable} ${martianMono.variable} ${cookie.variable} antialiased ${NODE_ENV === "development" ? "relative" : ""}`}
       >
         <DevelopmentBanner />
         {children}

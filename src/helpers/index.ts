@@ -10,12 +10,6 @@ export function normalizeHtmlBody(html: string): string {
     .replace(/[ \t]{2,}/g, " ");
 }
 
-export function getGithubRepoName(url: string): string | null {
-  const pathname = new URL(url).pathname;
-  const parts = pathname.split("/").filter(Boolean);
-  return parts[1] || null;
-}
-
 export function formatURLContact(value: string, type: string): string {
   switch (type) {
     case "mail":
@@ -56,10 +50,7 @@ const isContactEntry = (value: unknown): value is ContactEntry =>
  * profile page) from the raw `contacts` JSON column. Null when the
  * channel is absent — used for the section empty-state links.
  */
-export function getContactUrl(
-  contacts: unknown,
-  type: string,
-): string | null {
+export function getContactUrl(contacts: unknown, type: string): string | null {
   if (!Array.isArray(contacts)) return null;
   const entry = contacts.find(
     (item): item is ContactEntry =>

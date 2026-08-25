@@ -1,6 +1,5 @@
 ﻿import BaseLayout from "@/components/layout";
 import { getHomeData } from "@/server/actions";
-import { getHeroContent } from "@/services/meProfileService";
 import { getCredentials, getPublications } from "@/services/credentialService";
 import { getContactUrl } from "@/helpers";
 import { buildMenuSections } from "@/models/menu";
@@ -23,10 +22,16 @@ import SkillsMarqueeSection from "./section/skills-marquee";
  */
 export const revalidate = 60;
 
+/**
+ * Profile location — fixed in code: Bogor primary, Jakarta as the
+ * rotating alternate (the navbar swaps the two automatically). No
+ * external profile file involved.
+ */
+const LOCATION_LABEL = "Bogor, Indonesia";
+
 const HomePage = async () => {
-  const [{ data }, hero, credentials, publications] = await Promise.all([
+  const [{ data }, credentials, publications] = await Promise.all([
     getHomeData(),
-    getHeroContent(),
     getCredentials(),
     getPublications(),
   ]);
@@ -75,21 +80,19 @@ const HomePage = async () => {
     <BaseLayout
       navbar={true}
       footer={true}
-      locationLabel={hero?.locationLabel}
+      locationLabel={LOCATION_LABEL}
       availability={data?.personal?.availability}
       cvUrl={data?.cv?.url}
       cvName={data?.cv?.name}
       sections={menuSections}
     >
       <div className="w-full bg-black">
-        <HeroSection
-          name={data?.personal?.name ?? hero?.name}
-          lead={hero?.lead}
-          stats={stats}
-        />
+        {/* Name comes from the database; the lead is the curated constant
+            in HeroSection (no external profile file). */}
+        <HeroSection name={data?.personal?.name} stats={stats} />
         <SkillsMarqueeSection
           skills={skills}
-          name={data?.personal?.name ?? hero?.name}
+          name={data?.personal?.name}
         />
         <AboutSection
           about={data?.personal?.about}

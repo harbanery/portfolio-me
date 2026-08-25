@@ -1,4 +1,4 @@
-import { Inter, Martian_Mono } from "next/font/google";
+import { Cookie, Inter, Martian_Mono } from "next/font/google";
 
 export const inter = Inter({
   subsets: ["latin"],
@@ -16,4 +16,13 @@ export const martianMono = Martian_Mono({
   weight: ["400", "700"],
   adjustFontFallback: true,
   fallback: ["system-ui", "monospace"],
+});
+
+export const cookie = Cookie({
+  subsets: ["latin"],
+  variable: "--font-cookie",
+  display: "swap",
+  weight: ["400"],
+  adjustFontFallback: true,
+  fallback: ["system-ui", "cursive"],
 });

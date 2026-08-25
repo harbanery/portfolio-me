@@ -18,6 +18,7 @@
   --font-bebas: var(--font-bebas), sans-serif;
   --font-neue-haas: var(--font-neue-haas-display), sans-serif;
   --font-martian-mono: var(--font-martian-mono), monospace;
+  --font-cookie: var(--font-cookie), cursive;
 }
 
 @theme {
