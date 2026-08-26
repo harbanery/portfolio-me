@@ -40,6 +40,32 @@ export interface EducationItem {
 
 const yearOf = (date: Date) => `${date.getFullYear()}`;
 
+/** Host serving the admin-uploaded certificate files. */
+const CLOUDINARY_HOST = "res.cloudinary.com";
+
+/**
+ * Viewer URL for an admin-uploaded certificate file. Cloudinary stores
+ * those PDFs with a disguised .docx extension (and blocks direct PDF
+ * delivery), so the raw link downloads a bogus MS Word file instead of
+ * opening it. Routing the URL through the /api/file proxy — WITHOUT
+ * `download=1` — fetches the asset server-side, detects the real `%PDF-`
+ * magic bytes, and serves it as `application/pdf` with
+ * `Content-Disposition: inline`: the browser opens its built-in PDF
+ * viewer instead of downloading. Non-Cloudinary URLs pass through
+ * untouched (the proxy rejects them anyway).
+ */
+const toViewerUrl = (fileUrl: string): string => {
+  try {
+    const parsed = new URL(fileUrl);
+    if (parsed.hostname === CLOUDINARY_HOST) {
+      return `/api/file?url=${encodeURIComponent(fileUrl)}`;
+    }
+  } catch {
+    // Not a parsable URL — hand it through as-is.
+  }
+  return fileUrl;
+};
+
 /** Year range label for an education entry ("2023" or "2019 – 2023"). */
 const yearRangeOf = (start: Date, end: Date | null): string => {
   const startYear = start.getFullYear();
@@ -157,7 +183,12 @@ export async function getCredentials(): Promise<CredentialItem[]> {
         title: row.title,
         issuer: row.issuer,
         detail: "",
-        url: row.credentialUrl || row.fileUrl,
+        // Verification pages link straight out; certificate files go
+        // through the inline viewer proxy so the PDF is displayed, never
+        // downloaded as the disguised .docx Cloudinary stores.
+        url:
+          row.credentialUrl ||
+          (row.fileUrl ? toViewerUrl(row.fileUrl) : null),
       }));
     }
   } catch (error) {
