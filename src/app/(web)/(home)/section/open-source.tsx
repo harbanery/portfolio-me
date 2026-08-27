@@ -39,7 +39,7 @@ const REPOS = [
   },
 ];
 
-const GITHUB_PROFILE = "https://github.com/";
+const GITHUB_PROFILE = "https://github.com/harbanery";
 
 /** Public GitHub archive grid, following the reference design. */
 const OpenSourceSection = () => (

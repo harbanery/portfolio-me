@@ -24,7 +24,7 @@ export interface Project {
   order?: number;
   /** Completion date — drives the archive year; null while ongoing. */
   endDate?: string | Date | null;
-  /** Record creation — archive year fallback (no start date column). */
+  /** Record creation — archive year fallback (start date is not used). */
   createdAt?: string | Date | null;
 }
 
@@ -66,6 +66,6 @@ export interface ArchiveProject {
   webLink?: string | null;
   /** Completion date — drives the archive year; null while ongoing. */
   endDate?: string | Date | null;
-  /** Record creation — archive year fallback (no start date column). */
+  /** Record creation — archive year fallback (start date is not used). */
   createdAt?: string | Date | null;
 }

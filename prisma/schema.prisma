@@ -140,6 +140,7 @@ model Portfolio {
   skills           String[]
   repoLinks        String[]        @map("repo_links")
   webLink          String?         @map("web_link")
+  startDate        DateTime?       @map("start_date")
   isOngoing        Boolean         @default(true) @map("is_ongoing")
   endDate          DateTime?       @map("end_date")
   status           PortfolioStatus @default(ACTIVE)
@@ -176,6 +177,7 @@ model Certification {
   credentialId  String?               @map("credential_id")
   credentialUrl String?               @map("credential_url")
   fileUrl       String?               @map("file_url")
+  filePath      String?               @map("file_path")
   skills        String[]
   status        CertificationStatus   @default(ACTIVE)
   createdAt     DateTime              @default(now())
