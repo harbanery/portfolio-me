@@ -45,21 +45,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  // twitter: {
-  //   card: "summary_large_image",
-  //   site: "@CommuterLine",
-  //   creator: "@CommuterLine",
-  //   creatorId: "341987176",
-  //   title: META_TITLE,
-  //   ...(META_DESCRIPTION && { description: META_DESCRIPTION }),
-  //   images: [
-  //     {
-  //       url: `images/twitter-image.png`,
-  //       alt: META_APP,
-  //       type: "image/png",
-  //     },
-  //   ],
-  // },
   creator: "Raihan Yusuf",
   authors: [
     { name: "Raihan Yusuf", url: "https://www.linkedin.com/in/raihan-yusuf" },
