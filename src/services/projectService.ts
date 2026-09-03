@@ -200,3 +200,33 @@ export async function getAllProjects(): Promise<ArchiveProject[]> {
     return [];
   }
 }
+
+/**
+ * Most recent `updatedAt` across the content tables — the sitemap's
+ * `lastModified` for the home page. Null when nothing is reachable.
+ */
+export async function getLatestContentUpdate(): Promise<Date | null> {
+  try {
+    const [project, experience] = await Promise.all([
+      prisma.portfolio.findFirst({
+        where: { status: "ACTIVE" },
+        orderBy: { updatedAt: "desc" },
+        select: { updatedAt: true },
+      }),
+      prisma.experience.findFirst({
+        where: { status: "ACTIVE" },
+        orderBy: { updatedAt: "desc" },
+        select: { updatedAt: true },
+      }),
+    ]);
+
+    const candidates = [project?.updatedAt, experience?.updatedAt]
+      .filter((date): date is Date => !!date)
+      .map((date) => date.getTime());
+    if (candidates.length === 0) return null;
+    return new Date(Math.max(...candidates));
+  } catch (error) {
+    console.error("Error fetching latest content update:", error);
+    return null;
+  }
+}

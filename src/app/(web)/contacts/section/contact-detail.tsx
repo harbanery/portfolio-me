@@ -13,6 +13,13 @@ interface Contact {
   value: string;
 }
 
+/**
+ * Honeypot field name — rendered hidden (offscreen, tabIndex -1,
+ * autoComplete off, aria-hidden) so bots auto-fill it while humans never
+ * see it. A filled value is rejected server-side as silent success.
+ */
+const HONEYPOT_FIELD = "website";
+
 interface ContactsDetailSectionProps {
   /** Raw `contacts` JSON column from Prisma. */
   contacts?: unknown;
@@ -74,6 +81,9 @@ const ContactsDetailSection = ({
   const [invalid, setInvalid] = useState<Record<string, boolean>>({});
   const [status, setStatus] = useState<"idle" | "loading" | "success">("idle");
   const [error, setError] = useState<string | null>(null);
+  // Honeypot value lives outside `form` so it never participates in the
+  // validation or reset flow.
+  const [honeypot, setHoneypot] = useState("");
 
   const isLocked = status === "loading" || status === "success";
 
@@ -106,6 +116,8 @@ const ContactsDetailSection = ({
           name: form.name.trim(),
           email: form.email.trim(),
           message: form.message.trim(),
+          // Honeypot travels with the payload; the server only checks it.
+          [HONEYPOT_FIELD]: honeypot,
         }),
       });
       const result = (await response.json()) as {
@@ -227,6 +239,21 @@ const ContactsDetailSection = ({
             onSubmit={handleSubmit}
             className="space-y-4"
           >
+            {/* Honeypot — invisible to humans (moved offscreen, unfocused,
+                untabbed), auto-filled by naive bots. The server rejects
+                filled submissions silently. */}
+            <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+              <label>
+                <span>Website</span>
+                <input
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={honeypot}
+                  onChange={(event) => setHoneypot(event.target.value)}
+                />
+              </label>
+            </div>
             <div className="grid sm:grid-cols-2 gap-4">
               <label className="block">
                 <span className="mb-1.5 block font-martian-mono text-xs uppercase tracking-[0.25em] text-gray-500">

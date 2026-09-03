@@ -11,10 +11,36 @@ import { ShootingStars } from "@/components/effects/shooting-stars";
  * (`zoomIn` / `zoomOut` in the global stylesheet); no animation library
  * involved.
  */
+/**
+ * sessionStorage flag marking the intro as played for this visit. The hero
+ * reads it on mount to skip the splash for repeat visitors within the same
+ * session, keeping the LCP of return navigations instant.
+ */
+export const INTRO_SHOWN_KEY = "introShown";
+
+/** True when this session already saw the intro (client only). */
+export const hasIntroBeenShown = (): boolean => {
+  try {
+    return sessionStorage.getItem(INTRO_SHOWN_KEY) === "1";
+  } catch {
+    return false;
+  }
+};
+
+/** Mark the intro as played for this session (client only). */
+export const markIntroShown = (): void => {
+  try {
+    sessionStorage.setItem(INTRO_SHOWN_KEY, "1");
+  } catch {
+    // Storage unavailable (privacy mode, quota) — the intro just plays.
+  }
+};
+
 const IntroSection = ({ onComplete }: { onComplete: () => void }) => {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
+    markIntroShown();
     const timer = setTimeout(() => {
       setIsVisible(false);
       setTimeout(() => {

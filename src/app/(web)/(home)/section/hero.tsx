@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, ChevronDown, MessageSquare } from "lucide-react";
 import CountUp from "@/components/count-up";
-import IntroSection from "./intro";
+import IntroSection, { hasIntroBeenShown } from "./intro";
 import { StarsBackground } from "@/components/effects/bg-stars";
 import { ShootingStars } from "@/components/effects/shooting-stars";
 
@@ -31,22 +31,33 @@ const FOCUS_LINE =
   "Fullstack web development. Scalable frontend platforms. Performance-focused engineering.";
 
 const HeroSection = ({ name, lead, stats = [] }: HeroSectionProps) => {
-  const [showIntro, setShowIntro] = useState(true);
+  // The intro splash plays once per session: sessionStorage remembers it,
+  // so repeat visitors skip straight to the hero (their LCP no longer
+  // waits behind the animation). The flag only exists on the client, so
+  // the lazy initializer reads it at hydration time — SSR renders with
+  // `true` and clients that have seen the splash start with `false`,
+  // without a cascading render from an effect.
+  const [showIntro, setShowIntro] = useState(() => !hasIntroBeenShown());
 
+  // Repeat visitors: skip the overflow lock entirely — the splash never
+  // mounts (see the guard below), so the page stays scrollable at once.
   useEffect(() => {
-    if (showIntro) {
-      document.body.style.overflow = "hidden";
-      document.documentElement.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-    }
+    if (!showIntro) return;
+
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
 
     return () => {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
     };
   }, [showIntro]);
+
+  // The splash only mounts on the first visit of a session — a repeat
+  // visitor renders the hero immediately instead of waiting behind it.
+  // (Defense in depth: the state initializer already returned false, but
+  // this guard also covers the manual onComplete path.)
+  const shouldShowIntro = showIntro && !hasIntroBeenShown();
 
   const handleIntroComplete = () => {
     setShowIntro(false);
@@ -72,11 +83,11 @@ const HeroSection = ({ name, lead, stats = [] }: HeroSectionProps) => {
 
   return (
     <>
-      {showIntro && <IntroSection onComplete={handleIntroComplete} />}
+      {shouldShowIntro && <IntroSection onComplete={handleIntroComplete} />}
       <section
         id="hero"
         className={`relative min-h-screen bg-black flex items-center transition-opacity duration-1000 ${
-          showIntro ? "opacity-0" : "opacity-100"
+          shouldShowIntro ? "opacity-0" : "opacity-100"
         }`}
       >
         <StarsBackground className="pointer-events-none" />
@@ -181,7 +192,7 @@ const HeroSection = ({ name, lead, stats = [] }: HeroSectionProps) => {
                         <CountUp
                           to={Number(stat.value)}
                           fallback={stat.value}
-                          delay={showIntro ? 5 : 0}
+                          delay={shouldShowIntro ? 5 : 0}
                         />
                       </dt>
                       <dd className="mt-1.5 text-[9px] sm:text-[10px] font-martian-mono uppercase leading-relaxed tracking-[0.2em] text-gray-500">
@@ -212,7 +223,7 @@ const HeroSection = ({ name, lead, stats = [] }: HeroSectionProps) => {
                         <CountUp
                           to={Number(stat.value)}
                           fallback={stat.value}
-                          delay={showIntro ? 5 : 0}
+                          delay={shouldShowIntro ? 5 : 0}
                         />
                       </dt>
                       <dd className="mt-2 text-[10px] font-martian-mono uppercase tracking-[0.25em] text-gray-500">

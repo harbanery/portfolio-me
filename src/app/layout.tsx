@@ -9,6 +9,8 @@ import {
 } from "@/config/variables";
 import { VercelCompatibleComponents } from "@/components/vercel";
 import DevelopmentBanner from "@/components/development-banner";
+import WebVitalsReporter from "@/components/web-vitals";
+import AssetHints from "@/components/asset-hints";
 import { cookie, inter, martianMono } from "@/utils/fonts/next-google";
 import { neueHaasDisplay } from "@/utils/fonts/next-local";
 
@@ -104,6 +106,8 @@ export default function RootLayout({
         className={`${neueHaasDisplay.variable} ${inter.variable} ${martianMono.variable} ${cookie.variable} antialiased ${NODE_ENV === "development" ? "relative" : ""}`}
       >
         <DevelopmentBanner />
+        <AssetHints />
+        <WebVitalsReporter />
         {children}
         <VercelCompatibleComponents.Analytics />
         <VercelCompatibleComponents.SpeedInsights />
