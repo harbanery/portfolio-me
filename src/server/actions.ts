@@ -9,6 +9,7 @@ import {
   getProjectById,
   getOtherProjects,
   getAllProjects,
+  getLatestContentUpdate,
 } from "@/services/projectService";
 import { getEducation, getPrimaryCv } from "@/services/credentialService";
 
@@ -118,4 +119,9 @@ export async function getProjectDetailData(slug: string) {
     console.error("Error fetching project detail:", error);
     return { success: false, error: "Failed to fetch data" };
   }
+}
+
+/** Latest content timestamp for the sitemap's `lastModified` values. */
+export async function getLatestUpdate() {
+  return getLatestContentUpdate();
 }

@@ -1,4 +1,4 @@
-import prisma from "@/server/db";
+import { prisma } from "@/server/db";
 
 /**
  * Data service for certifications (credentials section) and publications

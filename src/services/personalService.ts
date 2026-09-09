@@ -1,4 +1,4 @@
-import prisma from "@/server/db";
+import { prisma } from "@/server/db";
 import { masterDataMap } from "@/models/master-data";
 import {
   normalizeEmploymentType,

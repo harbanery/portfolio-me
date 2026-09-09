@@ -267,8 +267,8 @@ const Navbar = ({
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-500 ease-in-out ${animShowNavbar}`}
     >
       <div className="mx-auto w-full max-w-6xl px-4 md:px-6">
-        {/* AOS animates the wrapper; the Tailwind bar transition lives on
-            the inner pill so the two never conflict. */}
+        {/* The reveal engine animates the wrapper; the Tailwind bar
+            transition lives on the inner pill so the two never conflict. */}
         <div data-aos={mounted && isFixed ? "fade-down" : "fade-zoom-in"}>
           <div
             className={`flex items-center justify-between gap-4 h-14 md:h-16 my-3 md:my-4 rounded-full border px-4 md:px-6 transition-colors duration-500 ${barStyle}`}

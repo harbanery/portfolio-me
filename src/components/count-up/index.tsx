@@ -5,26 +5,26 @@ import { useEffect, useRef, useState } from "react";
 interface CountUpProps {
   /** Target number to reach. */
   to: number;
-  /** Rendered while the animation has not started yet (SSR / pre-AOS). */
+  /** Rendered while the animation has not started yet (SSR / pre-reveal). */
   fallback?: string;
   /** Extra milliseconds to wait before counting — pass the parent's
-   *  AOS delay so the count begins only after the reveal finishes. */
+   *  reveal delay so the count begins only after the reveal finishes. */
   delay?: number;
   /** Extra className forwarded to the outer <span>. */
   className?: string;
 }
 
-/** Site-wide AOS duration (see Aos.init in components/layout). */
-const AOS_DURATION = 500;
+/** Site-wide scroll-reveal duration (see `[data-aos]` in index.css). */
+const REVEAL_DURATION = 500;
 /** Count duration, matching every other animation on the site. */
 const COUNT_DURATION = 500;
 
 /**
  * Renders a number that counts from 0 to `to`. The count starts only
- * after the element has entered the viewport AND the surrounding AOS
- * reveal has finished (`AOS_DURATION + delay`), so the number never
- * animates behind a still-fading section. Uses a single rAF loop with
- * ease-in-out timing — no external library.
+ * after the element has entered the viewport AND the surrounding
+ * scroll-reveal has finished (`REVEAL_DURATION + delay`), so the number
+ * never animates behind a still-fading section. Uses a single rAF loop
+ * with ease-in-out timing — no external library.
  */
 const CountUp = ({ to, fallback, delay = 0, className }: CountUpProps) => {
   const ref = useRef<HTMLSpanElement>(null);
@@ -50,8 +50,8 @@ const CountUp = ({ to, fallback, delay = 0, className }: CountUpProps) => {
     };
 
     const startCount = () => {
-      // Wait out the AOS reveal first: duration + the element's delay.
-      const wait = AOS_DURATION + delay;
+      // Wait out the reveal first: duration + the element's delay.
+      const wait = REVEAL_DURATION + delay;
       if (wait <= 0) {
         raf = requestAnimationFrame(() => tick(performance.now()));
         return;

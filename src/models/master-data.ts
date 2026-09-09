@@ -154,7 +154,7 @@ export const masterDataMap: Record<string, MasterData> = {
   },
   cloudinary: {
     name: "Cloudinary",
-    category: ["library", "cloud"],
+    category: ["cloud", "storage"],
     color: "#3448C5",
   },
   nextintl: {
@@ -283,7 +283,7 @@ export const masterDataMap: Record<string, MasterData> = {
   },
   minio: {
     name: "MinIO",
-    category: ["tool", "storage"],
+    category: ["cloud", "storage"],
     color: "#C72E49",
   },
   figma: {
@@ -349,7 +349,7 @@ export const masterDataMap: Record<string, MasterData> = {
     color: "#000000",
   },
   factorydroid: {
-    name: "Factory",
+    name: "Factory Droid",
     category: ["ai-tool", "coding", "agent"],
     color: "#635BFF",
   },
@@ -520,7 +520,7 @@ export const masterDataMap: Record<string, MasterData> = {
     color: "#4ECDC4",
   },
   pwa: {
-    name: "PWAs",
+    name: "Progressive Web Applications (PWAs)",
     category: ["methodology", "web"],
     color: "#5D6D7E",
   },

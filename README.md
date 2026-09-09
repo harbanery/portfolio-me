@@ -61,7 +61,7 @@ The site is a single-page home (hero, skills marquee, about, experience, feature
 - **Project archive** (`/projects`) grouped by year — a five-column table on laptops, stacked rows with a scroll-spy year menu on phones and tablets — linking to live sites or repositories.
 - **Contact page** with an email form delivered through [Nodemailer](https://nodemailer.com/) SMTP (`/api/contact`) and a CV download proxied through `/api/file`.
 - **Responsive design** tuned for phone, tablet, laptop (1024–1280px), and desktop breakpoints.
-- **Motion & polish** with AOS scroll animations, Framer Motion, and Tailwind CSS v4 styling.
+- **Motion & polish** with a Tailwind CSS v4 + IntersectionObserver scroll-reveal engine (no animation library).
 - **Per-page metadata** — the archive ships its own title and Open Graph artwork.
 - **Analytics** via Vercel Analytics & Speed Insights.
 - **Linting** with **ESLint** for maintaining code quality.
@@ -100,8 +100,6 @@ Feel free to check it out:
 - [Prisma](https://www.prisma.io/)
 - [react-icons](https://react-icons.github.io/react-icons/)
 - [lucide-react](https://lucide.dev/)
-- [AOS (Animate On Scroll)](https://michalsnik.github.io/aos/)
-- [Framer Motion](https://www.framer.com/motion/)
 - [Nodemailer](https://nodemailer.com/)
 - [Vercel](https://vercel.com/)
 - [Img Shields](https://shields.io)

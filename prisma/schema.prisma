@@ -102,8 +102,8 @@ model Personal {
 model PersonalImage {
   id          Int      @id @default(autoincrement())
   personalId  Int
-  url         String // Supabase storage URL
-  storagePath String // Supabase storage path
+  url         String // Cloudinary storage URL
+  storagePath String // Cloudinary storage path
   mimeType    String // MIME type of the image
   size        Int // File size in bytes
   width       Int? // Image width

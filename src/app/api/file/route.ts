@@ -20,6 +20,13 @@ import { NextRequest, NextResponse } from "next/server";
 
 const CLOUDINARY_HOST = "res.cloudinary.com";
 
+/** Largest upstream file this proxy will buffer (20 MB). */
+const MAX_BYTES = 20 * 1024 * 1024;
+
+/** Upstream fetch timeout — a stalled Cloudinary fetch must not hold the
+ *  function's memory and connection open indefinitely. */
+const UPSTREAM_TIMEOUT_MS = 10_000;
+
 /** Extract the filename from a URL for Content-Disposition. */
 function filenameFromUrl(url: URL): string {
   const last = url.pathname.split("/").pop() ?? "file";
@@ -71,7 +78,10 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const upstream = await fetch(parsed.toString(), { cache: "no-store" });
+    const upstream = await fetch(parsed.toString(), {
+      cache: "no-store",
+      signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
+    });
 
     if (!upstream.ok || !upstream.body) {
       return NextResponse.json(
@@ -80,9 +90,29 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Reject oversized assets before buffering them — a huge object (or
+    // many parallel requests) would otherwise hold function memory and
+    // become a cheap DoS vector. The header can be absent (chunked
+    // transfer); the post-buffer length check still catches that.
+    const contentLength = Number(upstream.headers.get("content-length") ?? 0);
+    if (contentLength > MAX_BYTES) {
+      return NextResponse.json(
+        { success: false, error: "File too large" },
+        { status: 413 },
+      );
+    }
+
     // Buffer the body to inspect magic bytes — needed to serve PDFs that
     // were stored with a disguised .docx extension as real PDFs.
     const buffer = Buffer.from(await upstream.arrayBuffer());
+
+    // Belt-and-braces: the header may have lied (or been absent).
+    if (buffer.length > MAX_BYTES) {
+      return NextResponse.json(
+        { success: false, error: "File too large" },
+        { status: 413 },
+      );
+    }
 
     // Detect PDF by the "%PDF-" magic bytes even when the extension is
     // disguised.
@@ -103,7 +133,13 @@ export async function GET(request: NextRequest) {
     const headers = new Headers();
     headers.set("Content-Type", contentType ?? "application/octet-stream");
     headers.set("Content-Length", String(buffer.length));
-    headers.set("Cache-Control", "private, max-age=300");
+    // Per-account assets are stable; cache an hour at the browser/CDN and
+    // serve stale while revalidating in the background — cuts repeat
+    // round-trips through this proxy for the CV and certificate files.
+    headers.set(
+      "Cache-Control",
+      "private, max-age=3600, stale-while-revalidate=86400",
+    );
     headers.set("X-Content-Type-Options", "nosniff");
     headers.set(
       "Content-Disposition",
