@@ -280,6 +280,61 @@ body {
 }
 
 /*
+ * Scroll-reveal engine — Tailwind-native replacement for the removed AOS
+ * library. Elements keep their `data-aos` / `data-aos-delay` attributes;
+ * the ScrollReveal component (components/reveal) flips them to `.aos-in`
+ * with an IntersectionObserver once they enter the viewport. Distances
+ * mirror the old library (100px offsets); timing is the site-wide 0.5s
+ * ease-in-out.
+ *
+ * Deliberately unlayered: the reveal transition must win over Tailwind
+ * transition-* utilities on the same element (unlayered CSS beats layered
+ * utilities in Tailwind v4). Only opacity/transform/transition-* are touched, and only on
+ * `[data-aos]` elements, so no other utility is affected. Tailwind v4
+ * translate/rotate/scale utilities use the standalone CSS properties and
+ * compose with the `transform` below.
+ */
+[data-aos] {
+  opacity: 0;
+  transition-property: opacity, transform;
+  transition-duration: 500ms;
+  transition-timing-function: ease-in-out;
+}
+
+[data-aos="fade-up"] {
+  transform: translateY(100px);
+}
+
+[data-aos="fade-down"] {
+  transform: translateY(-100px);
+}
+
+[data-aos="fade-left"] {
+  transform: translateX(100px);
+}
+
+[data-aos="fade-right"] {
+  transform: translateX(-100px);
+}
+
+[data-aos="fade-zoom-in"] {
+  transform: scale(0.92);
+}
+
+[data-aos].aos-in {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-aos] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/*
  * Rich-text body styling for About & Experience HTML columns.
  * - each paragraph gets vertical spacing
  * - strong/em emphasis renders truly bold against the light body weight

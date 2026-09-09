@@ -204,8 +204,8 @@ const HeroSection = ({ name, lead, stats = [] }: HeroSectionProps) => {
               )}
             </div>
 
-            {/* Right: stats — the count starts after this block's AOS
-                reveal finishes (delay 450 + duration 500), plus the intro
+            {/* Right: stats — the count starts after this block's reveal
+                finishes (delay 450 + duration 500), plus the intro
                 splash time so the numbers are never counted behind it. */}
             {stats.length > 0 && (
               <div

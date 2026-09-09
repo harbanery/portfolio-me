@@ -22,10 +22,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "jfbwaakuillpudswyfkg.supabase.co",
-      },
-      {
-        protocol: "https",
         hostname: "res.cloudinary.com",
       },
     ],
@@ -65,7 +61,7 @@ const nextConfig: NextConfig = {
               "default-src 'self'",
               "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: https://res.cloudinary.com https://*.supabase.co https://raw.githubusercontent.com https://github.com",
+              "img-src 'self' data: blob: https://res.cloudinary.com https://raw.githubusercontent.com https://github.com",
               "font-src 'self' data:",
               "connect-src 'self' https://va.vercel-scripts.com",
               "frame-ancestors 'none'",

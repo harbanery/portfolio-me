@@ -1,11 +1,10 @@
 "use client";
 
-import Aos from "aos";
 import Footer from "../footer";
 import Navbar from "../navbar";
 import SideMenu from "../side-menu";
 import ScrollToTop from "../scroll-to-top";
-import "aos/dist/aos.css";
+import ScrollReveal from "@/components/reveal";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import type { AvailabilityStatus } from "../navbar";
@@ -45,9 +44,6 @@ const BaseLayout = ({
     pathname.includes("/projects/");
 
   useEffect(() => {
-    // Global AOS: 0.5s ease-in-out, matching every other animation.
-    Aos.init({ duration: 500, easing: 'ease-in-out' });
-
     // Scroll to top when on home page — "instant" opts out of the global
     // CSS smooth scrolling so route changes never animate the jump.
     if (shouldScrollToTop) {
@@ -57,6 +53,9 @@ const BaseLayout = ({
 
   return (
     <main className="w-full hide-scrollbar select-none overflow-x-clip">
+      {/* Scroll-reveal engine — flips `[data-aos]` elements to visible
+          (see components/reveal and the global stylesheet). */}
+      <ScrollReveal />
       {navbar && (
         <Navbar
           locationLabel={locationLabel}

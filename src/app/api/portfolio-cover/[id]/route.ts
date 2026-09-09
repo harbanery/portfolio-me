@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import prisma from "@/server/db";
+import { prisma } from "@/server/db";
 
 /**
  * Cover image delivery for showcase projects.

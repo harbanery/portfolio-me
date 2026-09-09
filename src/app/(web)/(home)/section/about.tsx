@@ -145,11 +145,11 @@ const AboutSection = ({
             )}
           </div>
 
-          {/* Info card — AOS animates the wrapper while the Tailwind
-              hover transition lives on the card itself, so the two never
-              fight over `transition-property`. On hover the border lights
-              up gold with a soft matching glow. Rendered only while at
-              least one block has data. */}
+          {/* Info card — the reveal engine animates the wrapper while the
+              Tailwind hover transition lives on the card itself, so the
+              two never fight over `transition-property`. On hover the border
+              lights up gold with a soft matching glow. Rendered only while
+              at least one block has data. */}
           {hasCard && (
             <div data-aos="fade-left" data-aos-delay="150">
               <aside className="h-full rounded-2xl border border-white/10 bg-white/[0.02] p-6 md:p-7 transition-[border-color,box-shadow] duration-500 ease-in-out hover:border-[#DEB887] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)] max-lg:active:border-[#DEB887] max-lg:active:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]">

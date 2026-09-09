@@ -166,9 +166,9 @@ const ContactsDetailSection = ({
         />
 
         <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
-          {/* Profile card — AOS animates the wrapper; the Tailwind hover
-              transition lives on the card itself. On hover the border
-              lights up gold with a soft matching glow. */}
+          {/* Profile card — the reveal engine animates the wrapper; the
+              Tailwind hover transition lives on the card itself. On hover
+              the border lights up gold with a soft matching glow. */}
           <div data-aos="fade-up">
             <div className="space-y-5 rounded-2xl border border-white/10 bg-white/[0.02] p-5 md:p-7 transition-[border-color,box-shadow] duration-500 ease-in-out hover:border-[#DEB887] hover:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)] max-lg:active:border-[#DEB887] max-lg:active:shadow-[0_0_24px_-6px_rgba(222,184,135,0.45)]">
               {indicator && (

@@ -160,12 +160,12 @@ const ProjectSection = ({
                   key={project.id}
                   data-aos={flipped ? "fade-left" : "fade-right"}
                 >
-                  {/* AOS animates the article; the Tailwind group/hover
-                    lives on the inner grid so transitions keep working.
-                    Laptop (lg, 1024–1280px): a simple 4-column grid where
-                    the image spans 3 (exactly 3/4 of the width); wide
-                    screens (xl+) return to the 12-column split with the
-                    deeper panel overlap. */}
+                  {/* The reveal engine animates the article; the Tailwind
+                    group/hover lives on the inner grid so transitions keep
+                    working. Laptop (lg, 1024–1280px): a simple 4-column
+                    grid where the image spans 3 (exactly 3/4 of the
+                    width); wide screens (xl+) return to the 12-column
+                    split with the deeper panel overlap. */}
                   <div className="group grid items-center gap-6 md:grid-cols-12 md:gap-0 lg:grid-cols-4 xl:grid-cols-12">
                     {/* Screenshot — under the content panel, gradient washing
                     toward the panel side on desktop. Rests in black &
