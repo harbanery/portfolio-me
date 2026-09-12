@@ -1,5 +1,5 @@
 import { unstable_cache } from "next/cache";
-import { prisma } from "@/server/db";
+import { prisma } from "@/lib/prisma";
 
 /**
  * Data service for certifications (credentials section) and publications

@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import BaseLayout from "@/components/layout";
 import ContactsDetailSection from "./section/contact-detail";
-import { getContactsData } from "@/server/actions";
+import { getContactsData } from "@/actions";
 
 /**
  * Rendering: dynamically rendered per request (see the home page for

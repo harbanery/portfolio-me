@@ -1,4 +1,4 @@
-import { NODE_ENV } from "@/config/variables";
+import { NODE_ENV } from "@/utils/config/variables";
 
 /**
  * Development-only ribbon pinned over the top-left corner of the viewport.

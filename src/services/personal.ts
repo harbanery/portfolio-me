@@ -1,6 +1,6 @@
 import { unstable_cache } from "next/cache";
-import { prisma } from "@/server/db";
-import { masterDataMap } from "@/models/master-data";
+import { prisma } from "@/lib/prisma";
+import { masterDataMap } from "@/models/masterData";
 import {
   normalizeEmploymentType,
   type EmploymentType,

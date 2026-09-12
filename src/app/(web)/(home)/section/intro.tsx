@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { StarsBackground } from "@/components/effects/bg-stars";
-import { ShootingStars } from "@/components/effects/shooting-stars";
+import { StarsBackground } from "@/components/ui/effects/bg-stars";
+import { ShootingStars } from "@/components/ui/effects/shooting-stars";
 
 /**
  * Intro splash — the logo zooms in on a starfield, then zooms out and

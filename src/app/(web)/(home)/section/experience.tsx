@@ -1,9 +1,9 @@
-import SectionHeading from "@/components/section-heading";
-import SmoothSticky from "@/components/smooth-sticky";
+import SectionHeading from "@/components/ui/section-heading";
+import SmoothSticky from "@/components/layout/smooth-sticky";
 import { ArrowUpRight } from "lucide-react";
 import { logoMap } from "@/models/icons";
-import { masterDataMap } from "@/models/master-data";
-import { normalizeHtmlBody } from "@/helpers";
+import { masterDataMap } from "@/models/masterData";
+import { normalizeHtmlBody } from "@/utils/helpers";
 import { employmentTypeLabel } from "@/models/experience";
 import type { ExperienceTimelineEntry } from "@/models/experience";
 

@@ -6,7 +6,7 @@ import {
   SMTP_PORT,
   SMTP_SECURE,
   SMTP_USER,
-} from "@/config/variables";
+} from "@/utils/config/variables";
 
 /**
  * SMTP email service via Nodemailer — same lazy-transporter pattern as

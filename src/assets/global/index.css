@@ -282,7 +282,7 @@ body {
 /*
  * Scroll-reveal engine — Tailwind-native replacement for the removed AOS
  * library. Elements keep their `data-aos` / `data-aos-delay` attributes;
- * the ScrollReveal component (components/reveal) flips them to `.aos-in`
+ * the ScrollReveal component (components/ui/reveal) flips them to `.aos-in`
  * with an IntersectionObserver once they enter the viewport. Distances
  * mirror the old library (100px offsets); timing is the site-wide 0.5s
  * ease-in-out.

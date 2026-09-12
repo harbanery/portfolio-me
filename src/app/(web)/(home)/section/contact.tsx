@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowRight } from "lucide-react";
 import { logoMap } from "@/models/icons";
-import { masterDataMap } from "@/models/master-data";
-import { formatURLContact } from "@/helpers";
-import type { AvailabilityStatus } from "@/components/navbar";
+import { masterDataMap } from "@/models/masterData";
+import { formatURLContact } from "@/utils/helpers";
+import type { AvailabilityStatus } from "@/components/layout/navbar";
 
 interface Contact {
   type: string;

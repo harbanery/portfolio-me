@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { sendContactEmail, isEmailConfigured } from "@/server/email";
-import { getPersonalContactEmail } from "@/services/personalService";
-import { SMTP_FROM, SMTP_USER } from "@/config/variables";
-import { checkRateLimits, recordRateLimits } from "@/server/rate-limit";
+import { sendContactEmail, isEmailConfigured } from "@/lib/email";
+import { getPersonalContactEmail } from "@/services/personal";
+import { SMTP_FROM, SMTP_USER } from "@/utils/config/variables";
+import { checkRateLimits, recordRateLimits } from "@/lib/redis";
 
 /**
  * POST /api/contact — send a portfolio contact message via SMTP.
@@ -19,7 +19,7 @@ import { checkRateLimits, recordRateLimits } from "@/server/rate-limit";
  * - Rate limits: one message per sender email AND per client IP per 24h
  *   window. Timestamps persist in Upstash Redis when configured (shared
  *   across serverless instances) with an in-memory fallback — see
- *   `src/server/rate-limit.ts`.
+ *   `src/lib/redis.ts`.
  */
 
 /** Field length caps (characters). */

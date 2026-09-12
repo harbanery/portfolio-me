@@ -1,6 +1,6 @@
 "use client";
-import { cn } from "@/utils/cn";
-import { usePrefersReducedMotion } from "@/utils/use-prefers-reduced-motion";
+import { cn } from "@/utils/helpers";
+import { usePrefersReducedMotion } from "@/hooks/useMotion";
 import React, { useEffect, useState, useRef } from "react";
 
 interface ShootingStar {

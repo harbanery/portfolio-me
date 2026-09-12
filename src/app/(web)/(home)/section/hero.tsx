@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { ArrowRight, ChevronDown, MessageSquare } from "lucide-react";
-import CountUp from "@/components/count-up";
+import CountUp from "@/components/ui/count-up";
 import IntroSection, { hasIntroBeenShown } from "./intro";
-import { StarsBackground } from "@/components/effects/bg-stars";
-import { ShootingStars } from "@/components/effects/shooting-stars";
+import { StarsBackground } from "@/components/ui/effects/bg-stars";
+import { ShootingStars } from "@/components/ui/effects/shooting-stars";
 
 interface HeroStat {
   value: string;

@@ -1,5 +1,5 @@
 import { logoMap } from "@/models/icons";
-import { masterDataMap } from "@/models/master-data";
+import { masterDataMap } from "@/models/masterData";
 
 interface SkillsMarqueeSectionProps {
   skills?: string[];

@@ -1,3 +1,11 @@
+import { clsx, type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
+
+/** Merge conditional class names and resolve Tailwind conflicts. */
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
+
 /**
  * Normalize rich-text HTML bodies before rendering.
  * Stored content often uses `&nbsp;` entities instead of plain spaces, which
@@ -59,4 +67,26 @@ export function getContactUrl(contacts: unknown, type: string): string | null {
   if (!entry) return null;
   const url = formatURLContact(entry.value.trim(), type);
   return url.startsWith("http") ? url : `https://${url}`;
+}
+
+/**
+ * Convert project name to kebab-case for URL slugs
+ * @param text - The project name to convert
+ * @returns kebab-case string
+ */
+export function toKebabCase(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-');
+}
+
+/**
+ * Get project slug from project data
+ * @param project - Project data object
+ * @returns kebab-case slug for URL
+ */
+export function getProjectSlug(project: { title: string; id?: number }): string {
+  // For Prisma data, we'll use the ID as the slug for simplicity
+  // This avoids slug collisions and ensures stable URLs
+  return project.id?.toString() || toKebabCase(project.title);
 }

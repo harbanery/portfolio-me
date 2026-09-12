@@ -1,7 +1,6 @@
 ﻿import BaseLayout from "@/components/layout";
-import { getHomeData } from "@/server/actions";
-import { getCredentials, getPublications } from "@/services/credentialService";
-import { getContactUrl } from "@/helpers";
+import { getHomeData } from "@/actions";
+import { getContactUrl } from "@/utils/helpers";
 import { buildMenuSections } from "@/models/menu";
 import HeroSection from "./section/hero";
 import AboutSection from "./section/about";
@@ -33,11 +32,9 @@ export const dynamic = "force-dynamic";
 const LOCATION_LABEL = "Bogor, Indonesia";
 
 const HomePage = async () => {
-  const [{ data }, credentials, publications] = await Promise.all([
-    getHomeData(),
-    getCredentials(),
-    getPublications(),
-  ]);
+  const { data } = await getHomeData();
+  const credentials = data?.credentials || [];
+  const publications = data?.publications || [];
 
   // Hero stats from database data: projects, distinct companies, and total
   // professional experience. The project count covers every ACTIVE project,

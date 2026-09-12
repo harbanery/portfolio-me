@@ -6,8 +6,8 @@ export interface MasterData {
 
 /**
  * Master skill data, aligned with the admin-portfolio CMS
- * (admin-portfolio/src/helpers/skills.ts — `masterSkillsMap`). The keys here
- * MUST match the keys the admin writes into the database.
+ * (admin-portfolio/src/features/admin/utils/skills.ts — `masterSkillsMap`).
+ * The keys here MUST match the keys the admin writes into the database.
  */
 export const masterDataMap: Record<string, MasterData> = {
   // Languages

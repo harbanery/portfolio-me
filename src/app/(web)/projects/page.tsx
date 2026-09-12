@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import BaseLayout from "@/components/layout";
 import ListProjectSection from "./section/list";
-import { getProjectsData } from "@/server/actions";
-import { getContactUrl } from "@/helpers";
-import { META_APP } from "@/config/variables";
+import { getProjectsData } from "@/actions";
+import { getContactUrl } from "@/utils/helpers";
+import { META_APP } from "@/utils/config/variables";
 
 /**
  * Rendering: dynamically rendered per request (see the home page for

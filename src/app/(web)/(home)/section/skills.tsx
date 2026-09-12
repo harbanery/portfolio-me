@@ -1,5 +1,5 @@
-import SectionHeading from "@/components/section-heading";
-import { masterDataMap } from "@/models/master-data";
+import SectionHeading from "@/components/ui/section-heading";
+import { masterDataMap } from "@/models/masterData";
 
 interface SkillsSectionProps {
   /** Skill keys from the Personal row in the database. */

@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight, Star } from "lucide-react";
-import SectionHeading from "@/components/section-heading";
+import SectionHeading from "@/components/ui/section-heading";
 
 /**
  * Dummy public repositories for the open source section.

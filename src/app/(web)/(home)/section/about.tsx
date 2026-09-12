@@ -1,10 +1,10 @@
-import SectionHeading from "@/components/section-heading";
-import RotatingText from "@/components/rotating-text";
-import { normalizeHtmlBody } from "@/helpers";
+import SectionHeading from "@/components/ui/section-heading";
+import RotatingText from "@/components/ui/rotating-text";
+import { normalizeHtmlBody } from "@/utils/helpers";
 import { logoMap } from "@/models/icons";
-import { masterDataMap } from "@/models/master-data";
-import type { EducationItem } from "@/services/credentialService";
-import type { PersonalLanguage } from "@/services/personalService";
+import { masterDataMap } from "@/models/masterData";
+import type { EducationItem } from "@/services/credential";
+import type { PersonalLanguage } from "@/services/personal";
 
 interface AboutSectionProps {
   about?: string | null;

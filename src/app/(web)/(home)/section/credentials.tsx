@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Plus } from "lucide-react";
-import SectionHeading from "@/components/section-heading";
-import type { CredentialItem } from "@/services/credentialService";
+import SectionHeading from "@/components/ui/section-heading";
+import type { CredentialItem } from "@/services/credential";
 
 interface CredentialsSectionProps {
   items: CredentialItem[];

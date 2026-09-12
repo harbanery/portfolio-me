@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight, ExternalLink, Github } from "lucide-react";
 import { menuRole } from "@/models/menu";
-import { masterDataMap } from "@/models/master-data";
+import { masterDataMap } from "@/models/masterData";
 import { logoMap } from "@/models/icons";
 import type { ArchiveProject } from "@/models/project";
 

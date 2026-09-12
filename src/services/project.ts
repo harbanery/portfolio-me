@@ -1,5 +1,5 @@
 import { unstable_cache } from "next/cache";
-import { prisma } from "@/server/db";
+import { prisma } from "@/lib/prisma";
 import type {
   ArchiveProject,
   Project,
@@ -278,6 +278,43 @@ export async function getAllProjects(): Promise<ArchiveProject[]> {
     endDate: project.endDate ? new Date(project.endDate) : null,
     createdAt: project.createdAt ? new Date(project.createdAt) : null,
   }));
+}
+
+/** Row shape served to the cover delivery route (plain primitives only,
+ *  so it crosses the `unstable_cache` boundary cheaply). */
+export interface PortfolioCoverRow {
+  image: string;
+  updatedAtMs: number;
+}
+
+const getPortfolioCoverRowCached = unstable_cache(
+  async (projectId: number): Promise<PortfolioCoverRow | null> => {
+    try {
+      const row = await prisma.portfolio.findFirst({
+        where: { id: projectId, status: "ACTIVE" },
+        select: { image: true, updatedAt: true },
+      });
+      if (!row?.image) return null;
+      return { image: row.image, updatedAtMs: row.updatedAt.getTime() };
+    } catch (error) {
+      console.error("Error fetching portfolio cover row:", error);
+      return null;
+    }
+  },
+  ["portfolio-cover-row"],
+  DATA_CACHE,
+);
+
+/**
+ * Cover image row for the `/api/portfolio-cover/[id]` delivery route: the
+ * stored image value (inline base64 data URI or a remote URL) plus the
+ * `updatedAt` milliseconds that bust the cover URL's cache. Null when the
+ * project is missing, inactive, or has no image.
+ */
+export async function getPortfolioCoverRow(
+  projectId: number,
+): Promise<PortfolioCoverRow | null> {
+  return getPortfolioCoverRowCached(projectId);
 }
 
 const getLatestContentUpdateCached = unstable_cache(

@@ -1,6 +1,6 @@
 "use client";
-import { cn } from "@/utils/cn";
-import { usePrefersReducedMotion } from "@/utils/use-prefers-reduced-motion";
+import { cn } from "@/utils/helpers";
+import { usePrefersReducedMotion } from "@/hooks/useMotion";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 
 interface StarProps {
@@ -76,7 +76,7 @@ export const StarsBackground: React.FC<StarBackgroundProps> = ({
       twinkleProbability,
       minTwinkleSpeed,
       maxTwinkleSpeed,
-    ]
+    ],
   );
 
   useEffect(() => {

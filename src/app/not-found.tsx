@@ -1,4 +1,4 @@
-import NotFoundView from "@/components/not-found-view";
+import NotFoundView from "@/components/ui/not-found-view";
 
 /**
  * Server wrapper for the 404 page. Dynamic rendering is required by the

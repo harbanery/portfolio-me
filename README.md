@@ -72,14 +72,14 @@ The site is a single-page home (hero, skills marquee, about, experience, feature
 ```
 src/
 ├── app/          # Routes & pages (App Router)
+├── actions/      # Server actions — the only data surface pages call
 ├── assets/       # Fonts & global styles
-├── components/   # UI components (layout, navbar, footer, effects, etc.)
-├── config/       # Environment variables
-├── helpers/      # Pure helper functions
+├── components/   # Shared UI, split into layout/ (page frame) and ui/ (primitives & effects)
+├── lib/          # Server-only modules (Prisma client, email, Redis rate limit)
 ├── models/       # Data maps, master data & domain types
-├── server/       # Server-only code (Prisma client & server actions)
-├── services/     # Data services consumed by server actions
-└── utils/        # Utilities (fonts, slug, cn)
+├── services/     # Data services (personal, project, credential)
+├── hooks/        # Shared React hooks
+└── utils/        # Utilities (config, helpers, fonts)
 ```
 
 ## License

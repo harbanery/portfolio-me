@@ -1,6 +1,6 @@
 "use client";
 
-import { NightOceanSimple } from "@/components/effects/night-ocean";
+import { NightOceanSimple } from "@/components/ui/effects/night-ocean";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
