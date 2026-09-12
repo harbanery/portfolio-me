@@ -7,6 +7,8 @@ interface CountUpProps {
   to: number;
   /** Rendered while the animation has not started yet (SSR / pre-reveal). */
   fallback?: string;
+  /** Suffix appended to every rendered number (e.g. "+" renders "2+"). */
+  suffix?: string;
   /** Extra milliseconds to wait before counting — pass the parent's
    *  reveal delay so the count begins only after the reveal finishes. */
   delay?: number;
@@ -26,9 +28,9 @@ const COUNT_DURATION = 500;
  * never animates behind a still-fading section. Uses a single rAF loop
  * with ease-in-out timing — no external library.
  */
-const CountUp = ({ to, fallback, delay = 0, className }: CountUpProps) => {
+const CountUp = ({ to, fallback, delay = 0, suffix, className }: CountUpProps) => {
   const ref = useRef<HTMLSpanElement>(null);
-  const [display, setDisplay] = useState(fallback ?? `${to}`);
+  const [display, setDisplay] = useState(fallback ?? `${to}${suffix ?? ""}`);
 
   useEffect(() => {
     const el = ref.current;
@@ -45,7 +47,7 @@ const CountUp = ({ to, fallback, delay = 0, className }: CountUpProps) => {
     const tick = (start: number) => {
       const elapsed = performance.now() - start;
       const progress = Math.min(elapsed / COUNT_DURATION, 1);
-      setDisplay(`${Math.round(ease(progress) * to)}`);
+      setDisplay(`${Math.round(ease(progress) * to)}${suffix ?? ""}`);
       if (progress < 1) raf = requestAnimationFrame(() => tick(start));
     };
 
@@ -76,7 +78,7 @@ const CountUp = ({ to, fallback, delay = 0, className }: CountUpProps) => {
       clearTimeout(timer);
       cancelAnimationFrame(raf);
     };
-  }, [to, delay]);
+  }, [to, delay, suffix]);
 
   return (
     <span ref={ref} className={className}>

@@ -55,6 +55,8 @@ const HomePage = async () => {
     },
     {
       value: `${years}`,
+      // The total rounds down, so a trailing "+" reads as "2+ years".
+      suffix: "+",
       label: `${years === 1 ? "Year" : "Years"} of professional experience`,
     },
   ].filter((stat) => Number(stat.value) > 0);

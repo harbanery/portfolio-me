@@ -9,6 +9,8 @@ import { ShootingStars } from "@/components/ui/effects/shooting-stars";
 
 interface HeroStat {
   value: string;
+  /** Optional suffix rendered after the number (e.g. "2+"). */
+  suffix?: string;
   label: string;
 }
 
@@ -191,7 +193,8 @@ const HeroSection = ({ name, lead, stats = [] }: HeroSectionProps) => {
                       <dt className="font-inter text-2xl sm:text-3xl font-bold tracking-tight text-white">
                         <CountUp
                           to={Number(stat.value)}
-                          fallback={stat.value}
+                          fallback={stat.value + (stat.suffix ?? "")}
+                          suffix={stat.suffix}
                           delay={shouldShowIntro ? 5 : 0}
                         />
                       </dt>
@@ -222,7 +225,8 @@ const HeroSection = ({ name, lead, stats = [] }: HeroSectionProps) => {
                       <dt className="font-inter text-3xl font-bold tracking-tight text-white transition-colors group-hover:text-[#DEB887]">
                         <CountUp
                           to={Number(stat.value)}
-                          fallback={stat.value}
+                          fallback={stat.value + (stat.suffix ?? "")}
+                          suffix={stat.suffix}
                           delay={shouldShowIntro ? 5 : 0}
                         />
                       </dt>
