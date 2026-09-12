@@ -1,11 +1,12 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { track } from "@vercel/analytics";
 import { Check, Loader2, MapPin, SendHorizonal } from "lucide-react";
-import SectionHeading from "@/components/section-heading";
-import RotatingText from "@/components/rotating-text";
+import SectionHeading from "@/components/ui/section-heading";
+import RotatingText from "@/components/ui/rotating-text";
 import { logoMap } from "@/models/icons";
-import { formatURLContact } from "@/helpers";
+import { formatURLContact } from "@/utils/helpers";
 import Link from "next/link";
 
 interface Contact {
@@ -127,6 +128,10 @@ const ContactsDetailSection = ({
 
       if (response.ok && result.success) {
         setStatus("success");
+        // Conversion event for Vercel Analytics — pair it with a Goal
+        // ("contact-submit") in the Analytics dashboard to measure how
+        // many visits actually turn into a sent message.
+        track("contact-submit");
       } else {
         setStatus("idle");
         setError(result.error ?? "Failed to send. Please try again later.");

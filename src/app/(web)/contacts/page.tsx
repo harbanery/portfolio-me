@@ -2,13 +2,15 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import BaseLayout from "@/components/layout";
 import ContactsDetailSection from "./section/contact-detail";
-import { getContactsData } from "@/server/actions";
+import { getContactsData } from "@/actions";
 
 /**
- * ISR (see the home page for details) — 60-second background
- * revalidation keeps availability/contact data in sync with the database.
+ * Rendering: dynamically rendered per request (see the home page for
+ * details) — the nonce CSP requires it; `unstable_cache` keeps the data
+ * queries on a 60-second revalidate so availability/contact data stays
+ * in sync with the database.
  */
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Contacts",

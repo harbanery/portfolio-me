@@ -1,5 +1,6 @@
 "use client";
-import { cn } from "@/utils/cn";
+import { cn } from "@/utils/helpers";
+import { usePrefersReducedMotion } from "@/hooks/useMotion";
 import React, { useEffect, useState, useRef } from "react";
 
 interface ShootingStar {
@@ -23,6 +24,13 @@ interface ShootingStarsProps {
   starHeight?: number;
   className?: string;
 }
+
+/**
+ * Occasional shooting stars over the starfield. Runtime guards:
+ * - `prefers-reduced-motion` → nothing spawns at all;
+ * - IntersectionObserver → the spawn timer and movement chain pause
+ *   while the svg is scrolled out of the viewport.
+ */
 export const ShootingStars: React.FC<ShootingStarsProps> = ({
   minSpeed = 10,
   maxSpeed = 30,
@@ -35,9 +43,26 @@ export const ShootingStars: React.FC<ShootingStarsProps> = ({
   className,
 }) => {
   const [star, setStar] = useState<ShootingStar | null>(null);
+  const [inView, setInView] = useState(true);
+  const reducedMotion = usePrefersReducedMotion();
   const svgRef = useRef<SVGSVGElement>(null);
 
+  // Pause spawning and movement while offscreen.
   useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg) return;
+    const observer = new IntersectionObserver(([entry]) =>
+      setInView(entry.isIntersecting),
+    );
+    observer.observe(svg);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    // Reduced motion or offscreen: no spawns (an in-flight star still
+    // finishes its path once the viewport is re-entered).
+    if (reducedMotion || !inView) return;
+
     const getRandomStartPoint = () => {
       const side = Math.floor(Math.random() * 4);
       const offset = Math.random() * window.innerWidth;
@@ -80,9 +105,11 @@ export const ShootingStars: React.FC<ShootingStarsProps> = ({
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [minSpeed, maxSpeed, minDelay, maxDelay]);
+  }, [minSpeed, maxSpeed, minDelay, maxDelay, reducedMotion, inView]);
 
   useEffect(() => {
+    if (!inView) return;
+
     const moveStar = () => {
       if (star) {
         setStar((prevStar) => {
@@ -116,14 +143,14 @@ export const ShootingStars: React.FC<ShootingStarsProps> = ({
 
     const animationFrame = requestAnimationFrame(moveStar);
     return () => cancelAnimationFrame(animationFrame);
-  }, [star]);
+  }, [star, inView]);
 
   return (
     <svg
       ref={svgRef}
       className={cn("w-full h-full absolute inset-0", className)}
     >
-      {star && (
+      {!reducedMotion && star && (
         <rect
           key={star.id}
           x={star.x}

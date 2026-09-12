@@ -3,15 +3,15 @@ import {
   getExperiences,
   getMarqueeSkills,
   getExperienceStats,
-} from "@/services/personalService";
+} from "@/services/personal";
 import {
   getProjects,
   getProjectById,
   getOtherProjects,
   getAllProjects,
   getLatestContentUpdate,
-} from "@/services/projectService";
-import { getEducation, getPrimaryCv } from "@/services/credentialService";
+} from "@/services/project";
+import { getEducation, getPrimaryCv, getCredentials, getPublications } from "@/services/credential";
 
 /**
  * Server actions for fetching page data (SSR).
@@ -22,7 +22,7 @@ import { getEducation, getPrimaryCv } from "@/services/credentialService";
 
 export async function getHomeData() {
   try {
-    const [personal, projects, allProjects, experiences, experienceStats, education, cv] =
+    const [personal, projects, allProjects, experiences, experienceStats, education, cv, credentials, publications] =
       await Promise.all([
         getPersonalProfile(),
         getProjects(),
@@ -31,6 +31,8 @@ export async function getHomeData() {
         getExperienceStats(),
         getEducation(),
         getPrimaryCv(),
+        getCredentials(),
+        getPublications(),
       ]);
 
     return {
@@ -46,6 +48,8 @@ export async function getHomeData() {
         experienceStats,
         education,
         cv,
+        credentials,
+        publications,
       },
     };
   } catch (error) {

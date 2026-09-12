@@ -1,6 +1,6 @@
 import { ArrowRight } from "lucide-react";
-import SectionHeading from "@/components/section-heading";
-import type { WritingItem } from "@/services/credentialService";
+import SectionHeading from "@/components/ui/section-heading";
+import type { WritingItem } from "@/services/credential";
 
 interface WritingSectionProps {
   items: WritingItem[];

@@ -1,7 +1,6 @@
 ﻿import BaseLayout from "@/components/layout";
-import { getHomeData } from "@/server/actions";
-import { getCredentials, getPublications } from "@/services/credentialService";
-import { getContactUrl } from "@/helpers";
+import { getHomeData } from "@/actions";
+import { getContactUrl } from "@/utils/helpers";
 import { buildMenuSections } from "@/models/menu";
 import HeroSection from "./section/hero";
 import AboutSection from "./section/about";
@@ -16,11 +15,14 @@ import HomeContactSection from "./section/contact";
 import SkillsMarqueeSection from "./section/skills-marquee";
 
 /**
- * ISR: pages are prerendered statically and revalidated in the background
- * at most every 60 seconds, so database edits appear on the site within a
- * minute — no redeploy and no external webhook needed (DB-only refresh).
+ * Rendering: dynamically rendered per request — required by the
+ * nonce-based CSP set in `src/proxy.ts` (a nonce must be fresh on every
+ * response, which rules out ISR-cached HTML). Database freshness is
+ * preserved by the data layer instead: the service queries are wrapped
+ * in `unstable_cache` with a 60-second revalidate, so DB edits still
+ * appear on the site within a minute without redeploying.
  */
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 /**
  * Profile location — fixed in code: Bogor primary, Jakarta as the
@@ -30,11 +32,9 @@ export const revalidate = 60;
 const LOCATION_LABEL = "Bogor, Indonesia";
 
 const HomePage = async () => {
-  const [{ data }, credentials, publications] = await Promise.all([
-    getHomeData(),
-    getCredentials(),
-    getPublications(),
-  ]);
+  const { data } = await getHomeData();
+  const credentials = data?.credentials || [];
+  const publications = data?.publications || [];
 
   // Hero stats from database data: projects, distinct companies, and total
   // professional experience. The project count covers every ACTIVE project,
@@ -55,6 +55,8 @@ const HomePage = async () => {
     },
     {
       value: `${years}`,
+      // The total rounds down, so a trailing "+" reads as "2+ years".
+      suffix: "+",
       label: `${years === 1 ? "Year" : "Years"} of professional experience`,
     },
   ].filter((stat) => Number(stat.value) > 0);

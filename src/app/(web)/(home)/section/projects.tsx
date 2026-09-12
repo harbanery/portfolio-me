@@ -9,10 +9,10 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import SectionHeading from "@/components/section-heading";
+import SectionHeading from "@/components/ui/section-heading";
 import { logoMap } from "@/models/icons";
-import { masterDataMap } from "@/models/master-data";
-import { normalizeHtmlBody } from "@/helpers";
+import { masterDataMap } from "@/models/masterData";
+import { normalizeHtmlBody } from "@/utils/helpers";
 import type { ShowcaseProject } from "@/models/project";
 
 /** Postman icon from the shared icon registry (SiPostman). */

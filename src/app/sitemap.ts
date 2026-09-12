@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
-import { BASE_URL } from "@/config/variables";
-import { getLatestUpdate } from "@/server/actions";
+import { BASE_URL } from "@/utils/config/variables";
+import { getLatestUpdate } from "@/actions";
 
 /**
  * Sitemap for the indexable routes. `lastModified` follows the newest

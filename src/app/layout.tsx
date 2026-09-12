@@ -6,11 +6,11 @@ import {
   META_DESCRIPTION,
   META_TITLE,
   NODE_ENV,
-} from "@/config/variables";
-import { VercelCompatibleComponents } from "@/components/vercel";
-import DevelopmentBanner from "@/components/development-banner";
-import WebVitalsReporter from "@/components/web-vitals";
-import AssetHints from "@/components/asset-hints";
+} from "@/utils/config/variables";
+import { VercelCompatibleComponents } from "@/components/ui/vercel";
+import DevelopmentBanner from "@/components/layout/development-banner";
+import WebVitalsReporter from "@/components/ui/web-vitals";
+import AssetHints from "@/components/ui/asset-hints";
 import { cookie, inter, martianMono } from "@/utils/fonts/next-google";
 import { neueHaasDisplay } from "@/utils/fonts/next-local";
 

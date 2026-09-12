@@ -1,13 +1,13 @@
 "use client";
 
-import Footer from "../footer";
-import Navbar from "../navbar";
-import SideMenu from "../side-menu";
-import ScrollToTop from "../scroll-to-top";
-import ScrollReveal from "@/components/reveal";
+import Footer from "./footer";
+import Navbar from "./navbar";
+import SideMenu from "./side-menu";
+import ScrollToTop from "./scroll-to-top";
+import ScrollReveal from "@/components/ui/reveal";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
-import type { AvailabilityStatus } from "../navbar";
+import type { AvailabilityStatus } from "./navbar";
 import { buildMenuSections, type MenuSection } from "@/models/menu";
 
 const BaseLayout = ({
@@ -54,7 +54,7 @@ const BaseLayout = ({
   return (
     <main className="w-full hide-scrollbar select-none overflow-x-clip">
       {/* Scroll-reveal engine — flips `[data-aos]` elements to visible
-          (see components/reveal and the global stylesheet). */}
+          (see components/ui/reveal and the global stylesheet). */}
       <ScrollReveal />
       {navbar && (
         <Navbar

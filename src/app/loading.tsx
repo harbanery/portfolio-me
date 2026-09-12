@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { StarsBackground } from "@/components/effects/bg-stars";
-import { ShootingStars } from "@/components/effects/shooting-stars";
+import { StarsBackground } from "@/components/ui/effects/bg-stars";
+import { ShootingStars } from "@/components/ui/effects/shooting-stars";
 
 const RootLoading = () => {
   return (

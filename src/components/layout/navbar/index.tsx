@@ -27,24 +27,26 @@ export type AvailabilityStatus =
   | "ONLY_FREELANCE"
   | "NOT_AVAILABLE";
 
-/** Badge text + color per availability value from the database. `short`
- *  is the phone-width label — the navbar pill is too narrow there for the
- *  full sentence. */
+/** Badge text + color per availability value from the database. The
+ *  NOT_AVAILABLE entry exists for type completeness — it never renders
+ *  (see `showAvailabilityIndicator`). `shortLabel` is the compact
+ *  lg-breakpoint variant ("Available for freelance" → "Freelance",
+ *  "Available for work" → "Available"). */
 const AVAILABILITY_BADGE: Record<
   AvailabilityStatus,
-  { label: string; short: string; color: string }
+  { label: string; shortLabel: string; color: string }
 > = {
   AVAILABLE: {
     label: "Available for work",
-    short: "Available",
+    shortLabel: "Available",
     color: "#2DD4BF",
   },
   ONLY_FREELANCE: {
     label: "Available for freelance",
-    short: "Freelance",
+    shortLabel: "Freelance",
     color: "#DEB887",
   },
-  NOT_AVAILABLE: { label: "Busy", short: "Busy", color: "#EF4444" },
+  NOT_AVAILABLE: { label: "Busy", shortLabel: "Busy", color: "#EF4444" },
 };
 
 /** City shown alternating with the primary one in the navbar location. */
@@ -52,6 +54,40 @@ const ALTERNATE_CITY = "Jakarta";
 
 /** How long each city stays before swapping (ms). */
 const CITY_SWAP_INTERVAL = 3200;
+
+/** Crossfading city strip shared by every breakpoint: both cities stack
+ *  in one grid cell, so the container keeps the widest city's width (no
+ *  layout shift) while the active one slides in. Index 0 parks below,
+ *  index 1 above — each swap moves as one coherent strip (ping-pong
+ *  loop). A single-city list simply renders its only entry. */
+const CitySwap = ({
+  cities,
+  activeIndex,
+}: {
+  cities: string[];
+  activeIndex: number;
+}) => (
+  <span className="relative inline-grid overflow-hidden">
+    {cities.map((city, index) => {
+      const isActive = activeIndex % cities.length === index;
+      return (
+        <span
+          key={city}
+          aria-hidden={!isActive}
+          className="[grid-area:1/1] motion-safe:transition-[opacity,transform] motion-safe:duration-500 motion-safe:ease-in-out text-right"
+          style={{
+            opacity: isActive ? 1 : 0,
+            transform: isActive
+              ? "translateY(0)"
+              : `translateY(${index === 0 ? 70 : -70}%)`,
+          }}
+        >
+          {city}
+        </span>
+      );
+    })}
+  </span>
+);
 
 const Navbar = ({
   locationLabel,
@@ -176,6 +212,9 @@ const Navbar = ({
   const effectiveAvailability: AvailabilityStatus =
     availability ?? "NOT_AVAILABLE";
   const badge = AVAILABILITY_BADGE[effectiveAvailability];
+  // Busy (NOT_AVAILABLE) shows no indicator at all — only the available
+  // and freelance-only statuses are advertised.
+  const showAvailabilityIndicator = effectiveAvailability !== "NOT_AVAILABLE";
   const isHireable =
     effectiveAvailability !== "NOT_AVAILABLE" && pathname !== "/contacts";
 
@@ -280,63 +319,52 @@ const Navbar = ({
             <div className="hidden lg:flex items-center gap-6 xl:gap-8">
               {isHome ? (
                 <>
-                  <span className="flex items-center gap-2.5">
-                    <span className="relative flex h-2 w-2">
-                      <span
-                        className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
-                        style={{ backgroundColor: badge.color }}
-                      />
-                      <span
-                        className="relative inline-flex h-2 w-2 rounded-full"
-                        style={{ backgroundColor: badge.color }}
-                      />
-                    </span>
-                    <span
-                      className="text-[11px] uppercase tracking-[0.2em] font-martian-mono font-medium"
-                      style={{ color: badge.color }}
-                    >
-                      {badge.label}
-                    </span>
-                  </span>
+                  {showAvailabilityIndicator && (
+                    <>
+                      <span className="flex items-center gap-2.5">
+                        <span className="relative flex h-2 w-2">
+                          <span
+                            className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
+                            style={{ backgroundColor: badge.color }}
+                          />
+                          <span
+                            className="relative inline-flex h-2 w-2 rounded-full"
+                            style={{ backgroundColor: badge.color }}
+                          />
+                        </span>
+                        <span
+                          className="text-[11px] uppercase tracking-[0.2em] font-martian-mono font-medium"
+                          style={{ color: badge.color }}
+                        >
+                          {/* Short label on laptops (lg and below the
+                              desktop bar goes) — the full sentence only
+                              fits comfortably from xl up. */}
+                          <span className="xl:hidden">
+                            {badge.shortLabel}
+                          </span>
+                          <span className="hidden xl:inline">
+                            {badge.label}
+                          </span>
+                        </span>
+                      </span>
+                      <span className="h-3 w-px bg-white/15" />
+                    </>
+                  )}
                   {locationLabel && (
                     <>
-                      <span className="h-3 w-px bg-white/15" />
                       <span className="flex items-center gap-1.5 text-[11px] uppercase tracking-[0.2em] font-martian-mono font-medium text-gray-400">
                         <MapPin size={12} className="text-[#DEB887]" />
                         <div className="flex items-center gap-0">
-                          {/* Both cities share one grid cell: the container
-                            keeps the widest city's width (no layout shift)
-                            while the active one crossfades in with a slide.
-                            Index 0 parks below, index 1 above, so each swap
-                            moves as one coherent strip (ping-pong loop). */}
-
-                          <span className="relative inline-grid overflow-hidden">
-                            {cities.map((city, index) => {
-                              const isActive =
-                                cityIndex % cities.length === index;
-                              return (
-                                <span
-                                  key={city}
-                                  aria-hidden={!isActive}
-                                  className="[grid-area:1/1] motion-safe:transition-[opacity,transform] motion-safe:duration-500 motion-safe:ease-in-out text-right"
-                                  style={{
-                                    opacity: isActive ? 1 : 0,
-                                    transform: isActive
-                                      ? "translateY(0)"
-                                      : `translateY(${index === 0 ? 70 : -70}%)`,
-                                  }}
-                                >
-                                  {city}
-                                </span>
-                              );
-                            })}
-                          </span>
+                          {/* Both cities crossfade in one shared grid cell —
+                              the loop runs on every breakpoint (see
+                              `CitySwap`). */}
+                          <CitySwap cities={cities} activeIndex={cityIndex} />
                           {countryLabel && `, ${countryLabel}`}
                         </div>
                       </span>
+                      <span className="h-3 w-px bg-white/15" />
                     </>
                   )}
-                  <span className="h-3 w-px bg-white/15" />
                   <span
                     className="text-[11px] uppercase tracking-[0.2em] font-martian-mono font-medium text-gray-400 tabular-nums"
                     suppressHydrationWarning
@@ -351,17 +379,19 @@ const Navbar = ({
                     onClick={() => router.push("/")}
                     className="group flex items-center gap-2.5"
                   >
-                    <span className="relative flex h-2 w-2">
-                      <span
-                        className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
-                        style={{ backgroundColor: badge.color }}
-                      />
-                      <span
-                        className="relative inline-flex h-2 w-2 rounded-full"
-                        style={{ backgroundColor: badge.color }}
-                      />
-                    </span>
-                    <span className="text-[11px] cursor-pointer uppercase tracking-[0.2em] font-inter font-semibold text-white group-hover:text-[#DEB887] transition-colors duration-500">
+                    {showAvailabilityIndicator && (
+                      <span className="relative flex h-2 w-2">
+                        <span
+                          className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
+                          style={{ backgroundColor: badge.color }}
+                        />
+                        <span
+                          className="relative inline-flex h-2 w-2 rounded-full"
+                          style={{ backgroundColor: badge.color }}
+                        />
+                      </span>
+                    )}
+                    <span className="text-[11px] cursor-pointer uppercase tracking-[0.2em] font-martian-mono font-semibold text-white group-hover:text-[#DEB887] transition-colors duration-500">
                       {name ?? "Raihan Yusuf"}
                     </span>
                   </button>
@@ -376,47 +406,76 @@ const Navbar = ({
               )}
             </div>
 
-            {/* Mobile/tablet status — replaces the old "Menu" spacer. Home
-              route: availability indicator (short label on phones, full
-              sentence on tablets, which also add the location). Other
-              routes: the profile name, clicking straight home. */}
+            {/* Mobile/tablet status bar. Home route: phones carry the dot
+              alone (the location joins it only while no badge shows),
+              tablets add the status sentence and the location. Other
+              routes: phones show dot + name, tablets add the local
+              clock. */}
             <div className="flex min-w-0 items-center gap-2.5 lg:hidden">
-              <span className="relative flex h-2 w-2 shrink-0">
-                <span
-                  className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
-                  style={{ backgroundColor: badge.color }}
-                />
-                <span
-                  className="relative inline-flex h-2 w-2 rounded-full"
-                  style={{ backgroundColor: badge.color }}
-                />
-              </span>
-              {isHome ? (
-                <span
-                  className="truncate font-martian-mono text-[10px] font-medium uppercase tracking-[0.18em]"
-                  style={{ color: badge.color }}
-                >
-                  <span className="md:hidden">{badge.short}</span>
-                  <span className="hidden md:inline">{badge.label}</span>
+              {showAvailabilityIndicator && (
+                <span className="relative flex h-2 w-2 shrink-0">
+                  <span
+                    className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-60"
+                    style={{ backgroundColor: badge.color }}
+                  />
+                  <span
+                    className="relative inline-flex h-2 w-2 rounded-full"
+                    style={{ backgroundColor: badge.color }}
+                  />
                 </span>
-              ) : (
-                <button
-                  onClick={() => router.push("/")}
-                  className="cursor-pointer truncate font-martian-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-white transition-colors duration-500 hover:text-[#DEB887]"
-                >
-                  {name ?? "Raihan Yusuf"}
-                </button>
               )}
-              {/* Location — tablets only; the phone pill stays minimal. */}
-              {locationLabel && (
-                <span className="hidden min-w-0 items-center gap-1.5 font-martian-mono text-[10px] font-medium uppercase tracking-[0.18em] text-gray-400 md:flex">
-                  <span className="h-3 w-px bg-white/15" />
-                  <MapPin size={12} className="shrink-0 text-[#DEB887]" />
-                  <span className="truncate">
-                    {primaryCity}
-                    {countryLabel && `, ${countryLabel}`}
+              {isHome ? (
+                <>
+                  {/* Status text — tablets only (phones keep the dot; the
+                      sentence moves to the mobile menu). */}
+                  {showAvailabilityIndicator && (
+                    <>
+                      <span
+                        className="hidden truncate font-martian-mono text-[10px] font-medium uppercase tracking-[0.18em] md:inline"
+                        style={{ color: badge.color }}
+                      >
+                        {badge.label}
+                      </span>
+                      <span className="hidden h-3 w-px bg-white/15 md:inline-block" />
+                    </>
+                  )}
+                  {/* Location — tablets always; phones only when there is
+                      no status indicator (busy/not_available), because a
+                      visible badge leaves the compact bar to the dot alone
+                      and the city moves to the mobile menu instead. The
+                      city loops Bogor ↔ Jakarta on every breakpoint. */}
+                  {locationLabel && (
+                    <span
+                      className={`flex min-w-0 items-center gap-1.5 font-martian-mono text-[10px] font-medium uppercase tracking-[0.18em] text-gray-400 ${
+                        showAvailabilityIndicator ? "hidden md:flex" : "flex"
+                      }`}
+                    >
+                      <MapPin size={12} className="shrink-0 text-[#DEB887]" />
+                      <span className="truncate">
+                        <CitySwap cities={cities} activeIndex={cityIndex} />
+                        {countryLabel && `, ${countryLabel}`}
+                      </span>
+                    </span>
+                  )}
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => router.push("/")}
+                    className="cursor-pointer truncate font-martian-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-white transition-colors duration-500 hover:text-[#DEB887]"
+                  >
+                    {name ?? "Raihan Yusuf"}
+                  </button>
+                  {/* Local clock — tablets only (phones keep it in the
+                      mobile menu). */}
+                  <span className="hidden h-3 w-px bg-white/15 md:inline-block" />
+                  <span
+                    className="hidden font-martian-mono text-[10px] font-medium uppercase tracking-[0.18em] text-gray-400 tabular-nums md:inline"
+                    suppressHydrationWarning
+                  >
+                    {clock ?? "--:--:-- GMT+7"}
                   </span>
-                </span>
+                </>
               )}
             </div>
 
@@ -460,7 +519,9 @@ const Navbar = ({
                   Hire Me
                 </button>
               )}
-              {(cvUrl || isHome) && (
+              {/* Hamburger whenever the menu has content: home sections,
+                  the CV button, or the status/time block on other routes. */}
+              {(cvUrl || isHome || showAvailabilityIndicator) && (
                 <button
                   onClick={() => setIsMenuOpen(!isMenuOpen)}
                   aria-label="Toggle navigation menu"
@@ -478,6 +539,43 @@ const Navbar = ({
       {/* Mobile menu */}
       {isMenuOpen && (
         <div className="lg:hidden mx-4 md:mx-6 mb-4 rounded-2xl border border-white/10 bg-black/90 backdrop-blur-md p-6">
+          {/* Status + local time — the pieces that do not fit the compact
+              bar. Phones carry the status text, the location (while the
+              badge shows) and the time here; tablets only what the bar
+              omits (time on the home route, status on other routes). */}
+          {(showAvailabilityIndicator || isHome) && (
+            <div className="mb-4 flex flex-col gap-2.5 border-b border-white/5 pb-4">
+              {showAvailabilityIndicator && (
+                <span
+                  className={`items-center gap-2.5 ${isHome ? "flex md:hidden" : "flex"}`}
+                >
+                  <span
+                    className="font-martian-mono text-[10px] font-medium uppercase tracking-[0.18em]"
+                    style={{ color: badge.color }}
+                  >
+                    {badge.label}
+                  </span>
+                </span>
+              )}
+              {/* Location — phones on the home route while the badge shows
+                  (the bar carries it otherwise). Loops like the navbar. */}
+              {isHome && showAvailabilityIndicator && locationLabel && (
+                <span className="flex md:hidden items-center gap-2.5 font-martian-mono text-[10px] font-medium uppercase tracking-[0.18em] text-gray-400">
+                  <MapPin size={12} className="shrink-0 text-[#DEB887]" />
+                  <span className="truncate">
+                    <CitySwap cities={cities} activeIndex={cityIndex} />
+                    {countryLabel && `, ${countryLabel}`}
+                  </span>
+                </span>
+              )}
+              <span
+                className={`items-center gap-2.5 font-martian-mono text-[10px] font-medium uppercase tracking-[0.18em] text-gray-400 tabular-nums ${isHome ? "flex" : "flex md:hidden"}`}
+                suppressHydrationWarning
+              >
+                {clock ?? "--:--:-- GMT+7"}
+              </span>
+            </div>
+          )}
           {isHome && (
             <div className="flex flex-col gap-1">
               {menuSections.map((section) => (

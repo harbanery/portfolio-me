@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/server/db";
+import { getPortfolioCoverRow } from "@/services/project";
 
 /**
  * Cover image delivery for showcase projects.
@@ -16,6 +16,11 @@ import { prisma } from "@/server/db";
  *   the admin updates the record).
  * - Remote http(s) covers (Cloudinary) never hit this route — the
  *   service passes their URL straight through.
+ *
+ * The row lookup itself lives in the service layer
+ * (`getPortfolioCoverRow`, wrapped in `unstable_cache` 60s) so a cache
+ * hit at the CDN edge or a burst of requests does not reach Prisma;
+ * this handler stays transport-only (parse, headers, redirect).
  */
 
 export const dynamic = "force-dynamic";
@@ -50,12 +55,9 @@ export async function GET(
   }
 
   try {
-    const row = await prisma.portfolio.findFirst({
-      where: { id: projectId, status: "ACTIVE" },
-      select: { image: true, updatedAt: true },
-    });
+    const row = await getPortfolioCoverRow(projectId);
 
-    if (!row?.image) {
+    if (!row) {
       return NextResponse.json(
         { success: false, error: "Cover not found" },
         { status: 404 },
@@ -75,7 +77,7 @@ export async function GET(
       );
     }
 
-    const version = row.updatedAt.getTime();
+    const version = row.updatedAtMs;
     return new NextResponse(new Uint8Array(parsed.bytes), {
       status: 200,
       headers: {

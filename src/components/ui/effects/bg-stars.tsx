@@ -1,5 +1,6 @@
 "use client";
-import { cn } from "@/utils/cn";
+import { cn } from "@/utils/helpers";
+import { usePrefersReducedMotion } from "@/hooks/useMotion";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 
 interface StarProps {
@@ -19,6 +20,13 @@ interface StarBackgroundProps {
   className?: string;
 }
 
+/**
+ * Starfield canvas. Two runtime guards keep it cheap on mobile:
+ * - `prefers-reduced-motion` → stars are drawn once as a static frame
+ *   (no twinkle loop at all);
+ * - IntersectionObserver → the rAF loop pauses whenever the canvas is
+ *   scrolled out of the viewport and resumes on re-entry.
+ */
 export const StarsBackground: React.FC<StarBackgroundProps> = ({
   starDensity = 0.00015,
   allStarsTwinkle = true,
@@ -28,7 +36,20 @@ export const StarsBackground: React.FC<StarBackgroundProps> = ({
   className,
 }) => {
   const [stars, setStars] = useState<StarProps[]>([]);
+  const [inView, setInView] = useState(true);
+  const reducedMotion = usePrefersReducedMotion();
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Pause the animation while the canvas is offscreen.
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const observer = new IntersectionObserver(([entry]) =>
+      setInView(entry.isIntersecting),
+    );
+    observer.observe(canvas);
+    return () => observer.disconnect();
+  }, []);
 
   const generateStars = useCallback(
     (width: number, height: number): StarProps[] => {
@@ -55,7 +76,7 @@ export const StarsBackground: React.FC<StarBackgroundProps> = ({
       twinkleProbability,
       minTwinkleSpeed,
       maxTwinkleSpeed,
-    ]
+    ],
   );
 
   useEffect(() => {
@@ -96,9 +117,8 @@ export const StarsBackground: React.FC<StarBackgroundProps> = ({
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    let animationFrameId: number;
-
-    const render = () => {
+    /** One frame. `twinkle` mutates star opacity over time. */
+    const draw = (twinkle: boolean) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       stars.forEach((star) => {
         ctx.beginPath();
@@ -106,13 +126,26 @@ export const StarsBackground: React.FC<StarBackgroundProps> = ({
         ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
         ctx.fill();
 
-        if (star.twinkleSpeed !== null) {
+        if (twinkle && star.twinkleSpeed !== null) {
           star.opacity =
             0.5 +
             Math.abs(Math.sin((Date.now() * 0.001) / star.twinkleSpeed) * 0.5);
         }
       });
+    };
 
+    // Reduced motion: a single static frame, no loop, no twinkle.
+    if (reducedMotion) {
+      draw(false);
+      return;
+    }
+
+    // Offscreen: stop the loop entirely (the last frame stays painted).
+    if (!inView) return;
+
+    let animationFrameId: number;
+    const render = () => {
+      draw(true);
       animationFrameId = requestAnimationFrame(render);
     };
 
@@ -121,7 +154,7 @@ export const StarsBackground: React.FC<StarBackgroundProps> = ({
     return () => {
       cancelAnimationFrame(animationFrameId);
     };
-  }, [stars]);
+  }, [stars, reducedMotion, inView]);
 
   return (
     <canvas

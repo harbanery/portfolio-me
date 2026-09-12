@@ -1,6 +1,6 @@
 "use client";
 
-import CountUp from "@/components/count-up";
+import CountUp from "@/components/ui/count-up";
 
 interface SectionHeadingProps {
   /** Section label, e.g. "ABOUT". */

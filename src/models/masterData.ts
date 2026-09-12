@@ -6,8 +6,8 @@ export interface MasterData {
 
 /**
  * Master skill data, aligned with the admin-portfolio CMS
- * (admin-portfolio/src/helpers/skills.ts — `masterSkillsMap`). The keys here
- * MUST match the keys the admin writes into the database.
+ * (admin-portfolio/src/features/admin/utils/skills.ts — `masterSkillsMap`).
+ * The keys here MUST match the keys the admin writes into the database.
  */
 export const masterDataMap: Record<string, MasterData> = {
   // Languages
@@ -349,7 +349,7 @@ export const masterDataMap: Record<string, MasterData> = {
     color: "#000000",
   },
   factorydroid: {
-    name: "Factory Droid",
+    name: "Factory",
     category: ["ai-tool", "coding", "agent"],
     color: "#635BFF",
   },
@@ -520,7 +520,7 @@ export const masterDataMap: Record<string, MasterData> = {
     color: "#4ECDC4",
   },
   pwa: {
-    name: "Progressive Web Applications (PWAs)",
+    name: "PWA",
     category: ["methodology", "web"],
     color: "#5D6D7E",
   },

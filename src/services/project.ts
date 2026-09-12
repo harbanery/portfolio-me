@@ -1,0 +1,357 @@
+import { unstable_cache } from "next/cache";
+import { prisma } from "@/lib/prisma";
+import type {
+  ArchiveProject,
+  Project,
+  ShowcaseProject,
+} from "@/models/project";
+
+/**
+ * Data service for portfolio projects.
+ * Mirrors the progress-self pattern: server actions stay thin and delegate
+ * data access to `src/services`. No dummy fallback: an empty or unreachable
+ * database yields an empty list and the UI renders its empty state.
+ *
+ * Every query is wrapped in `unstable_cache` (60s revalidate — the
+ * cadence the pages' former ISR gave) so concurrent dynamic renders share
+ * one result. Dates cross the cache boundary as ISO strings and are
+ * re-hydrated on return; the `Project`/`ArchiveProject` types allow
+ * `string | Date`.
+ */
+const DATA_CACHE = { revalidate: 60 } as const;
+
+/** Cross the cache boundary as an ISO string regardless of input kind. */
+const toIso = (value: string | Date | null | undefined): string | null =>
+  value === null || value === undefined
+    ? null
+    : new Date(value).toISOString();
+
+/**
+ * Full column set — used by the single-project lookups only. The list
+ * endpoints below select leaner shapes so long-form fields (story,
+ * features, highlights, challenges, solutions, outcomes, galleries)
+ * never bloat the RSC payload embedded in the HTML.
+ */
+const projectColumns = {
+  id: true,
+  title: true,
+  subtitle: true,
+  projectType: true,
+  clientName: true,
+  companyName: true,
+  role: true,
+  image: true,
+  images: true,
+  description: true,
+  apiDocumentation: true,
+  features: true,
+  highlights: true,
+  challenges: true,
+  solutions: true,
+  story: true,
+  outcomes: true,
+  skills: true,
+  repoLinks: true,
+  webLink: true,
+  order: true,
+  endDate: true,
+  createdAt: true,
+} as const;
+
+/** Showcase (home) columns — everything the featured card renders.
+ *  `updatedAt` feeds the cover URL's cache buster (not part of the
+ *  public shape). */
+const showcaseColumns = {
+  id: true,
+  title: true,
+  projectType: true,
+  image: true,
+  description: true,
+  apiDocumentation: true,
+  skills: true,
+  repoLinks: true,
+  webLink: true,
+  updatedAt: true,
+} as const;
+
+/** Archive (/projects) columns — everything the year table renders. */
+const archiveColumns = {
+  id: true,
+  title: true,
+  projectType: true,
+  clientName: true,
+  companyName: true,
+  role: true,
+  skills: true,
+  repoLinks: true,
+  webLink: true,
+  endDate: true,
+  createdAt: true,
+} as const;
+
+/**
+ * Showcase order: smallest `order` first (top of the page), newest created
+ * breaking ties.
+ */
+const projectOrdering = [{ order: "asc" as const }, { createdAt: "desc" as const }];
+
+/**
+ * A project is only showcased when it is presentable: has a cover image and
+ * a live web link. Ongoing/active status is enforced by isOngoing when the
+ * column exists (older rows without it default true in the schema).
+ */
+const isShowcaseable = (
+  project: Pick<Project, "image" | "webLink">,
+): boolean => !!project.image && !!project.webLink;
+
+/**
+ * Effective archive date as a timestamp: the completion date (endDate) when
+ * set, else the record's creation date — the same date that drives the
+ * archive year column. Dateless records sink to the bottom (0).
+ */
+const archiveTimestampOf = (
+  project: Pick<ArchiveProject, "endDate" | "createdAt">,
+): number => {
+  const raw = project.endDate || project.createdAt;
+  if (!raw) return 0;
+  const time = new Date(raw).getTime();
+  return Number.isNaN(time) ? 0 : time;
+};
+
+const createdTimestampOf = (
+  project: Pick<ArchiveProject, "createdAt">,
+): number =>
+  project.createdAt ? new Date(project.createdAt).getTime() || 0 : 0;
+
+/**
+ * Archive ordering: latest year first, then latest month — the effective
+ * archive date descending. Records sharing a date fall back to newest
+ * created first; dateless records sink to the bottom.
+ */
+const byArchiveDateDesc = (
+  a: Pick<ArchiveProject, "endDate" | "createdAt">,
+  b: Pick<ArchiveProject, "endDate" | "createdAt">,
+): number =>
+  archiveTimestampOf(b) - archiveTimestampOf(a) ||
+  createdTimestampOf(b) - createdTimestampOf(a);
+
+const getProjectsCached = unstable_cache(
+  async (): Promise<ShowcaseProject[]> => {
+    try {
+      const projects = await prisma.portfolio.findMany({
+        where: { status: "ACTIVE" },
+        orderBy: projectOrdering,
+        select: showcaseColumns,
+      });
+
+      return (projects as (ShowcaseProject & { updatedAt: Date })[])
+        .filter(isShowcaseable)
+        .map(({ updatedAt, ...project }) => ({
+          ...project,
+          // Inline base64 covers are served through the cacheable cover
+          // route instead of being embedded in the RSC payload.
+          image: project.image.startsWith("data:")
+            ? `/api/portfolio-cover/${project.id}?v=${updatedAt.getTime()}`
+            : project.image,
+        }));
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+      return [];
+    }
+  },
+  ["projects"],
+  DATA_CACHE,
+);
+
+/** Every ACTIVE showcaseable project, smallest order first. */
+export async function getProjects(): Promise<ShowcaseProject[]> {
+  return getProjectsCached();
+}
+
+const getProjectByIdCached = unstable_cache(
+  async (projectId: number): Promise<Project | null> => {
+    try {
+      // findFirst, not findUnique: the status filter is not a unique field.
+      const project = await prisma.portfolio.findFirst({
+        where: { id: projectId, status: "ACTIVE" },
+        select: projectColumns,
+      });
+      if (!project) return null;
+      return {
+        ...(project as Project),
+        endDate: toIso(project.endDate),
+        createdAt: toIso(project.createdAt),
+      };
+    } catch (error) {
+      console.error("Error fetching project:", error);
+      return null;
+    }
+  },
+  ["project-detail"],
+  DATA_CACHE,
+);
+
+/** A single ACTIVE project by its ID slug. */
+export async function getProjectById(
+  projectId: number,
+): Promise<Project | null> {
+  const project = await getProjectByIdCached(projectId);
+  if (!project) return null;
+  return {
+    ...project,
+    endDate: project.endDate ? new Date(project.endDate) : null,
+    createdAt: project.createdAt ? new Date(project.createdAt) : null,
+  };
+}
+
+const getOtherProjectsCached = unstable_cache(
+  async (projectId: number): Promise<Project[]> => {
+    try {
+      const projects = await prisma.portfolio.findMany({
+        where: { id: { not: projectId }, status: "ACTIVE" },
+        orderBy: projectOrdering,
+        select: projectColumns,
+      });
+      return (projects as Project[])
+        .filter(isShowcaseable)
+        .map((project) => ({
+          ...project,
+          endDate: toIso(project.endDate),
+          createdAt: toIso(project.createdAt),
+        }));
+    } catch (error) {
+      console.error("Error fetching other projects:", error);
+      return [];
+    }
+  },
+  ["other-projects"],
+  DATA_CACHE,
+);
+
+/** Every ACTIVE showcaseable project except the given one, smallest order first. */
+export async function getOtherProjects(
+  projectId: number,
+): Promise<Project[]> {
+  const projects = await getOtherProjectsCached(projectId);
+  return projects.map((project) => ({
+    ...project,
+    endDate: project.endDate ? new Date(project.endDate) : null,
+    createdAt: project.createdAt ? new Date(project.createdAt) : null,
+  }));
+}
+
+const getAllProjectsCached = unstable_cache(
+  async (): Promise<ArchiveProject[]> => {
+    try {
+      const projects = await prisma.portfolio.findMany({
+        where: { status: "ACTIVE" },
+        orderBy: projectOrdering,
+        select: archiveColumns,
+      });
+
+      return (projects as ArchiveProject[])
+        .sort(byArchiveDateDesc)
+        .map((project) => ({
+          ...project,
+          endDate: toIso(project.endDate),
+          createdAt: toIso(project.createdAt),
+        }));
+    } catch (error) {
+      console.error("Error fetching all projects:", error);
+      return [];
+    }
+  },
+  ["all-projects"],
+  DATA_CACHE,
+);
+
+/**
+ * Every ACTIVE project for the archive page — no showcase filter, so work
+ * without a cover image or live link still counts. Sorted by the effective
+ * archive date (endDate, falling back to createdAt) descending: latest
+ * year first, then latest month.
+ */
+export async function getAllProjects(): Promise<ArchiveProject[]> {
+  const projects = await getAllProjectsCached();
+  return projects.map((project) => ({
+    ...project,
+    endDate: project.endDate ? new Date(project.endDate) : null,
+    createdAt: project.createdAt ? new Date(project.createdAt) : null,
+  }));
+}
+
+/** Row shape served to the cover delivery route (plain primitives only,
+ *  so it crosses the `unstable_cache` boundary cheaply). */
+export interface PortfolioCoverRow {
+  image: string;
+  updatedAtMs: number;
+}
+
+const getPortfolioCoverRowCached = unstable_cache(
+  async (projectId: number): Promise<PortfolioCoverRow | null> => {
+    try {
+      const row = await prisma.portfolio.findFirst({
+        where: { id: projectId, status: "ACTIVE" },
+        select: { image: true, updatedAt: true },
+      });
+      if (!row?.image) return null;
+      return { image: row.image, updatedAtMs: row.updatedAt.getTime() };
+    } catch (error) {
+      console.error("Error fetching portfolio cover row:", error);
+      return null;
+    }
+  },
+  ["portfolio-cover-row"],
+  DATA_CACHE,
+);
+
+/**
+ * Cover image row for the `/api/portfolio-cover/[id]` delivery route: the
+ * stored image value (inline base64 data URI or a remote URL) plus the
+ * `updatedAt` milliseconds that bust the cover URL's cache. Null when the
+ * project is missing, inactive, or has no image.
+ */
+export async function getPortfolioCoverRow(
+  projectId: number,
+): Promise<PortfolioCoverRow | null> {
+  return getPortfolioCoverRowCached(projectId);
+}
+
+const getLatestContentUpdateCached = unstable_cache(
+  async (): Promise<number | null> => {
+    try {
+      const [project, experience] = await Promise.all([
+        prisma.portfolio.findFirst({
+          where: { status: "ACTIVE" },
+          orderBy: { updatedAt: "desc" },
+          select: { updatedAt: true },
+        }),
+        prisma.experience.findFirst({
+          where: { status: "ACTIVE" },
+          orderBy: { updatedAt: "desc" },
+          select: { updatedAt: true },
+        }),
+      ]);
+
+      const candidates = [project?.updatedAt, experience?.updatedAt]
+        .filter((date): date is Date => !!date)
+        .map((date) => date.getTime());
+      if (candidates.length === 0) return null;
+      return Math.max(...candidates);
+    } catch (error) {
+      console.error("Error fetching latest content update:", error);
+      return null;
+    }
+  },
+  ["latest-content-update"],
+  { revalidate: 300 },
+);
+
+/**
+ * Most recent `updatedAt` across the content tables — the sitemap's
+ * `lastModified` for the home page. Null when nothing is reachable.
+ */
+export async function getLatestContentUpdate(): Promise<Date | null> {
+  const latest = await getLatestContentUpdateCached();
+  return latest === null ? null : new Date(latest);
+}
