@@ -51,7 +51,8 @@ The site is a single-page home (hero, skills marquee, about, experience, feature
 ### Features
 
 - **Next.js App Router** with Server Components and Server Actions for data fetching.
-- **Incremental Static Regeneration** (`revalidate = 60`) on the home, projects, and contacts pages — content stays in sync with the database without a rebuild.
+- **Dynamic rendering with a cached data layer** — pages render per request (required by the nonce-based CSP) while every database query is wrapped in `unstable_cache` with a 60-second revalidate, so content stays in sync with the database without a rebuild and concurrent requests share one query result.
+- **Hardened security headers** — a nonce-based Content Security Policy generated per request in `src/proxy.ts` (Next.js 16 proxy convention, `strict-dynamic` keeps Vercel scripts working), plus HSTS, `Cross-Origin-Opener-Policy`, `X-Frame-Options`, `Referrer-Policy`, and `Permissions-Policy`.
 - **Database-driven content** via **Prisma ORM** on **PostgreSQL**, managed by the separate admin-portfolio application.
 - **Master skill data** (`masterDataMap`) with icons (`logoMap`, from react-icons) kept aligned with the admin application.
 - **Home page sections** that adapt to the data: hero statistics hidden at zero, marquee falling back to the name, education with grades, languages, and an "Open to" block that hides when unavailable.
@@ -59,11 +60,11 @@ The site is a single-page home (hero, skills marquee, about, experience, feature
 - **Availability indicator** shared between the navbar and contacts page (available / freelance only / busy).
 - **Featured project cards** filtered to card-worthy skill categories (language, framework, library, database), resting in black & white and coloring up on hover.
 - **Project archive** (`/projects`) grouped by year — a five-column table on laptops, stacked rows with a scroll-spy year menu on phones and tablets — linking to live sites or repositories.
-- **Contact page** with an email form delivered through [Nodemailer](https://nodemailer.com/) SMTP (`/api/contact`) and a CV download proxied through `/api/file`.
+- **Contact page** with an email form delivered through [Nodemailer](https://nodemailer.com/) SMTP (`/api/contact`) and a CV download proxied through `/api/file` — submissions are guarded by a honeypot, input caps, and a 24-hour per-email/per-IP rate limit persisted in [Upstash Redis](https://upstash.com/) (with an in-memory fallback when `UPSTASH_REDIS_REST_URL`/`UPSTASH_REDIS_REST_TOKEN` are not configured).
 - **Responsive design** tuned for phone, tablet, laptop (1024–1280px), and desktop breakpoints.
-- **Motion & polish** with a Tailwind CSS v4 + IntersectionObserver scroll-reveal engine (no animation library).
+- **Motion & polish** with a Tailwind CSS v4 + IntersectionObserver scroll-reveal engine (no animation library); the canvas starfield and shooting-star effects pause while offscreen and honor `prefers-reduced-motion`.
 - **Per-page metadata** — the archive ships its own title and Open Graph artwork.
-- **Analytics** via Vercel Analytics & Speed Insights.
+- **Analytics** via Vercel Analytics & Speed Insights, including a `contact-submit` custom event on the contact form — pair it with a Goal in the Analytics dashboard to measure how many visits turn into a sent message.
 - **Linting** with **ESLint** for maintaining code quality.
 
 ### Project Structure

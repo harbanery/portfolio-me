@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { sendContactEmail, isEmailConfigured } from "@/server/email";
 import { getPersonalContactEmail } from "@/services/personalService";
 import { SMTP_FROM, SMTP_USER } from "@/config/variables";
+import { checkRateLimits, recordRateLimits } from "@/server/rate-limit";
 
 /**
  * POST /api/contact — send a portfolio contact message via SMTP.
@@ -15,36 +16,16 @@ import { SMTP_FROM, SMTP_USER } from "@/config/variables";
  *   inputs, humans never see one. Rejected silently as success.
  * - Field length caps (name/email/message) so a single request cannot
  *   push a multi-megabyte payload into the SMTP pipeline.
- * - Rolling rate limits in-process (a Map on the server instance):
- *   one message per sender email AND per client IP per 24h window.
- *   In-memory limits are weak on serverless (each cold start starts a
- *   fresh instance) but still blunt the obvious sweeps; a persistent
- *   store (Upstash/Vercel KV) can replace `lastSentAt` later without
- *   touching the rest of the route.
+ * - Rate limits: one message per sender email AND per client IP per 24h
+ *   window. Timestamps persist in Upstash Redis when configured (shared
+ *   across serverless instances) with an in-memory fallback — see
+ *   `src/server/rate-limit.ts`.
  */
-
-/** Rolling window before the same email/IP may send again (ms). */
-const RATE_LIMIT_MS = 24 * 60 * 60 * 1000;
 
 /** Field length caps (characters). */
 const MAX_NAME_LENGTH = 100;
 const MAX_EMAIL_LENGTH = 254;
 const MAX_MESSAGE_LENGTH = 5000;
-
-const lastSentAt = new Map<string, number>();
-
-/** Prune entries older than the window so the map never grows unbounded. */
-function pruneRateLimits(now: number): void {
-  for (const [key, sentAt] of lastSentAt) {
-    if (now - sentAt >= RATE_LIMIT_MS) lastSentAt.delete(key);
-  }
-}
-
-/** True when the key already sent within the rolling window. */
-function isRateLimited(key: string, now: number): boolean {
-  const sentAt = lastSentAt.get(key);
-  return !!sentAt && now - sentAt < RATE_LIMIT_MS;
-}
 
 /** Client IP behind Vercel/proxies (`x-forwarded-for` first hop). */
 function clientIpOf(request: Request): string {
@@ -66,6 +47,17 @@ const isNonEmptyString = (value: unknown): value is string =>
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/**
+ * Strip control characters (CRLF included) from the display name. The
+ * name lands in the email subject header — this makes header-injection
+ * attempts fail explicitly at the validation layer instead of relying on
+ * Nodemailer's internal rejection. Newlines become spaces; the message
+ * body keeps its line breaks (it is body-only, never a header).
+ */
+function sanitizeName(name: string): string {
+  return name.replace(/[\u0000-\u001F\u007F]/g, " ").trim();
+}
+
 export async function POST(request: Request) {
   let body: ContactBody;
   try {
@@ -83,7 +75,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true });
   }
 
-  const name = isNonEmptyString(body.name) ? body.name.trim() : "";
+  const name = isNonEmptyString(body.name) ? sanitizeName(body.name) : "";
   const email = isNonEmptyString(body.email)
     ? body.email.trim().toLowerCase()
     : "";
@@ -111,22 +103,18 @@ export async function POST(request: Request) {
     );
   }
 
-  const now = Date.now();
-  pruneRateLimits(now);
-
   // Per-email and per-IP limits share the same window — closing the
-  // "many different emails from one machine" sweep within an instance.
+  // "many different emails from one machine" sweep across instances.
   const rateLimitKeys = [email, clientIpOf(request)];
-  const limitedKey = rateLimitKeys.find((key) => isRateLimited(key, now));
-  if (limitedKey) {
-    const sentAt = lastSentAt.get(limitedKey)!;
-    const hoursLeft = Math.ceil((RATE_LIMIT_MS - (now - sentAt)) / 3_600_000);
+  const { limited, retryAfterMs } = await checkRateLimits(rateLimitKeys);
+  if (limited && retryAfterMs !== null) {
+    const hoursLeft = Math.max(1, Math.ceil(retryAfterMs / 3_600_000));
     return NextResponse.json(
       {
         success: false,
         error: `You've already sent a message. Please try again in about ${hoursLeft} hour${hoursLeft === 1 ? "" : "s"}.`,
       },
-      { status: 429 },
+      { status: 429, headers: { "Retry-After": String(Math.ceil(retryAfterMs / 1000)) } },
     );
   }
 
@@ -161,8 +149,7 @@ export async function POST(request: Request) {
     );
   }
 
-  for (const key of rateLimitKeys) {
-    lastSentAt.set(key, now);
-  }
+  await recordRateLimits(rateLimitKeys);
   return NextResponse.json({ success: true });
 }
+

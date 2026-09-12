@@ -34,11 +34,10 @@ const nextConfig: NextConfig = {
   compress: true,
   poweredByHeader: false,
 
-  // Security headers for every route. CSP keeps Analytics & Speed Insights
-  // working: their script loads from va.vercel-scripts.com and both beacon
-  // back over connect-src (style-src keeps 'unsafe-inline' for the inline
-  // styles the components set; img-src lists every host next/image may
-  // fetch plus data:/blob: for the inline base64 covers).
+  // Security headers for every route. The Content-Security-Policy is
+  // intentionally NOT set here: it is nonce-based and generated per
+  // request in `src/proxy.ts` (the Next.js 16 middleware convention) —
+  // a static CSP from next.config could not carry a per-request nonce.
   async headers() {
     return [
       {
@@ -55,20 +54,10 @@ const nextConfig: NextConfig = {
             key: "Strict-Transport-Security",
             value: "max-age=63072000; includeSubDomains; preload",
           },
-          {
-            key: "Content-Security-Policy",
-            value: [
-              "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com",
-              "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: https://res.cloudinary.com https://raw.githubusercontent.com https://github.com",
-              "font-src 'self' data:",
-              "connect-src 'self' https://va.vercel-scripts.com",
-              "frame-ancestors 'none'",
-              "base-uri 'self'",
-              "form-action 'self'",
-            ].join("; "),
-          },
+          // Cheap process-isolation hardening for the top-level document
+          // (prevents other origins from holding a reference to the
+          // window object after navigation).
+          { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
         ],
       },
     ];

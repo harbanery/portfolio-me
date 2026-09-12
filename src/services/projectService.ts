@@ -1,3 +1,4 @@
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/server/db";
 import type {
   ArchiveProject,
@@ -10,7 +11,20 @@ import type {
  * Mirrors the progress-self pattern: server actions stay thin and delegate
  * data access to `src/services`. No dummy fallback: an empty or unreachable
  * database yields an empty list and the UI renders its empty state.
+ *
+ * Every query is wrapped in `unstable_cache` (60s revalidate — the
+ * cadence the pages' former ISR gave) so concurrent dynamic renders share
+ * one result. Dates cross the cache boundary as ISO strings and are
+ * re-hydrated on return; the `Project`/`ArchiveProject` types allow
+ * `string | Date`.
  */
+const DATA_CACHE = { revalidate: 60 } as const;
+
+/** Cross the cache boundary as an ISO string regardless of input kind. */
+const toIso = (value: string | Date | null | undefined): string | null =>
+  value === null || value === undefined
+    ? null
+    : new Date(value).toISOString();
 
 /**
  * Full column set — used by the single-project lookups only. The list
@@ -121,64 +135,135 @@ const byArchiveDateDesc = (
   archiveTimestampOf(b) - archiveTimestampOf(a) ||
   createdTimestampOf(b) - createdTimestampOf(a);
 
+const getProjectsCached = unstable_cache(
+  async (): Promise<ShowcaseProject[]> => {
+    try {
+      const projects = await prisma.portfolio.findMany({
+        where: { status: "ACTIVE" },
+        orderBy: projectOrdering,
+        select: showcaseColumns,
+      });
+
+      return (projects as (ShowcaseProject & { updatedAt: Date })[])
+        .filter(isShowcaseable)
+        .map(({ updatedAt, ...project }) => ({
+          ...project,
+          // Inline base64 covers are served through the cacheable cover
+          // route instead of being embedded in the RSC payload.
+          image: project.image.startsWith("data:")
+            ? `/api/portfolio-cover/${project.id}?v=${updatedAt.getTime()}`
+            : project.image,
+        }));
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+      return [];
+    }
+  },
+  ["projects"],
+  DATA_CACHE,
+);
+
 /** Every ACTIVE showcaseable project, smallest order first. */
 export async function getProjects(): Promise<ShowcaseProject[]> {
-  try {
-    const projects = await prisma.portfolio.findMany({
-      where: { status: "ACTIVE" },
-      orderBy: projectOrdering,
-      select: showcaseColumns,
-    });
-
-    return (projects as (ShowcaseProject & { updatedAt: Date })[])
-      .filter(isShowcaseable)
-      .map(({ updatedAt, ...project }) => ({
-        ...project,
-        // Inline base64 covers are served through the cacheable cover
-        // route instead of being embedded in the RSC payload.
-        image: project.image.startsWith("data:")
-          ? `/api/portfolio-cover/${project.id}?v=${updatedAt.getTime()}`
-          : project.image,
-      }));
-  } catch (error) {
-    console.error("Error fetching projects:", error);
-    return [];
-  }
+  return getProjectsCached();
 }
+
+const getProjectByIdCached = unstable_cache(
+  async (projectId: number): Promise<Project | null> => {
+    try {
+      // findFirst, not findUnique: the status filter is not a unique field.
+      const project = await prisma.portfolio.findFirst({
+        where: { id: projectId, status: "ACTIVE" },
+        select: projectColumns,
+      });
+      if (!project) return null;
+      return {
+        ...(project as Project),
+        endDate: toIso(project.endDate),
+        createdAt: toIso(project.createdAt),
+      };
+    } catch (error) {
+      console.error("Error fetching project:", error);
+      return null;
+    }
+  },
+  ["project-detail"],
+  DATA_CACHE,
+);
 
 /** A single ACTIVE project by its ID slug. */
 export async function getProjectById(
   projectId: number,
 ): Promise<Project | null> {
-  try {
-    // findFirst, not findUnique: the status filter is not a unique field.
-    const project = await prisma.portfolio.findFirst({
-      where: { id: projectId, status: "ACTIVE" },
-      select: projectColumns,
-    });
-    return (project as Project) ?? null;
-  } catch (error) {
-    console.error("Error fetching project:", error);
-    return null;
-  }
+  const project = await getProjectByIdCached(projectId);
+  if (!project) return null;
+  return {
+    ...project,
+    endDate: project.endDate ? new Date(project.endDate) : null,
+    createdAt: project.createdAt ? new Date(project.createdAt) : null,
+  };
 }
+
+const getOtherProjectsCached = unstable_cache(
+  async (projectId: number): Promise<Project[]> => {
+    try {
+      const projects = await prisma.portfolio.findMany({
+        where: { id: { not: projectId }, status: "ACTIVE" },
+        orderBy: projectOrdering,
+        select: projectColumns,
+      });
+      return (projects as Project[])
+        .filter(isShowcaseable)
+        .map((project) => ({
+          ...project,
+          endDate: toIso(project.endDate),
+          createdAt: toIso(project.createdAt),
+        }));
+    } catch (error) {
+      console.error("Error fetching other projects:", error);
+      return [];
+    }
+  },
+  ["other-projects"],
+  DATA_CACHE,
+);
 
 /** Every ACTIVE showcaseable project except the given one, smallest order first. */
 export async function getOtherProjects(
   projectId: number,
 ): Promise<Project[]> {
-  try {
-    const projects = await prisma.portfolio.findMany({
-      where: { id: { not: projectId }, status: "ACTIVE" },
-      orderBy: projectOrdering,
-      select: projectColumns,
-    });
-    return (projects as Project[]).filter(isShowcaseable);
-  } catch (error) {
-    console.error("Error fetching other projects:", error);
-    return [];
-  }
+  const projects = await getOtherProjectsCached(projectId);
+  return projects.map((project) => ({
+    ...project,
+    endDate: project.endDate ? new Date(project.endDate) : null,
+    createdAt: project.createdAt ? new Date(project.createdAt) : null,
+  }));
 }
+
+const getAllProjectsCached = unstable_cache(
+  async (): Promise<ArchiveProject[]> => {
+    try {
+      const projects = await prisma.portfolio.findMany({
+        where: { status: "ACTIVE" },
+        orderBy: projectOrdering,
+        select: archiveColumns,
+      });
+
+      return (projects as ArchiveProject[])
+        .sort(byArchiveDateDesc)
+        .map((project) => ({
+          ...project,
+          endDate: toIso(project.endDate),
+          createdAt: toIso(project.createdAt),
+        }));
+    } catch (error) {
+      console.error("Error fetching all projects:", error);
+      return [];
+    }
+  },
+  ["all-projects"],
+  DATA_CACHE,
+);
 
 /**
  * Every ACTIVE project for the archive page — no showcase filter, so work
@@ -187,46 +272,49 @@ export async function getOtherProjects(
  * year first, then latest month.
  */
 export async function getAllProjects(): Promise<ArchiveProject[]> {
-  try {
-    const projects = await prisma.portfolio.findMany({
-      where: { status: "ACTIVE" },
-      orderBy: projectOrdering,
-      select: archiveColumns,
-    });
-
-    return (projects as ArchiveProject[]).sort(byArchiveDateDesc);
-  } catch (error) {
-    console.error("Error fetching all projects:", error);
-    return [];
-  }
+  const projects = await getAllProjectsCached();
+  return projects.map((project) => ({
+    ...project,
+    endDate: project.endDate ? new Date(project.endDate) : null,
+    createdAt: project.createdAt ? new Date(project.createdAt) : null,
+  }));
 }
+
+const getLatestContentUpdateCached = unstable_cache(
+  async (): Promise<number | null> => {
+    try {
+      const [project, experience] = await Promise.all([
+        prisma.portfolio.findFirst({
+          where: { status: "ACTIVE" },
+          orderBy: { updatedAt: "desc" },
+          select: { updatedAt: true },
+        }),
+        prisma.experience.findFirst({
+          where: { status: "ACTIVE" },
+          orderBy: { updatedAt: "desc" },
+          select: { updatedAt: true },
+        }),
+      ]);
+
+      const candidates = [project?.updatedAt, experience?.updatedAt]
+        .filter((date): date is Date => !!date)
+        .map((date) => date.getTime());
+      if (candidates.length === 0) return null;
+      return Math.max(...candidates);
+    } catch (error) {
+      console.error("Error fetching latest content update:", error);
+      return null;
+    }
+  },
+  ["latest-content-update"],
+  { revalidate: 300 },
+);
 
 /**
  * Most recent `updatedAt` across the content tables — the sitemap's
  * `lastModified` for the home page. Null when nothing is reachable.
  */
 export async function getLatestContentUpdate(): Promise<Date | null> {
-  try {
-    const [project, experience] = await Promise.all([
-      prisma.portfolio.findFirst({
-        where: { status: "ACTIVE" },
-        orderBy: { updatedAt: "desc" },
-        select: { updatedAt: true },
-      }),
-      prisma.experience.findFirst({
-        where: { status: "ACTIVE" },
-        orderBy: { updatedAt: "desc" },
-        select: { updatedAt: true },
-      }),
-    ]);
-
-    const candidates = [project?.updatedAt, experience?.updatedAt]
-      .filter((date): date is Date => !!date)
-      .map((date) => date.getTime());
-    if (candidates.length === 0) return null;
-    return new Date(Math.max(...candidates));
-  } catch (error) {
-    console.error("Error fetching latest content update:", error);
-    return null;
-  }
+  const latest = await getLatestContentUpdateCached();
+  return latest === null ? null : new Date(latest);
 }

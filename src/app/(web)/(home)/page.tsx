@@ -16,11 +16,14 @@ import HomeContactSection from "./section/contact";
 import SkillsMarqueeSection from "./section/skills-marquee";
 
 /**
- * ISR: pages are prerendered statically and revalidated in the background
- * at most every 60 seconds, so database edits appear on the site within a
- * minute — no redeploy and no external webhook needed (DB-only refresh).
+ * Rendering: dynamically rendered per request — required by the
+ * nonce-based CSP set in `src/proxy.ts` (a nonce must be fresh on every
+ * response, which rules out ISR-cached HTML). Database freshness is
+ * preserved by the data layer instead: the service queries are wrapped
+ * in `unstable_cache` with a 60-second revalidate, so DB edits still
+ * appear on the site within a minute without redeploying.
  */
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
 
 /**
  * Profile location — fixed in code: Bogor primary, Jakarta as the

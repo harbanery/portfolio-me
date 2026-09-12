@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { unstable_cache } from "next/cache";
 import { prisma } from "@/server/db";
 
 /**
@@ -16,9 +17,34 @@ import { prisma } from "@/server/db";
  *   the admin updates the record).
  * - Remote http(s) covers (Cloudinary) never hit this route — the
  *   service passes their URL straight through.
+ *
+ * The row lookup itself is wrapped in `unstable_cache` (60s) so a cache
+ * hit at the CDN edge or a burst of requests does not reach Prisma; the
+ * row crosses the cache boundary as plain primitives (string + number).
  */
 
 export const dynamic = "force-dynamic";
+
+/** Cache-buster window for the row lookup — matches the service layer. */
+const ROW_CACHE = { revalidate: 60 } as const;
+
+interface CoverRow {
+  image: string;
+  updatedAtMs: number;
+}
+
+const fetchCoverRow = unstable_cache(
+  async (projectId: number): Promise<CoverRow | null> => {
+    const row = await prisma.portfolio.findFirst({
+      where: { id: projectId, status: "ACTIVE" },
+      select: { image: true, updatedAt: true },
+    });
+    if (!row?.image) return null;
+    return { image: row.image, updatedAtMs: row.updatedAt.getTime() };
+  },
+  ["portfolio-cover-row"],
+  ROW_CACHE,
+);
 
 /** Parse "data:<mime>;base64,<payload>" into its parts. */
 function parseDataUri(
@@ -50,12 +76,9 @@ export async function GET(
   }
 
   try {
-    const row = await prisma.portfolio.findFirst({
-      where: { id: projectId, status: "ACTIVE" },
-      select: { image: true, updatedAt: true },
-    });
+    const row = await fetchCoverRow(projectId);
 
-    if (!row?.image) {
+    if (!row) {
       return NextResponse.json(
         { success: false, error: "Cover not found" },
         { status: 404 },
@@ -75,7 +98,7 @@ export async function GET(
       );
     }
 
-    const version = row.updatedAt.getTime();
+    const version = row.updatedAtMs;
     return new NextResponse(new Uint8Array(parsed.bytes), {
       status: 200,
       headers: {
