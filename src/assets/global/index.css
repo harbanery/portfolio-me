@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Dark mode berbasis class (.dark pada <html>) */
+/* Class-based dark mode (.dark on <html>) */
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
@@ -9,9 +9,9 @@
 }
 
 /*
- * Font families dimapping dari CSS variable next/font.
- * `@theme inline` agar nilai di-inline ke utility, bukan di-emit ulang
- * sebagai CSS variable (next/font sudah mendefinisikannya di <body>).
+ * Font families are mapped from next/font CSS variables.
+ * `@theme inline` inlines the values into utilities instead of re-emitting
+ * them as CSS variables (next/font already defines them on <body>).
  */
 @theme inline {
   --font-inter: var(--font-inter), sans-serif;
@@ -398,8 +398,8 @@ body {
 
 /*
  * Utility `hide-scrollbar` (Tailwind v4).
- * Didefinisikan dengan `@utility` agar dapat dipakai via `@apply`
- * maupun sebagai class biasa.
+ * Defined with `@utility` so it can be used via `@apply`
+ * as well as a plain class.
  */
 @utility hide-scrollbar {
   &::-webkit-scrollbar {
